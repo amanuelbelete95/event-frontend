@@ -15,6 +15,7 @@ type NormalInputFieldProps<T extends Record<string, any>> = {
     placeholder?: string;
     error?: FieldError;
     width?: string | number;
+    type?: string;
 };
 
 export default function NormalInputField<T extends Record<string, any>>({
@@ -25,6 +26,7 @@ export default function NormalInputField<T extends Record<string, any>>({
     placeholder,
     error,
     width = "100%",
+    type = "text",
 }: NormalInputFieldProps<T>) {
     return (
         <Box width={width}>
@@ -32,16 +34,15 @@ export default function NormalInputField<T extends Record<string, any>>({
                 <FormLabel fontWeight="semibold">{label}</FormLabel>
                 <Input
                     placeholder={placeholder || label}
-                    {...register(name, { required, maxLength: 4 })}
-                    type="text"
+                    {...register(name, { required })}
+                    type={type}
                     borderWidth="1px"
                     p={4}
                     borderColor="gray.300"
                     borderRadius="md"
                     _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3182CE" }}
-
                 />
-                {error && error.type && <FormErrorMessage>{error.message}</FormErrorMessage>}
+                {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
             </FormControl>
         </Box>
     );

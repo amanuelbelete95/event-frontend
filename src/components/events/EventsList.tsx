@@ -1,14 +1,12 @@
 
-import { Box, Button, HStack, useToast } from '@chakra-ui/react';
-import { ColumnDef } from '@tanstack/react-table';
-import { useMemo } from 'react';
+import { Box, Button, HStack, VStack, Text, Badge, useToast, Input, InputGroup, InputLeftElement, SimpleGrid, Card, CardBody, CardHeader, Heading, IconButton, Flex, Spacer } from '@chakra-ui/react';
+import { useMemo, useState } from 'react';
 import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
-import BasicTable from '../table/BasicTable';
 import getAllEvents from './api/getAllEvents';
 import { Event } from './events.type';
 import { EVENTS_ROUTES } from './routes';
 import { onDelete } from './api/deleteEvents';
-import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon, ViewIcon, SearchIcon, AddIcon } from '@chakra-ui/icons';
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -25,11 +23,11 @@ export const loader: LoaderFunction = async () => {
 
 const EventList = () => {
   const navigate = useNavigate();
-  const addisEvent = useLoaderData() as Event[];
+  const events = useLoaderData() as Event[];
   const toast = useToast();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleDelete = async (id: string) => {
-
     try {
       const response = await onDelete(id);
       if (response.ok) {
@@ -37,16 +35,17 @@ const EventList = () => {
           title: "Event Deleted Successfully",
           status: 'success',
           description: "The event has been successfully deleted from the system.",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         });
+        // Note: In a real app, you'd invalidate the query cache here
       } else {
         const errorData = await response.json();
         toast({
           title: "Error Deleting Event",
           status: 'error',
           description: errorData.message || "The event was not found or could not be deleted.",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         });
       }
@@ -55,109 +54,123 @@ const EventList = () => {
         title: "Error",
         status: 'error',
         description: error.message || "An unexpected error occurred while deleting the event.",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
     }
   };
 
+  const filteredEvents = useMemo(() => {
+    return events.filter(event =>
+      event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.event_status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [events, searchTerm]);
 
-  const columns = useMemo<ColumnDef<Event>[]>(
-    () => [
-      {
-        header: 'ID',
-        accessorKey: 'event_id',
-      },
-      {
-        header: 'Event Name',
-        accessorKey: 'name',
-      },
-      {
-        header: 'Date',
-        accessorKey: 'event_date',
-      },
-      {
-        header: 'Event Location',
-        accessorKey: 'location',
-      },
-      {
-        header: 'Event Description',
-        accessorKey: 'description',
-      },
-      {
-        header: "Event Status",
-        accessorKey: "event_status"
-      },
-      {
-        header: 'Event Action',
-        id: 'actions',
-        cell: (info: any) => {
-          return (
-            <HStack spacing={4} width={'100%'} alignItems={"center"} display={'flex'} justifyContent={"space-around"}>
-              <Button
-                size="sm"
-                px={8}
-                py={4}
-                display={'inline-block'}
-                borderRadius={'8px'}
-                colorScheme="blue"
-                _hover={{
-                  background: "#4444"
-                }}
-                leftIcon={<ViewIcon />}
-                onClick={() =>
-                  navigate(
-                    EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(
-                      info.row?.original?.event_id ?? ''
-                    )
-                  )
-                }
-              >
-                View
-              </Button>
-              <Button
-                size="sm"
-                px={8}
-                py={4}
-                borderRadius={'8px'}
-                colorScheme="yellow"
-                _hover={{
-                  background: "#4444"
-                }}
-                leftIcon={<EditIcon />}
-                onClick={() =>
-                  navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(
-                    info.row?.original?.event_id ?? ''
-                  ))}>
-                Edit
-              </Button>
-              <Button
-                size="sm"
-                px={8}
-                py={4}
-                _hover={{
-                  background: "#4444"
-                }}
-                borderRadius={'8px'}
-                colorScheme="red"
-                leftIcon={<DeleteIcon />}
-                onClick={() => handleDelete(info.row.original?.event_id ?? '')}>
-                Delete
-              </Button>
-            </HStack>
-          )
-        }
-      },
-    ],
-    []
-  );
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed': return 'green';
+      case 'in_progress': return 'blue';
+      case 'todo': return 'yellow';
+      case 'postponed': return 'orange';
+      case 'cancelled': return 'red';
+      default: return 'gray';
+    }
+  };
 
   return (
-    <Box px={4} display={'flex'} flexDirection={'column'} alignItems={'center'} width={'100%'} justifyContent={'center'}>
-      <Button onClick={() => navigate("new")}>Add Event</Button>
-      <BasicTable data={addisEvent} columns={columns} />
+    <Box p={6} maxW="1200px" mx="auto">
+      <Flex mb={6} align="center" direction={{ base: 'column', md: 'row' }} gap={4}>
+        <Heading size="lg" color="blue.600">Events</Heading>
+        <Spacer />
+        <InputGroup maxW="300px">
+          <InputLeftElement pointerEvents="none">
+            <SearchIcon color="gray.300" />
+          </InputLeftElement>
+          <Input
+            placeholder="Search events..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </InputGroup>
+        <Button
+          leftIcon={<AddIcon />}
+          colorScheme="blue"
+          onClick={() => navigate("new")}
+          size="md"
+        >
+          Add Event
+        </Button>
+      </Flex>
+
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+        {filteredEvents.map((event) => (
+          <Card key={event.event_id} shadow="md" borderRadius="lg" overflow="hidden">
+            <CardHeader pb={2}>
+              <Flex justify="space-between" align="center">
+                <Heading size="md" color="blue.600" noOfLines={1}>
+                  {event.name}
+                </Heading>
+                <Badge colorScheme={getStatusColor(event.event_status)} variant="solid">
+                  {event.event_status}
+                </Badge>
+              </Flex>
+            </CardHeader>
+            <CardBody pt={0}>
+              <VStack align="start" spacing={2}>
+                <Text fontSize="sm" color="gray.600">
+                  <strong>Location:</strong> {event.location}
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  <strong>Date:</strong> {new Date(event.event_date).toLocaleDateString()}
+                </Text>
+                {event.description && (
+                  <Text fontSize="sm" color="gray.600" noOfLines={2}>
+                    <strong>Description:</strong> {event.description}
+                  </Text>
+                )}
+              </VStack>
+
+              <HStack spacing={2} mt={4} justify="flex-end">
+                <IconButton
+                  aria-label="View event"
+                  icon={<ViewIcon />}
+                  size="sm"
+                  colorScheme="blue"
+                  variant="outline"
+                  onClick={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
+                />
+                <IconButton
+                  aria-label="Edit event"
+                  icon={<EditIcon />}
+                  size="sm"
+                  colorScheme="yellow"
+                  variant="outline"
+                  onClick={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
+                />
+                <IconButton
+                  aria-label="Delete event"
+                  icon={<DeleteIcon />}
+                  size="sm"
+                  colorScheme="red"
+                  variant="outline"
+                  onClick={() => handleDelete(event.event_id)}
+                />
+              </HStack>
+            </CardBody>
+          </Card>
+        ))}
+      </SimpleGrid>
+
+      {filteredEvents.length === 0 && (
+        <Box textAlign="center" py={10}>
+          <Text fontSize="lg" color="gray.500">
+            {searchTerm ? 'No events found matching your search.' : 'No events available.'}
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 };
-
 export default EventList;

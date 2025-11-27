@@ -1,32 +1,32 @@
 export const accordionData = [
   {
     id: 1,
-    question: 'What are responsibilities of Cleaning Management Office?',
+    question: 'What is the Event Tracking System?',
     answer:
-      'The office staff is responsible for creating awareness on solid waste management,  in their work areas, including keeping desks tidy, disposing of trash properly, and cleaning up spills or messes.',
+      'The Event Tracking System is a comprehensive platform designed to help organizations manage, track, and organize their events efficiently. It allows you to create, update, and monitor events from planning to completion.',
   },
   {
     id: 2,
-    question: 'How often is the Office Management Team Is Available?',
+    question: 'How do I create a new event?',
     answer:
-      'The office is cleaned daily after working hours. Additionally, thorough cleaning is performed by professional cleaners twice a week.',
+      'To create a new event, navigate to the Events page and click the "Add Event" button. Fill in the event details including name, location, date, and status, then save to add it to your event list.',
   },
   {
     id: 3,
-    question: 'What measures are in place for COVID-19 cleanliness?',
+    question: 'What event statuses are available?',
     answer:
-      'In light of COVID-19, extra measures have been implemented, including frequent disinfection of high-touch surfaces, provision of hand sanitizers, and mandatory wearing of masks in common areas.',
+      'Events can have the following statuses: Todo (planning phase), In Progress (actively running), Completed (finished successfully), Postponed (delayed), or Cancelled (no longer happening).',
   },
   {
     id: 4,
-    question: 'How does the office handle recycling waste?',
+    question: 'How can I search and filter events?',
     answer:
-      'We have designated recycling bins for paper, plastic, and glass materials. The cleaning staff ensures that recyclable waste is properly segregated and disposed of in accordance with local recycling guidelines.',
+      'Use the search bar on the Events page to find events by name, location, or status. The system provides real-time filtering to help you quickly locate specific events.',
   },
   {
     id: 5,
-    question: 'What steps are taken for disposing of hazardous waste?',
+    question: 'Can I edit or delete events?',
     answer:
-      'Hazardous waste, such as chemicals and electronic waste, is handled by certified professionals who follow strict disposal protocols to ensure environmental safety and compliance with regulations.',
+      'Yes, each event card has action buttons for View, Edit, and Delete operations. You can modify event details or remove events that are no longer needed from your tracking system.',
   },
 ];

@@ -2,9 +2,8 @@ const Footer = function () {
   return (
     <footer className='footer-section'>
       <p>
-        Amanuel Belete © {new Date().getFullYear()} Solid Waste Management
-        Services. All rights reserved.
-        Arada Cleaning office
+        Event Tracking System © {new Date().getFullYear()}. All rights reserved.
+        Built for efficient event management and organization.
       </p>
     </footer>
   )
