@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
       {
         path: "events",
         children: [
-          { index: true, element: <EventsList />, loader: eventLoader },
+          { index: true, element: <EventsList />, loader: eventLoader, errorElement: <h1>No Event List Found</h1> },
           { path: "new", element: <EventForm />, },
           { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
         ],

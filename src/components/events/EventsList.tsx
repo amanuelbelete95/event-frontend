@@ -15,8 +15,8 @@ export const loader: LoaderFunction = async () => {
     const events = await getAllEvents();
     return events;
   } catch (error) {
-    Promise.reject(error)
-    return [];
+    return Promise.reject(error)
+   
   }
 
 };
