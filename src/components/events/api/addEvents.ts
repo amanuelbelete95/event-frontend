@@ -1,8 +1,10 @@
+
+import { EventFormTypes } from "../components/EventForm";
 import { BASE_URL } from "../constants";
-import { Event } from "../events.type";
+
 
 export const addEvents = async (
-    event: Event
+    event: EventFormTypes
 ): Promise<Event | null> => {
     try {
         const response = await fetch(`${BASE_URL}/api/events`, {

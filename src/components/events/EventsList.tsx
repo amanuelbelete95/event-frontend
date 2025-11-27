@@ -154,6 +154,7 @@ const EventList = () => {
 
   return (
     <Box px={4} display={'flex'} flexDirection={'column'} alignItems={'center'} width={'100%'} justifyContent={'center'}>
+      <Button onClick={() => navigate("new")}>Add Event</Button>
       <BasicTable data={addisEvent} columns={columns} />
     </Box>
   );
