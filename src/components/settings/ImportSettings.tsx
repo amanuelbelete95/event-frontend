@@ -11,7 +11,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import { Form } from "react-router-dom";
 import * as XLSX from "xlsx";
-import BasicTable from "../table/BasicTable";
 
 
 
@@ -53,9 +52,8 @@ function ImportSettings() {
       header: key,
       accessorKey: key,
       cell: ({ getValue, row, column }) => {
-        const initialValue = getValue();
-        console.log("row", row);
-        const [value, setValue] = useState(initialValue ?? "");
+      
+      
 
         const onBlur = () => {
           setData((old) => {
@@ -66,7 +64,7 @@ function ImportSettings() {
         };
 
         const errorMessage = getErrorMessage(row, column);
-        console.log("errorMessage", errorMessage)
+      
         return (
           <Tooltip
             label={errorMessage}

@@ -10,9 +10,6 @@ import NoMatch from "./components/nomatch/NoMatch";
 
 import EventForm from "./components/events/components/EventForm";
 
-// Admin
-import ImportSettings from "./components/settings/ImportSettings";
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -27,9 +24,9 @@ export const router = createBrowserRouter([
           { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
         ],
       },
-      {
-        path: "settings", element: <ImportSettings />
-      },
+      // {
+      //   path: "settings", element: <ImportSettings />
+      // },
       { path: "contact", element: <Contacts /> },
       { path: "*", element: <NoMatch /> },
     ],
