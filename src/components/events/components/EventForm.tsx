@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import NormalInputField from "./Input";
 import { schema as eventCreateUpdateSchema } from "../schema";
 import { useMutation } from "@tanstack/react-query";
-import { addEvents } from "../api/addEvents";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 
@@ -32,7 +31,8 @@ export default function EventForm(props) {
         handleSubmit,
         formState: { errors },
     } = useForm<EventFormTypes>({
-    resolver: yupResolver(eventCreateUpdateSchema),
+        defaultValues: initialValues,
+        resolver: yupResolver(eventCreateUpdateSchema),
   })
    
     const { mutate} = useMutation({
