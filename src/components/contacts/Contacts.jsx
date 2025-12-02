@@ -1,86 +1,166 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './style.css';
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  VStack,
+  Heading,
+  Text,
+  HStack,
+  Link,
+  useToast,
+  Card,
+  CardBody,
+  Divider
+} from '@chakra-ui/react';
 
 function Contacts() {
   const navigate = useNavigate();
+  const toast = useToast();
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    request: ''
+  });
 
-  // Function to handle form submission
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (!formData.name || !formData.address || !formData.request) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // You can add your logic here to handle form submission, like sending data to a server
-    // For now, let's just navigate to the confirmation page
+    toast({
+      title: "Request Submitted",
+      description: "Your request has been submitted successfully",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+
+    // Navigate to confirmation page
     navigate('/request-conformation');
   };
 
   return (
-    <div className='form-container'>
-      <form onSubmit={handleSubmit}>
-        <div className='form-control'>
-          <label htmlFor='name'>Name:</label>
-          <input
-            type='text'
-            id='name'
-            placeholder='Your name'
-            required
-          />
-        </div>
-        <div className='form-control'>
-          <label htmlFor='address'>Address:</label>
-          <input
-            type='text'
-            id='address'
-            placeholder='Your address'
-            required
-          />
-        </div>
+    <Box maxW="600px" mx="auto" p={6}>
+      <Card shadow="md">
+        <CardBody>
+          <VStack spacing={6} align="stretch">
+            <Heading size="lg" textAlign="center" color="blue.600">
+              Contact Us
+            </Heading>
 
-        <div className='form-control'>
-          <label htmlFor='text-area'>Please Provide Your Request:</label>
-          <textarea
-            name='text-area'
-            placeholder='Please provide your request'
-            id='text-area'
-            cols='30'
-            rows='10'
-            required></textarea>
-        </div>
-        <div className='button-container'>
-          <button type='submit'>Submit Request</button>
-        </div>
-      </form>
-      {/* Social media links */}
-      <div className='social-media-links'>
-        <p>Follow us on social media:</p>
-        <ul>
-          <li>
-            <a
-              href='https://www.example.com/facebook'
-              target='_blank'
-              rel='noopener noreferrer'>
-              Facebook
-            </a>
-          </li>
-          <li>
-            <a
-              href='https://www.example.com/twitter'
-              target='_blank'
-              rel='noopener noreferrer'>
-              Twitter
-            </a>
-          </li>
-          <li>
-            <a
-              href='https://www.example.com/linkedin'
-              target='_blank'
-              rel='noopener noreferrer'>
-              LinkedIn
-            </a>
-          </li>
-          {/* Add more social media links as needed */}
-        </ul>
-      </div>
-    </div>
+            <Text textAlign="center" color="gray.600">
+              Have questions or need assistance? Send us your request and we'll get back to you.
+            </Text>
+
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={4} align="stretch">
+                <FormControl isRequired>
+                  <FormLabel fontWeight="semibold">Name</FormLabel>
+                  <Input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Your full name"
+                    bg="white"
+                  />
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel fontWeight="semibold">Address</FormLabel>
+                  <Input
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="Your address"
+                    bg="white"
+                  />
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel fontWeight="semibold">Request Details</FormLabel>
+                  <Textarea
+                    name="request"
+                    value={formData.request}
+                    onChange={handleInputChange}
+                    placeholder="Please provide details of your request"
+                    rows={6}
+                    bg="white"
+                  />
+                </FormControl>
+
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  size="lg"
+                  width="full"
+                  _hover={{ bg: "blue.600" }}
+                >
+                  Submit Request
+                </Button>
+              </VStack>
+            </form>
+
+            <Divider />
+
+            <Box>
+              <Text fontWeight="semibold" mb={3}>Follow us on social media:</Text>
+              <HStack spacing={4} justify="center">
+                <Link
+                  href="https://www.facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="blue.500"
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Facebook
+                </Link>
+                <Link
+                  href="https://www.twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="blue.400"
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Twitter
+                </Link>
+                <Link
+                  href="https://www.linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="blue.600"
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  LinkedIn
+                </Link>
+              </HStack>
+            </Box>
+          </VStack>
+        </CardBody>
+      </Card>
+    </Box>
   );
 }
 

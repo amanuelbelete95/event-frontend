@@ -26,11 +26,10 @@ const Home = () => {
   return (
     <Box className='home-container'>
       <Box className='hero-section'>
-        <h1>Clean, Reuse and Recycle</h1>
+        <h1>Event Tracking System</h1>
         <p>
-          Explore frequently asked questions to learn more about solid waste
-          management and how we maintain cleanliness and safety in the
-          environment.
+          Streamline your event management process with our comprehensive tracking system.
+          Plan, organize, and monitor events from start to finish with ease.
         </p>
       </Box>
 

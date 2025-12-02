@@ -1,6 +1,5 @@
 import {
-  createBrowserRouter,
-  redirect,
+  createBrowserRouter
 } from "react-router-dom";
 import Contacts from "./components/contacts/Contacts";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
@@ -9,8 +8,7 @@ import Home from "./components/home/Home";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
 
-// Admin
-import ImportSettings from "./components/settings/ImportSettings";
+import EventForm from "./components/events/components/EventForm";
 
 export const router = createBrowserRouter([
   {
@@ -21,14 +19,14 @@ export const router = createBrowserRouter([
       {
         path: "events",
         children: [
-          { index: true, element: <EventsList />, loader: eventLoader },
-          // { path: "new", element: <EventNew /> },
+          { index: true, element: <EventsList />, loader: eventLoader, errorElement: <h1>No Event List Found</h1> },
+          { path: "new", element: <EventForm />, },
           { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
         ],
       },
-      {
-        path: "settings", element: <ImportSettings />
-      },
+      // {
+      //   path: "settings", element: <ImportSettings />
+      // },
       { path: "contact", element: <Contacts /> },
       { path: "*", element: <NoMatch /> },
     ],
