@@ -14,7 +14,6 @@ export const loader: LoaderFunction = async () => {
     return events;
   } catch (error) {
     return Promise.reject(error)
-   
   }
 
 };
@@ -69,7 +68,7 @@ const EventList = () => {
   }, [events, searchTerm]);
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'completed': return 'green';
       case 'in_progress': return 'blue';
       case 'todo': return 'yellow';

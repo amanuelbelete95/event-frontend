@@ -18,6 +18,6 @@ export const addEvents = async (
         const newAddisEvent: Event = await response.json();
         return newAddisEvent;
     } catch (error) {
-        return Promise.reject();
+        throw error;
     }
 };

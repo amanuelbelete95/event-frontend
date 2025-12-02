@@ -36,5 +36,10 @@ export default [
                 version: 'detect',
             },
         },
+        "env": {
+            "browser": true, // <--- Add this line
+            "es2021": true,
+            "node": true    // Keep this if you also have Node.js code
+        },
     },
 ];
