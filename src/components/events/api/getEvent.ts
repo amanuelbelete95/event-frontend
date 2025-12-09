@@ -6,10 +6,9 @@ export const getEventById = async (id: string): Promise<EventAPIResponse> => {
     const response = await fetch(`${BASE_URL}/api/events/${id}`);
   
     if (response.status !== 200) {
-      const errorBody = await response.json(); 
-      console.error(`Resource Error: ${errorBody.message}`)
-      throw new Error(`Server error: ${errorBody.message}`);
-    
+      const errorBody = await response.json();
+      const errorMessage = errorBody.message || `HTTP error! status: ${response.status}`;
+      throw new Error(`Server error: ${errorMessage}`);
     }
     return await response.json() as EventAPIResponse;
 
