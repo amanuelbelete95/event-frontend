@@ -8,8 +8,8 @@ import { useToast } from '@chakra-ui/react'
 
 
 export const loader: LoaderFunction = async ({params}): Promise<EventAPIResponse> => {
-    const { eventId } = params
-    const event = await getEventById(eventId ?? "")
+    const { id } = params
+    const event = await getEventById(id ?? "")
     return event;
 }
 
