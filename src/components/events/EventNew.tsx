@@ -6,9 +6,7 @@ import EventForm from './components/EventForm';
 function NewEvent() {
     const navigate = useNavigate();
 
-    const handleCreateEvent = async (data) => {
-        return await addEvents(data);
-    };
+    
 
     const handleSuccess = () => {
         navigate('/events');

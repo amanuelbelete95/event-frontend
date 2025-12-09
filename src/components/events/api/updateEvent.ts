@@ -1,9 +1,10 @@
 import { BASE_URL } from '../constants';
 import { Event, EventAPIResponse } from '../events.type';
+import { CreateUpdateEvent } from '../schema';
 
 
 
-const updateEvent = async (eventData: Event, id: string) => {
+const updateEvent = async (eventData: CreateUpdateEvent, id: string): Promise<EventAPIResponse> => {
   try {
         const response = await fetch(`${BASE_URL}/api/events/${id}`, {
             method: "PUT",
@@ -18,7 +19,7 @@ const updateEvent = async (eventData: Event, id: string) => {
             throw new Error(errorData.message || 'Failed to update event');
         }
 
-        const updatedEvent: EventAPIResponse = await response.json();
+        const updatedEvent = await response.json();
         return updatedEvent;
     } catch (error) {
          return Promise.reject(error)

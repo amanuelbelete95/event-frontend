@@ -1,28 +1,24 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Select, VStack } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Select, VStack } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EventAPIResponse } from "../events.type";
-import { CreateUpdateEvent,  createUpdateEventSchema } from "../schema";
-import NormalInputField from "./Input";
+import { CreateUpdateEvent, createUpdateEventSchema } from "../schema";
 
 
 
 
 
 export interface EventFormProps {
-    schema?: any;
-    initialValues?: any;
+    initialValues?: EventAPIResponse;
     onConfirm?: (data: CreateUpdateEvent) => Promise<EventAPIResponse>
     onSuccess?: (data: EventAPIResponse) => void;
     onError?: (error: any) => void;
-    title?: string;
-    formName?: string,
+    title: string;
 }
 
 export default function EventForm(props: EventFormProps) {
     const {
-        schema,
         initialValues,
         onConfirm,
         onSuccess,
@@ -35,7 +31,7 @@ export default function EventForm(props: EventFormProps) {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<Event>({
+    } = useForm<CreateUpdateEvent>({
         defaultValues: initialValues,
         mode: "onTouched",
         resolver: yupResolver(createUpdateEventSchema),
@@ -59,30 +55,27 @@ export default function EventForm(props: EventFormProps) {
             </Heading>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack spacing={4} align="stretch">
-                    <NormalInputField<Event>
-                        label="Event Name"
-                        name="name"
-                        register={register}
-                        required={true}
-                        error={errors.name}
-                        placeholder="Enter event name"
-                    />
-                    <NormalInputField
-                        label="Location"
-                        name="location"
-                        register={register}
-                        required={true}
-                        error={errors.location}
-                        placeholder="Enter event location"
-                    />
-                    <NormalInputField
-                        label="Event Date"
-                        name="event_date"
-                        register={register}
-                        required={true}
-                        error={errors.event_date}
-                        type="date"
-                    />
+                    <FormControl>
+                        <FormLabel fontWeight="semibold">Name</FormLabel>
+                         <Input
+                        {...register("name")}
+                        type={"text"}/>
+                        </FormControl>
+                                   
+                                   <FormLabel fontWeight="semibold">Date</FormLabel>
+                                   <Input
+                        
+                                       {...register("event_date")}
+                                       type={"date"}
+                                      
+                                   />
+                                   <FormLabel fontWeight="semibold">Location</FormLabel>
+                                   <Input
+                        
+                                       {...register("location")}
+                                       type={"text"}
+                                       
+                                   />
 
                     <FormControl isInvalid={!!errors.event_status}>
                         <FormLabel fontWeight="semibold">Event Status</FormLabel>
