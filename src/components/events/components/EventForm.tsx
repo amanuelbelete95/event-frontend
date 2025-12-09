@@ -1,71 +1,54 @@
-import { Flex, Button, Select, FormControl, FormLabel, FormErrorMessage, Box, VStack, Heading, useToast } from "@chakra-ui/react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import NormalInputField from "./Input";
-import { schema as eventCreateUpdateSchema } from "../schema";
-import { useMutation } from "@tanstack/react-query";
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Select, VStack } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { EventAPIResponse } from "../events.type";
+import { CreateUpdateEvent,  createUpdateEventSchema } from "../schema";
+import NormalInputField from "./Input";
 
-export interface EventFormTypes {
-    name: string;
-    location: string;
-    event_status: string;
-    event_date: string;
-}
+
+
+
 
 export interface EventFormProps {
     schema?: any;
     initialValues?: any;
-    onConfirm?: (data: any) => void;
-    onSuccess?: (data: any) => void;
+    onConfirm?: (data: CreateUpdateEvent) => Promise<EventAPIResponse>
+    onSuccess?: (data: EventAPIResponse) => void;
     onError?: (error: any) => void;
     title?: string;
+    formName?: string,
 }
 
 export default function EventForm(props: EventFormProps) {
     const {
         schema,
-        initialValues = { name: '', location: '', event_status: 'todo', event_date: '' },
-        onConfirm = () => Promise.resolve(null),
-        onSuccess = () => {},
-        onError = () => {},
-        title = "Create Event"
+        initialValues,
+        onConfirm,
+        onSuccess,
+        onError,
+        title,
     } = props;
-    const toast = useToast();
+   
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<EventFormTypes>({
+    } = useForm<Event>({
         defaultValues: initialValues,
-        resolver: yupResolver(eventCreateUpdateSchema),
+        mode: "onTouched",
+        resolver: yupResolver(createUpdateEventSchema),
     });
 
     const { mutate } = useMutation({
         mutationFn: onConfirm,
-        onSuccess: (data) => {
-            toast({
-                title: "Success",
-                description: "Event saved successfully",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
-            onSuccess(data);
-        },
-        onError: (error: any) => {
-            toast({
-                title: "Error",
-                description: error.message || "Failed to save event",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            });
-            onError(error);
-        },
+        onSuccess: onSuccess,
+        onError: onError,
+        
     });
 
-    const onSubmit: SubmitHandler<EventFormTypes> = (data) => {
+    const onSubmit: SubmitHandler<CreateUpdateEvent> = (data) => {
         mutate(data);
     };
 
@@ -76,7 +59,7 @@ export default function EventForm(props: EventFormProps) {
             </Heading>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack spacing={4} align="stretch">
-                    <NormalInputField<EventFormTypes>
+                    <NormalInputField<Event>
                         label="Event Name"
                         name="name"
                         register={register}
@@ -128,7 +111,7 @@ export default function EventForm(props: EventFormProps) {
                         loadingText="Saving..."
                         _hover={{ bg: "blue.600" }}
                     >
-                        Save Event
+                        New Event
                     </Button>
                 </VStack>
             </form>

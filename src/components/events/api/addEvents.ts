@@ -1,11 +1,12 @@
 
-import { EventFormTypes } from "../components/EventForm";
 import { BASE_URL } from "../constants";
+import { EventAPIResponse } from "../events.type";
+import { CreateUpdateEvent } from "../schema";
 
 
 export const addEvents = async (
-    event: EventFormTypes
-): Promise<Event | null> => {
+    event: CreateUpdateEvent
+): Promise<EventAPIResponse> => {
     try {
         const response = await fetch(`${BASE_URL}/api/events`, {
             method: "POST",
@@ -14,10 +15,13 @@ export const addEvents = async (
               },
             body: JSON.stringify(event),
         });
-        if (!response.ok) throw new Error("Failed to add event");
-        const newAddisEvent: Event = await response.json();
+         if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to create event');
+        }
+        const newAddisEvent: EventAPIResponse = await response.json();
         return newAddisEvent;
     } catch (error) {
-        throw error;
+        return Promise.reject(error)
     }
 };

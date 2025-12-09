@@ -1,8 +1,8 @@
 import { BASE_URL } from "../constants";
-import { Event } from "../events.type";
+import { Event, EventAPIResponse } from "../events.type";
 
 
-const getAllEvents = async (): Promise<Event[]> => {
+const getAllEvents = async (): Promise<EventAPIResponse[]> => {
   try {
     const response = await fetch(`${BASE_URL}/api/events`);
     if (!response.ok) {
@@ -11,7 +11,7 @@ const getAllEvents = async (): Promise<Event[]> => {
     const events = await response.json();
     return events;
   } catch (error) {
-    throw error;
+   return Promise.reject(error)
   }
 };
 

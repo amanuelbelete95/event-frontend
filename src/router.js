@@ -7,8 +7,9 @@ import EventsList, { loader as eventLoader } from "./components/events/EventsLis
 import Home from "./components/home/Home";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
-
-import EventForm from "./components/events/components/EventForm";
+import EventNew from "./components/events/EventNew"
+import { loader as eventEditLoader } from "./components/events/EventEdit"
+import EventEdit from "./components/events/EventEdit";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,8 @@ export const router = createBrowserRouter([
         path: "events",
         children: [
           { index: true, element: <EventsList />, loader: eventLoader, errorElement: <h1>No Event List Found</h1> },
-          { path: "new", element: <EventForm />, },
+          { path: "new", element: <EventNew />, },
+          { path: "edit/:id", element: <EventEdit router={eventEditLoader} />, },
           { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
         ],
       },

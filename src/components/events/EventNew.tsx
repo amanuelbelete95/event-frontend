@@ -6,7 +6,7 @@ import EventForm from './components/EventForm';
 function NewEvent() {
     const navigate = useNavigate();
 
-    const handleCreateEvent = async (data: any) => {
+    const handleCreateEvent = async (data) => {
         return await addEvents(data);
     };
 
@@ -24,10 +24,10 @@ function NewEvent() {
                 initialValues={{
                     name: '',
                     location: '',
-                    event_status: 'todo',
+                    event_status: '',
                     event_date: '',
                 }}
-                onConfirm={handleCreateEvent}
+                onConfirm={addEvents}
                 onSuccess={handleSuccess}
                 onError={handleError}
                 title="Create New Event"
