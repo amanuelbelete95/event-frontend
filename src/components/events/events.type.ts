@@ -1,6 +1,5 @@
 
 export interface Event {
-  event_id: string;
   name: string;
   event_date: string;
   event_status: string;
@@ -12,7 +11,7 @@ export interface EventAPIResponse {
   event_id: string;
   name: string;
   location: string;
-  event_date?: string;
-  event_status?: string;
+  event_date: string;
+  event_status: string;
   description?: string;
 }

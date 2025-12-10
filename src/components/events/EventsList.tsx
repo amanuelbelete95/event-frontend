@@ -4,10 +4,11 @@ import { EventDesignSystem } from './designSystem';
 import { useMemo, useState } from 'react';
 import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
 import getAllEvents from './api/getAllEvents';
-import { Event } from './events.type';
+import { Event, EventAPIResponse } from './events.type';
 import { EVENTS_ROUTES } from './routes';
 import { onDelete } from './api/deleteEvents';
 import { DeleteIcon, EditIcon, ViewIcon, SearchIcon, AddIcon } from '@chakra-ui/icons';
+import DetailActions from '../DetailActions';
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -23,62 +24,10 @@ export const loader: LoaderFunction = async () => {
 
 const EventList = () => {
   const navigate = useNavigate();
-  const events = useLoaderData() as Event[];
-  const toast = useToast();
+  const events = useLoaderData() as EventAPIResponse[];
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await onDelete(id);
-      if (response.ok) {
-        toast({
-          title: "Event Deleted Successfully",
-          status: 'success',
-          description: "The event has been successfully deleted from the system.",
-          duration: 3000,
-          isClosable: true,
-        });
-        // Note: In a real app, you'd invalidate the query cache here
-      } else {
-        const errorData = await response.json();
-        toast({
-          title: "Error Deleting Event",
-          status: 'error',
-          description: errorData.message || "The event was not found or could not be deleted.",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        status: 'error',
-        description: error.message || "An unexpected error occurred while deleting the event.",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const filteredEvents = useMemo(() => {
-    return events.filter(event =>
-      event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.event_status.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [events, searchTerm]);
-
-  const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'completed': return 'green';
-      case 'in_progress': return 'blue';
-      case 'todo': return 'yellow';
-      case 'postponed': return 'orange';
-      case 'cancelled': return 'red';
-      default: return 'gray';
-    }
-  };
-
+  
   return (
     <Box p={6} maxW="1200px" mx="auto" bg="gray.50" minHeight="100vh">
       <Flex mb={6} align="center" direction={{ base: 'column', md: 'row' }} gap={4}>
@@ -109,7 +58,7 @@ const EventList = () => {
       </Flex>
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={16} borderRadius={"md"} >
-        {filteredEvents.map((event) => (
+        {events.map((event) => (
           <Card
             key={event.event_id}
             shadow={EventDesignSystem.card.shadow}
@@ -155,49 +104,17 @@ const EventList = () => {
               </VStack>
 
               <HStack spacing={3} mt={4} justify="flex-end" p={3} bg="gray.50" borderRadius="md">
-                <IconButton
-                  aria-label="View event"
-                  icon={<ViewIcon fontSize="lg" />}
-                  size={EventDesignSystem.button.icon.view.size}
-                  colorScheme={EventDesignSystem.button.icon.view.colorScheme}
-                  bg={EventDesignSystem.button.icon.view.bg}
-                  color={EventDesignSystem.button.icon.view.color}
-                  _hover={EventDesignSystem.button.icon.view._hover}
-                  onClick={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
-                  borderRadius="md"
-                  transition="all 0.2s"
-                />
-                <IconButton
-                  aria-label="Edit event"
-                  icon={<EditIcon fontSize="lg" />}
-                  size={EventDesignSystem.button.icon.edit.size}
-                  colorScheme={EventDesignSystem.button.icon.edit.colorScheme}
-                  bg={EventDesignSystem.button.icon.edit.bg}
-                  color={EventDesignSystem.button.icon.edit.color}
-                  _hover={EventDesignSystem.button.icon.edit._hover}
-                  onClick={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
-                  borderRadius="md"
-                  transition="all 0.2s"
-                />
-                <IconButton
-                  aria-label="Delete event"
-                  icon={<DeleteIcon fontSize="lg" />}
-                  size={EventDesignSystem.button.icon.delete.size}
-                  colorScheme={EventDesignSystem.button.icon.delete.colorScheme}
-                  bg={EventDesignSystem.button.icon.delete.bg}
-                  color={EventDesignSystem.button.icon.delete.color}
-                  _hover={EventDesignSystem.button.icon.delete._hover}
-                  onClick={() => handleDelete(event.event_id)}
-                  borderRadius="md"
-                  transition="all 0.2s"
-                />
+                
+                <DetailActions 
+                handleEdit={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))} 
+                handleView={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}/>
               </HStack>
             </CardBody>
           </Card>
         ))}
       </SimpleGrid>
 
-      {filteredEvents.length === 0 && (
+      {events.length === 0 && (
         <Box textAlign="center" py={10} bg="white" borderRadius="lg" borderWidth="1px" borderColor="gray.200">
           <Text fontSize="xl" color="gray.500" fontWeight="medium">
             {searchTerm ? '🔍 No events found matching your search.' : '📅 No events available.'}

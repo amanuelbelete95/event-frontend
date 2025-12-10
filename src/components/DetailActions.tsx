@@ -3,8 +3,8 @@ import React from "react";
 import { Button, ButtonGroup, HStack } from "@chakra-ui/react";
 
 interface DetailActionProps {
-  handleView?: () => void;
-  handleEdit?: () => void;
+  handleView: () => void;
+  handleEdit: () => void;
   handleDelete?: () => void;
 }
 

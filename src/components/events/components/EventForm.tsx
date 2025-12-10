@@ -11,7 +11,7 @@ import { EventDesignSystem } from "../designSystem";
 
 
 export interface EventFormProps {
-    initialValues?: EventAPIResponse;
+    initialValues?: CreateUpdateEvent;
     onConfirm?: (data: CreateUpdateEvent) => Promise<EventAPIResponse>
     onSuccess?: (data: EventAPIResponse) => void;
     onError?: (error: any) => void;
