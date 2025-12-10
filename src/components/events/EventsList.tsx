@@ -1,4 +1,3 @@
-
 import { Box, Button, HStack, VStack, Text, Badge, useToast, Input, InputGroup, InputLeftElement, SimpleGrid, Card, CardBody, CardHeader, Heading, IconButton, Flex, Spacer } from '@chakra-ui/react';
 import { EventDesignSystem } from './designSystem';
 import { useMemo, useState } from 'react';
@@ -20,14 +19,44 @@ export const loader: LoaderFunction = async () => {
 
 };
 
-
-
 const EventList = () => {
   const navigate = useNavigate();
   const events = useLoaderData() as EventAPIResponse[];
   const [searchTerm, setSearchTerm] = useState('');
+  const toast = useToast();
 
-  
+  const handleDelete = async (event_id: string) => {
+    try {
+      await onDelete(event_id);
+      toast({
+        title: "Event Deleted",
+        description: "Event deleted successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      // Refresh the page to update the events list
+      window.location.reload();
+    } catch (error: any) {
+      toast({
+        title: "Error deleting event",
+        description: error.message || "Failed to delete event",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      console.error(error);
+    }
+  };
+
+  const filteredEvents = useMemo(() => {
+    return events.filter(event =>
+      event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.event_status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [events, searchTerm]);
+
   return (
     <Box p={6} maxW="1200px" mx="auto" bg="gray.50" minHeight="100vh">
       <Flex mb={6} align="center" direction={{ base: 'column', md: 'row' }} gap={4}>
@@ -58,7 +87,7 @@ const EventList = () => {
       </Flex>
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={16} borderRadius={"md"} >
-        {events.map((event) => (
+        {filteredEvents.map((event) => (
           <Card
             key={event.event_id}
             shadow={EventDesignSystem.card.shadow}
@@ -70,7 +99,7 @@ const EventList = () => {
             _hover={EventDesignSystem.card.hover}
             bg="white"
             padding={8}
-            
+
           >
             <CardHeader pb={2}>
               <Flex justify="space-between" align="center">
@@ -104,17 +133,19 @@ const EventList = () => {
               </VStack>
 
               <HStack spacing={3} mt={4} justify="flex-end" p={3} bg="gray.50" borderRadius="md">
-                
-                <DetailActions 
-                handleEdit={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))} 
-                handleView={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}/>
+
+                <DetailActions
+                handleEdit={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
+                handleView={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
+                handleDelete={() => handleDelete(event.event_id)}
+                />
               </HStack>
             </CardBody>
           </Card>
         ))}
       </SimpleGrid>
 
-      {events.length === 0 && (
+      {filteredEvents.length === 0 && (
         <Box textAlign="center" py={10} bg="white" borderRadius="lg" borderWidth="1px" borderColor="gray.200">
           <Text fontSize="xl" color="gray.500" fontWeight="medium">
             {searchTerm ? '🔍 No events found matching your search.' : '📅 No events available.'}
