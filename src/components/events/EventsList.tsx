@@ -108,22 +108,24 @@ const EventList = () => {
         </Button>
       </Flex>
 
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={16} borderRadius={"md"} >
         {filteredEvents.map((event) => (
           <Card
             key={event.event_id}
             shadow={EventDesignSystem.card.shadow}
-            borderRadius={EventDesignSystem.card.borderRadius}
+            borderRadius={"lg"}
             overflow="hidden"
             borderWidth={EventDesignSystem.card.borderWidth}
             borderColor={EventDesignSystem.card.borderColor}
             transition={EventDesignSystem.card.transition}
             _hover={EventDesignSystem.card.hover}
             bg="white"
+            padding={8}
+            
           >
             <CardHeader pb={2}>
               <Flex justify="space-between" align="center">
-                <Heading size="md" color={EventDesignSystem.primaryColor} noOfLines={1} fontWeight="semibold">
+                <Heading size="lg" color={EventDesignSystem.primaryColor} noOfLines={1} fontWeight="semibold">
                   {event.name}
                 </Heading>
                 <Badge
@@ -152,32 +154,42 @@ const EventList = () => {
                 )}
               </VStack>
 
-              <HStack spacing={2} mt={4} justify="flex-end" p={2} bg="gray.50" borderRadius="md">
+              <HStack spacing={3} mt={4} justify="flex-end" p={3} bg="gray.50" borderRadius="md">
                 <IconButton
                   aria-label="View event"
-                  icon={<ViewIcon />}
-                  size="sm"
-                  colorScheme="blue"
-                  variant="outline"
+                  icon={<ViewIcon fontSize="lg" />}
+                  size={EventDesignSystem.button.icon.view.size}
+                  colorScheme={EventDesignSystem.button.icon.view.colorScheme}
+                  bg={EventDesignSystem.button.icon.view.bg}
+                  color={EventDesignSystem.button.icon.view.color}
+                  _hover={EventDesignSystem.button.icon.view._hover}
                   onClick={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
+                  borderRadius="md"
+                  transition="all 0.2s"
                 />
                 <IconButton
                   aria-label="Edit event"
-                  icon={<EditIcon />}
-                  size="sm"
-                  colorScheme="yellow"
-                  variant="solid"
+                  icon={<EditIcon fontSize="lg" />}
+                  size={EventDesignSystem.button.icon.edit.size}
+                  colorScheme={EventDesignSystem.button.icon.edit.colorScheme}
+                  bg={EventDesignSystem.button.icon.edit.bg}
+                  color={EventDesignSystem.button.icon.edit.color}
+                  _hover={EventDesignSystem.button.icon.edit._hover}
                   onClick={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
-                  _hover={{ transform: "scale(1.05)" }}
+                  borderRadius="md"
+                  transition="all 0.2s"
                 />
                 <IconButton
                   aria-label="Delete event"
-                  icon={<DeleteIcon />}
-                  size="sm"
-                  colorScheme={EventDesignSystem.primaryColor}
-                  variant="solid"
+                  icon={<DeleteIcon fontSize="lg" />}
+                  size={EventDesignSystem.button.icon.delete.size}
+                  colorScheme={EventDesignSystem.button.icon.delete.colorScheme}
+                  bg={EventDesignSystem.button.icon.delete.bg}
+                  color={EventDesignSystem.button.icon.delete.color}
+                  _hover={EventDesignSystem.button.icon.delete._hover}
                   onClick={() => handleDelete(event.event_id)}
-                  _hover={{ transform: "scale(1.05)" }}
+                  borderRadius="md"
+                  transition="all 0.2s"
                 />
               </HStack>
             </CardBody>

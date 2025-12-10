@@ -8,7 +8,7 @@ export const getEventById = async (id: string): Promise<EventAPIResponse> => {
     if (response.status !== 200) {
       const errorBody = await response.json();
       const errorMessage = errorBody.message || `HTTP error! status: ${response.status}`;
-      throw new Error(`Server error: ${errorMessage}`);
+      throw new Error(`${errorMessage}`);
     }
     return await response.json() as EventAPIResponse;
 

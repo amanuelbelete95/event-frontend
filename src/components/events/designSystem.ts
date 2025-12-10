@@ -56,6 +56,41 @@ export const EventDesignSystem = {
         bg: "primaryLight",
         color: "white"
       }
+    },
+    icon: {
+      view: {
+        colorScheme: "blue",
+        bg: "blue.50",
+        color: "blue.600",
+        _hover: {
+          bg: "blue.100",
+          transform: "translateY(-1px)"
+        },
+        size: "md",
+        iconSize: "sm"
+      },
+      edit: {
+        colorScheme: "yellow",
+        bg: "yellow.50",
+        color: "yellow.600",
+        _hover: {
+          bg: "yellow.100",
+          transform: "translateY(-1px)"
+        },
+        size: "md",
+        iconSize: "sm"
+      },
+      delete: {
+        colorScheme: "red",
+        bg: "red.50",
+        color: "red.600",
+        _hover: {
+          bg: "red.100",
+          transform: "translateY(-1px)"
+        },
+        size: "md",
+        iconSize: "sm"
+      }
     }
   },
 
