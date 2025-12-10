@@ -4,8 +4,10 @@ import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom'
 import { getEventById } from "../events/api/getEvent"
 import updateEvent from './api/updateEvent'
 import { EventAPIResponse } from './events.type'
-import { useToast } from '@chakra-ui/react'
+import { createStandaloneToast} from '@chakra-ui/react'
 
+
+const { toast } = createStandaloneToast()
 
 export const loader: LoaderFunction = async ({params}): Promise<EventAPIResponse> => {
     const { id } = params
@@ -15,9 +17,8 @@ export const loader: LoaderFunction = async ({params}): Promise<EventAPIResponse
 
 const EventEdit = () =>  {
 const event = useLoaderData() as EventAPIResponse;
-console.log(event)
 const navigate = useNavigate()
-const toast = useToast()
+;
 
   return (
     <div>
@@ -25,7 +26,16 @@ const toast = useToast()
         initialValues={event} 
         onConfirm={(data) => updateEvent(data, event.event_id)}
         onSuccess={() => {
-            navigate("./events")
+
+          toast({
+             title: "Event Updated",
+             description:"Event updated successfully",
+             status: "success",
+             duration: 5000,
+             isClosable: true,
+            })
+            navigate("/events")
+
         }}
         onError={(err) => {
            toast({

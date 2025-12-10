@@ -74,7 +74,6 @@ export default function EventForm(props: EventFormProps) {
                     <FormControl>
                         <FormLabel
                           fontWeight="semibold"
-                          color={EventDesignSystem.form.label.color}
                           fontSize="md"
                         >
                           🏷️ Event Name
@@ -82,14 +81,11 @@ export default function EventForm(props: EventFormProps) {
                         <Input
                           {...register("name")}
                           type="text"
-                          borderColor={EventDesignSystem.form.input.borderColor}
-                          _focus={EventDesignSystem.form.input._focus}
-                          size="lg"
                           placeholder="Enter event name"
                         />
                         </FormControl>
                                    
-                                   <FormLabel
+                          <FormLabel
                                      fontWeight="semibold"
                                      color={EventDesignSystem.form.label.color}
                                      fontSize="md"
@@ -99,9 +95,7 @@ export default function EventForm(props: EventFormProps) {
                                    <Input
                                      {...register("event_date")}
                                      type="date"
-                                     borderColor={EventDesignSystem.form.input.borderColor}
-                                     _focus={EventDesignSystem.form.input._focus}
-                                     size="lg"
+                                   
                                    />
                                    <FormLabel
                                      fontWeight="semibold"
@@ -113,10 +107,7 @@ export default function EventForm(props: EventFormProps) {
                                    <Input
                                      {...register("location")}
                                      type="text"
-                                     borderColor={EventDesignSystem.form.input.borderColor}
-                                     _focus={EventDesignSystem.form.input._focus}
-                                     size="lg"
-                                     placeholder="Enter event location"
+                          
                                    />
 
                     <FormControl isInvalid={!!errors.event_status}>
@@ -131,8 +122,7 @@ export default function EventForm(props: EventFormProps) {
                           {...register("event_status")}
                           placeholder="Select status"
                           bg="white"
-                          borderColor={EventDesignSystem.form.input.borderColor}
-                          _focus={EventDesignSystem.form.input._focus}
+              
                           size="lg"
                         >
                             <option value="todo">Todo</option>
