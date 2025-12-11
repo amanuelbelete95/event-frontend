@@ -1,25 +1,22 @@
-import { Box, Button, HStack, VStack, Text, Badge, useToast, Input, InputGroup, InputLeftElement, SimpleGrid, Card, CardBody, CardHeader, Heading, IconButton, Flex, Spacer } from '@chakra-ui/react';
-import { EventDesignSystem } from './designSystem';
+import { AddIcon, SearchIcon } from '@chakra-ui/icons';
+import { Badge, Box, Button, Card, CardBody, CardHeader, Flex, Heading, HStack, Input, InputGroup, InputLeftElement, SimpleGrid, Spacer, Text, useToast, VStack } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
-import getAllEvents from './api/getAllEvents';
-import { Event, EventAPIResponse } from './events.type';
-import { EVENTS_ROUTES } from './routes';
-import { onDelete } from './api/deleteEvents';
-import { DeleteIcon, EditIcon, ViewIcon, SearchIcon, AddIcon } from '@chakra-ui/icons';
-import DetailActions from '../DetailActions';
+import { EventAPIResponse } from '../events.type';
+import { EVENTS_ROUTES } from '../routes';
+import { EventDesignSystem } from '../designSystem';
+import DetailActions from '../../DetailActions';
+import { onDelete } from '../api/deleteEvents';
+import getAllEvents from '../api/getAllEvents';
 
-export const loader: LoaderFunction = async () => {
-  try {
-    const events = await getAllEvents();
-    return events;
-  } catch (error) {
-    return Promise.reject(error)
-  }
 
-};
+interface EventListProps {
+  isAdmin: boolean
+}
 
-const EventList = () => {
+
+const EventList = (props: EventListProps) => {
+  const {isAdmin} = props
   const navigate = useNavigate();
   const events = useLoaderData() as EventAPIResponse[];
   const [searchTerm, setSearchTerm] = useState('');
@@ -72,7 +69,7 @@ const EventList = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </InputGroup>
-        <Button
+       { isAdmin && <Button
           leftIcon={<AddIcon />}
           bg={EventDesignSystem.primaryColor}
           color="white"
@@ -83,7 +80,7 @@ const EventList = () => {
           boxShadow="md"
         >
           Add New Event
-        </Button>
+        </Button>}
       </Flex>
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={16} borderRadius={"md"} >
@@ -138,6 +135,7 @@ const EventList = () => {
                 handleEdit={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
                 handleView={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
                 handleDelete={() => handleDelete(event.event_id)}
+                isAdmin={isAdmin}
                 />
               </HStack>
             </CardBody>
@@ -145,7 +143,7 @@ const EventList = () => {
         ))}
       </SimpleGrid>
 
-      {filteredEvents.length === 0 && (
+      {filteredEvents.length === 0 && isAdmin && (
         <Box textAlign="center" py={10} bg="white" borderRadius="lg" borderWidth="1px" borderColor="gray.200">
           <Text fontSize="xl" color="gray.500" fontWeight="medium">
             {searchTerm ? '🔍 No events found matching your search.' : '📅 No events available.'}

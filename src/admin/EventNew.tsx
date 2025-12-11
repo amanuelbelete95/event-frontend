@@ -1,7 +1,7 @@
 import { Box, useToast } from '@chakra-ui/react';
-import { addEvents } from './api/addEvents';
-import EventForm from './components/EventForm';
 import { useNavigate } from 'react-router-dom';
+import EventForm from '../components/events/components/EventForm';
+import { addEvents } from '../components/events/api/addEvents';
 
 function NewEvent() {
     const toast = useToast();
