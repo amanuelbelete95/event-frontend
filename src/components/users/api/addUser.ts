@@ -7,7 +7,7 @@ export const addUser = async (
     user: CreateUpdateUser
 ): Promise<UserAPIResponse> => {
     try {
-        const response = await fetch(`${BASE_URL}/api/users`, {
+        const response = await fetch(`${BASE_URL}/api/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
