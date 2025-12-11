@@ -4,6 +4,8 @@ import {
 import EventEdit, { loader as eventEditLoader } from "./admin/EventEdit";
 import EventNew from "./admin/EventNew";
 import EventsAdminList, { eventListAdminLoader } from "./admin/EventsAdminList";
+import UserNew from "./admin/UserNew";
+import UsersAdminList, { loader as userListAdminLoader } from "./admin/UsersAdminList";
 import Contacts from "./components/contacts/Contacts";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
 import EventsListClient, { loader as eventListClientLoader } from "./components/events/EventsListClient";
@@ -23,8 +25,8 @@ export const router = createBrowserRouter([
           { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
         ]
       },
-
       {
+
         path: "admin/events",
         children: [
           { index: true, element: <EventsAdminList />, loader: eventListAdminLoader },
@@ -35,6 +37,13 @@ export const router = createBrowserRouter([
         ]
       }
       ,
+      {
+        path: "admin/users",
+        children: [
+          { index: true, element: <UsersAdminList />, loader: userListAdminLoader },
+          { path: "new", element: <UserNew />, },
+        ]
+      },
       { path: "contact", element: <Contacts /> },
       { path: "*", element: <NoMatch /> },
     ],
