@@ -136,7 +136,7 @@ export default function UserForm(props: UserFormProps) {
                       fontWeight="bold"
                       mt={2}
                     >
-                      {isSubmitting ? "Saving..." : (title.includes("Edit") ? "Update User" : "Create User")}
+                      {isSubmitting ? "Saving..." : `${title}`}
                     </Button>
                 </VStack>
             </form>

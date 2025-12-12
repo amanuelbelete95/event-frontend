@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Button, Tabs, TabList, Tab, TabPanels, TabPanel, useToast } from "@chakra-ui/react";
 import { useAuth } from "../../../components/auth/AuthProvider";
 import { logInUser } from "../api/logInUser";
+import NewUser from "../../../admin/users/UserNew";
+import UserForm from "./UserForm";
 
 function UserLoginLayout() {
   const { user, isAuthenticated, isLoading, login, logout } = useAuth();
@@ -77,28 +79,7 @@ function UserLoginLayout() {
         <TabPanels>
           <TabPanel>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-              />
-              <Button
-                colorScheme="blue"
-                onClick={handleLogin}
-                isLoading={isLoading}
-                isDisabled={isLoading || !username || !password}
-              >
-                Login
-              </Button>
+              <UserForm isNew={false} title="Log In"/>
 
               {isAuthenticated && user && (
                 <div style={{ marginTop: '16px', padding: '16px', background: '#f0f0f0', borderRadius: '8px' }}>
@@ -118,8 +99,7 @@ function UserLoginLayout() {
           </TabPanel>
           <TabPanel>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p>Register new user:</p>
-              {/* Your registration form should go here */}
+              <UserForm isNew={true} title={"Register"}/>
             </div>
           </TabPanel>
         </TabPanels>
