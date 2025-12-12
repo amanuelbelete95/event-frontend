@@ -1,8 +1,22 @@
+import { Navigate, Outlet } from "react-router-dom";
+
 interface ProtectedRouteProps {
   requiredRole?: 'admin' | 'user'
   redirectPath?: string;
   children?: React.ReactNode;
 }
+
+
+// const isAuthenticated = () => {
+//   return user !== null
+// }
+// const hasRole = (role) => {
+//   return user.role === role
+// }
+// const isAuthorized = (requiredRole) => {
+      // return isAuthenticated(required)
+//   return hasRole(role)
+// }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRole,

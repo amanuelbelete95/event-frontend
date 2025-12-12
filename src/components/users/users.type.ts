@@ -4,6 +4,7 @@ export interface UserAPIResponse {
     role: string;
 }
 
+
 export interface UserListResponse {
     users: UserAPIResponse[];
 }
