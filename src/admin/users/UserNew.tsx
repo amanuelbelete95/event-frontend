@@ -1,7 +1,7 @@
 import { Box, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import UserForm from '../components/users/components/UserForm';
-import { addUser } from '../components/users/api/addUser';
+import UserForm from '../../components/users/components/UserForm';
+import { addUser } from '../../components/users/api/addUser';
 
 function NewUser() {
     const toast = useToast();

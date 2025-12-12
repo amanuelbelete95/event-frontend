@@ -1,20 +1,22 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Import admin components
-import EventEdit, { loader as eventEditLoader } from "./admin/EventEdit";
-import EventNew from "./admin/EventNew";
-import EventsAdminList, { loader as eventListAdminLoader } from "./admin/EventsAdminList";
-import UserNew from "./admin/UserNew";
-import UsersAdminList from "./admin/UsersAdminList";
+import EventEdit, { loader as eventEditLoader } from "./admin/events/EventEdit";
+import EventNew from "./admin/events/EventNew";
+import EventsAdminList, { loader as eventListAdminLoader } from "./admin/events/EventsAdminList";
+import UserNew from "./admin/users/UserNew";
+import UsersAdminList from "./admin/events/EventsAdminList"
 
 // Import user components
 import Contacts from "./components/contacts/Contacts";
-import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
+import EventDetailUser, { loader as eventDetailUserLoader } from "./components/events/EventDetailUser";
+import EventDetailAdmin, { loader as eventDetailAdminLoader } from "./components/events/EventDetailAdmin";
 import EventsListClient, { loader as eventListClientLoader } from "./components/events/EventsListClient";
 import Home from "./components/home/Home";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
 
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 // Import authentication components (placeholder for future auth)
 // import AdminLayout from "./components/layout/AdminLayout";
 // import UserLayout from "./components/layout/UserLayout";
@@ -45,14 +47,6 @@ const AdminDashboard = () => {
   );
 };
 
-// User Dashboard Layout
-const UserDashboard = () => {
-  return (
-    <Layout>
-      {/* User content will be rendered here */}
-    </Layout>
-  );
-};
 
 // Create the router with proper typing
 export const router = createBrowserRouter([
@@ -68,17 +62,21 @@ export const router = createBrowserRouter([
         path: ROUTE_PATHS.EVENTS,
         children: [
           { index: true, element: <EventsListClient />, loader: eventListClientLoader },
-          { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
+          { path: "detail/:id", element: <EventDetailUser />, loader: eventDetailUserLoader },
         ]
       },
 
       // Contact route
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },
 
-      // Admin routes - protected routes (would add auth guard in real implementation)
+      // Admin routes - protected routes with role-based access control
       {
         path: ROUTE_PATHS.ADMIN,
-        element: <AdminDashboard />, // Admin layout with sidebar
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        ),
         children: [
           // Events management
           {
@@ -87,7 +85,7 @@ export const router = createBrowserRouter([
               { index: true, element: <EventsAdminList />, loader: eventListAdminLoader },
               { path: "new", element: <EventNew /> },
               { path: "edit/:id", element: <EventEdit />, loader: eventEditLoader },
-              { path: "detail/:id", element: <EventDetail />, loader: eventDetailLoader },
+              { path: "detail/:id", element: <EventDetailAdmin />, loader: eventDetailAdminLoader },
             ]
           },
 
@@ -97,9 +95,6 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <UsersAdminList /> },
               { path: "new", element: <UserNew /> },
-              // Future user management routes would go here
-              // { path: "edit/:id", element: <UserEdit />, loader: userEditLoader },
-              // { path: "detail/:id", element: <UserDetail />, loader: userDetailLoader },
             ]
           },
 

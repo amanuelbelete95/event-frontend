@@ -1,11 +1,10 @@
-import React from 'react'
 import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom'
 
 import { useToast } from '@chakra-ui/react'
-import getEventById from '../components/events/api/getEvent'
-import { EventAPIResponse } from '../components/events/events.type'
-import EventForm from '../components/events/components/EventForm'
-import updateEvent from '../components/events/api/updateEvent'
+import { EventAPIResponse } from '../../components/events/events.type'
+import getEventById from '../../components/events/api/getEvent'
+import EventForm from '../../components/events/components/EventForm'
+import updateEvent from '../../components/events/api/updateEvent'
 
 export const loader: LoaderFunction = async ({params}): Promise<EventAPIResponse> => {
     const { id } = params

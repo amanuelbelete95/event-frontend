@@ -1,6 +1,6 @@
 import { LoaderFunction } from 'react-router-dom';
-import EventList from '../components/events/EventsListClient';
-import getAllEvents from '../components/events/api/getAllEvents';
+import EventList from '../../components/events/EventsListClient';
+import getAllEvents from '../../components/events/api/getAllEvents';
 
 
 export const loader: LoaderFunction = async () => {
