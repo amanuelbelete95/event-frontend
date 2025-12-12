@@ -10,7 +10,7 @@ import UsersAdminList from "./admin/events/EventsAdminList"
 // Import user components
 import Contacts from "./components/contacts/Contacts";
 import EventDetailUser, { loader as eventDetailUserLoader } from "./components/events/EventDetailUser";
-import EventDetailAdmin, { loader as eventDetailAdminLoader } from "./components/events/EventDetailAdmin";
+import EventDetailAdmin, { loader as eventDetailAdminLoader } from "./admin/events/EventDetailAdmin";
 import EventsListClient, { loader as eventListClientLoader } from "./components/events/EventsListClient";
 import Home from "./components/home/Home";
 import Layout from "./components/layout/Layout";
@@ -73,9 +73,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTE_PATHS.ADMIN,
         element: (
-          <ProtectedRoute requiredRole="admin">
             <AdminDashboard />
-          </ProtectedRoute>
         ),
         children: [
           // Events management

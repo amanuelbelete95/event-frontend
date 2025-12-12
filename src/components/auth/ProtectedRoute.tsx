@@ -1,6 +1,3 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { isAuthorized, isAuthenticated } from '../../utils/auth';
-
 interface ProtectedRouteProps {
   requiredRole?: 'admin' | 'user'
   redirectPath?: string;
