@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { getUser } from '../users/api/getUser';
 import { UserAPIResponse } from '../users/users.type';
 
-interface User {
+export interface User {
   id: string;
   username: string;
   role: 'admin' | 'employee' | 'any';
@@ -34,6 +34,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Check if user is authenticated
   const isAuthenticated = user !== null;
+
 
   // Role-based checks with null safety
   const isAdminUser = user?.role === "admin";

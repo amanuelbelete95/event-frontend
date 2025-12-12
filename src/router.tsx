@@ -52,7 +52,10 @@ const AdminDashboard = () => {
 export const router = createBrowserRouter([
   {
     path: ROUTE_PATHS.HOME,
-    element: <Layout />,
+    element: 
+      <ProtectedRoute redirectPath="/login">
+          <Layout />
+      </ProtectedRoute>,
     children: [
       // Public routes
       { path: ROUTE_PATHS.HOME, element: <Home /> },
@@ -73,7 +76,9 @@ export const router = createBrowserRouter([
       {
         path: ROUTE_PATHS.ADMIN,
         element: (
+          <ProtectedRoute redirectPath={"/forbidden"} requiredRole="admin">
             <AdminDashboard />
+          </ProtectedRoute>
         ),
         children: [
           // Events management
@@ -108,6 +113,10 @@ export const router = createBrowserRouter([
       { path: ROUTE_PATHS.NOT_FOUND, element: <NoMatch /> },
     ],
   },
+  {
+    path: "/login",
+    element: <h1>Log In</h1>
+  }
 ]);
 
 // Export route paths for use throughout the application

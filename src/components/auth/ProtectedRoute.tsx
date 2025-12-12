@@ -1,44 +1,54 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 
 interface ProtectedRouteProps {
-  requiredRole?: 'admin' | 'user'
+  isSignedIn?: boolean;
+  requiredRole?: 'admin' | 'employee' | 'any';
   redirectPath?: string;
   children?: React.ReactNode;
 }
 
-
-// const isAuthenticated = () => {
-//   return user !== null
-// }
-// const hasRole = (role) => {
-//   return user.role === role
-// }
-// const isAuthorized = (requiredRole) => {
-      // return isAuthenticated(required)
-//   return hasRole(role)
-// }
+export type Role = "admin" | "employee" | "any";
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRole,
   redirectPath = '/',
   children
 }) => {
-  // Check if user is authenticated and authorized
-  const isAuth = isAuthenticated();
-  const isAllowed = isAuthorized(requiredRole);
+  const {isAuthenticated, isAdminUser, isEmployeeUser, isRandomUser, isLoading } = useAuth();
 
-  if (!isAuth) {
-    // User is not authenticated, redirect to login or home
+  // Handle loading state
+  if (isLoading) {
+    return <div>Loading...</div>; 
+  }
+
+  // Check authorization based on required role
+  let isAllowed = true;
+  if (requiredRole) {
+    switch (requiredRole) {
+      case 'admin':
+        isAllowed = isAdminUser;
+        break;
+      case 'employee':
+        isAllowed = isEmployeeUser;
+        break;
+      case 'any':
+        isAllowed = isRandomUser;
+        break;
+      default:
+        isAllowed = false;
+    }
+  }
+
+
+  if (!isAuthenticated) {
     return <Navigate to={redirectPath} replace />;
   }
 
-  if (!isAllowed) {
-    // User is authenticated but doesn't have required role
-    // Redirect to unauthorized page or home
-    return <Navigate to="/" replace />;
+  if (requiredRole && !isAllowed) {
+    return <Navigate to={redirectPath} replace />;
   }
 
-  // User is authenticated and authorized
   return children ? <>{children}</> : <Outlet />;
 };
 
