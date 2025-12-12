@@ -3,7 +3,7 @@ import { BASE_URL } from "../constants";
 import { UserAPIResponse } from "../users.type";
 import { CreateUpdateUser } from "../schema";
 
-export const addUser = async (
+export const registerUserUser = async (
     user: CreateUpdateUser
 ): Promise<UserAPIResponse> => {
     try {

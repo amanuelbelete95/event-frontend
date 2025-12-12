@@ -12,6 +12,7 @@ export interface UserFormProps {
     onSuccess?: (data: EventAPIResponse) => void;
     onError?: (error: any) => void;
     title: string;
+    isNew: boolean;
 }
 
 export default function UserForm(props: UserFormProps) {
@@ -21,6 +22,7 @@ export default function UserForm(props: UserFormProps) {
         onSuccess,
         onError,
         title,
+        isNew = false,
     } = props;
 
     const {
@@ -97,7 +99,7 @@ export default function UserForm(props: UserFormProps) {
                         <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid={!!errors.role}>
+                   { isNew &&  <FormControl isInvalid={!!errors.role}>
                         <FormLabel
                           fontWeight="semibold"
                           color={EventDesignSystem.form.label.color}
@@ -113,10 +115,11 @@ export default function UserForm(props: UserFormProps) {
                           size="lg"
                         >
                             <option value="admin">Admin</option>
-                            <option value="user">User</option>
+                            <option value="employee">Employee</option>
+                            <option value="any">User</option>
                         </Select>
                         <FormErrorMessage>{errors.role?.message}</FormErrorMessage>
-                    </FormControl>
+                    </FormControl>}
 
                     <Button
                       type="submit"

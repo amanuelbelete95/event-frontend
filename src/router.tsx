@@ -17,6 +17,8 @@ import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import NewUser from "./admin/users/UserNew";
+import UserLoginLayout from "./components/users/components/UserLoginLayout";
 // Import authentication components (placeholder for future auth)
 // import AdminLayout from "./components/layout/AdminLayout";
 // import UserLayout from "./components/layout/UserLayout";
@@ -115,7 +117,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <h1>Log In</h1>
+    element: <UserLoginLayout/>,
   }
 ]);
 

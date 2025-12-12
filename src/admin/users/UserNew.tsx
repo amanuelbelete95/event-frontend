@@ -1,7 +1,7 @@
 import { Box, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import UserForm from '../../components/users/components/UserForm';
-import { addUser } from '../../components/users/api/addUser';
+import { addUser } from '../../components/users/api/registerUser';
 
 function NewUser() {
     const toast = useToast();
@@ -15,7 +15,6 @@ function NewUser() {
              duration: 5000,
              isClosable: true,
         });
-        navigate("/admin/users");
     };
 
     const handleError = (error: any) => {
@@ -40,6 +39,7 @@ function NewUser() {
                 onSuccess={handleSuccess}
                 onError={handleError}
                 title="Create New User"
+                isNew={true}
             />
         </Box>
     );

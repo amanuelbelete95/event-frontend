@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectPath = '/',
   children
 }) => {
-  const {isAuthenticated, isAdminUser, isEmployeeUser, isRandomUser, isLoading } = useAuth();
+  const { isAuthenticated, isAdminUser, isEmployeeUser, isRandomUser, isLoading } = useAuth();
 
   // Handle loading state
   if (isLoading) {
@@ -42,11 +42,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
 
   if (!isAuthenticated) {
-    return <Navigate to={redirectPath} replace />;
+    return <Navigate to={redirectPath} replace={true} />;
   }
 
   if (requiredRole && !isAllowed) {
-    return <Navigate to={redirectPath} replace />;
+    return <Navigate to={redirectPath} replace ={true} />;
   }
 
   return children ? <>{children}</> : <Outlet />;

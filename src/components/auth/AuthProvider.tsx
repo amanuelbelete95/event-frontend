@@ -1,11 +1,18 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { getUser } from '../users/api/getUser';
-import { UserAPIResponse } from '../users/users.type';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { logInUser } from "../users/api/logInUser";
+import { BASE_URL } from "../events/constants";
 
 export interface User {
   id: string;
   username: string;
-  role: 'admin' | 'employee' | 'any';
+  role: "admin" | "employee" | "any";
+  password: string,
 }
 
 interface AuthContextType {
@@ -16,7 +23,7 @@ interface AuthContextType {
   isAdminUser: boolean;
   isRandomUser: boolean;
   isEmployeeUser: boolean;
-  login: () => Promise<void>;
+  login: (userName: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -32,54 +39,74 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Check if user is authenticated
-  const isAuthenticated = user !== null;
-
-
-  // Role-based checks with null safety
+  const isAuthenticated = !!user;
   const isAdminUser = user?.role === "admin";
   const isRandomUser = user?.role === "any";
   const isEmployeeUser = user?.role === "employee";
 
-  // Fetch user data
   const fetchUser = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const userData = await getUser();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser(null);
+        return;
+      }
 
-      // Transform API response to match our User interface
+      const response = await fetch(`${BASE_URL}/api/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        setUser(null);
+        return;
+      }
+
+      const data = await response.json();
+
       const transformedUser: User = {
-        id: userData.id,
-        username: userData.username,
-        role: userData.role as 'admin' | 'employee' | 'any'
+        id: data.id,
+        username: data.username,
+        role: data.role,
+        password: data.password,
       };
 
       setUser(transformedUser);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch user data'));
       setUser(null);
+      setError(err instanceof Error ? err : new Error("Failed to fetch user"));
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Login function
-  const login = async () => {
-    await fetchUser();
+  const login = async (userName: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { token } = await logInUser(userName, password);
+      localStorage.setItem("token", token); 
+      await fetchUser();
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error("Login failed"));
+      throw err;
+    }
   };
 
-  // Logout function
   const logout = () => {
+    localStorage.removeItem("token");
     setUser(null);
   };
 
-  // Refresh user data
+
   const refreshUser = async () => {
     await fetchUser();
   };
-
-  // Initial fetch on component mount
+  
   useEffect(() => {
     fetchUser();
   }, []);
@@ -94,7 +121,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isEmployeeUser,
     login,
     logout,
-    refreshUser
+    refreshUser,
   };
 
   return (
@@ -104,11 +131,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
+// Custom hook for consuming auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
-  if (context === undefined) {
-    throw new Error('useAuth must be used within AuthProvider');
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
   }
 
   return context;
