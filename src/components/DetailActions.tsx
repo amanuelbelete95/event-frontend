@@ -3,15 +3,17 @@ import React from "react";
 import { Button, ButtonGroup, HStack } from "@chakra-ui/react";
 
 interface DetailActionProps {
-  handleView?: () => void;
+  handleView: () => void;
   handleEdit?: () => void;
   handleDelete?: () => void;
+  isAdmin: boolean,
 }
 
 const DetailActions: React.FC<DetailActionProps> = ({
   handleView,
   handleEdit,
   handleDelete,
+  isAdmin = false
 }) => {
 
   return (
@@ -29,7 +31,7 @@ const DetailActions: React.FC<DetailActionProps> = ({
           View
         </Button>
 
-        <Button
+        { isAdmin && <Button
           aria-label="edit"
           size="sm"
           colorScheme="brand"
@@ -38,9 +40,9 @@ const DetailActions: React.FC<DetailActionProps> = ({
           onClick={handleEdit}
         >
           Edit
-        </Button>
+        </Button>}
 
-        <Button
+        { isAdmin && <Button
           aria-label="remove"
           size="sm"
           colorScheme="brand"
@@ -49,7 +51,7 @@ const DetailActions: React.FC<DetailActionProps> = ({
           onClick={handleDelete}
         >
           Delete
-        </Button>
+        </Button>}
       </ButtonGroup>
     </HStack>
   );

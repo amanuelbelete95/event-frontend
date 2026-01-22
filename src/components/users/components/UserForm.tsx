@@ -2,50 +2,48 @@ import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { EventAPIResponse } from "../events.type";
-import { CreateUpdateEvent, createUpdateEventSchema } from "../schema";
-import { EventDesignSystem } from "../designSystem";
+import { EventDesignSystem } from "../../events/designSystem";
+import { CreateUpdateUser, logInSchema, registerSchema } from "../schema";
+import { UserAPIResponse } from "../users.type";
 
-
-
-
-
-export interface EventFormProps {
-    initialValues?: CreateUpdateEvent;
-    onConfirm?: (data: CreateUpdateEvent) => Promise<EventAPIResponse>
-    onSuccess?: (data: EventAPIResponse) => void;
+export interface UserFormProps {
+    initialValues?: CreateUpdateUser;
+    onConfirm?: (data: CreateUpdateUser) => Promise<UserAPIResponse>
+    onSuccess?: (data:any) => void;
     onError?: (error: any) => void;
     title: string;
+    isNew: boolean;
 }
 
-export default function EventForm(props: EventFormProps) {
+export default function UserForm(props: UserFormProps) {
     const {
         initialValues,
         onConfirm,
         onSuccess,
         onError,
         title,
+        isNew = false,
+
     } = props;
-   
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<CreateUpdateEvent>({
+    } = useForm<CreateUpdateUser>({
         defaultValues: initialValues,
         mode: "onTouched",
-        resolver: yupResolver(createUpdateEventSchema),
+        resolver: yupResolver(isNew ? registerSchema : logInSchema),
     });
 
     const { mutate } = useMutation({
         mutationFn: onConfirm,
         onSuccess: onSuccess,
         onError: onError,
-        
+
     });
 
-    const onSubmit: SubmitHandler<CreateUpdateEvent> = (data) => {
+    const onSubmit: SubmitHandler<CreateUpdateUser> = (data) => {
         mutate(data);
     };
 
@@ -71,68 +69,56 @@ export default function EventForm(props: EventFormProps) {
             </Heading>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack spacing={4} align="stretch">
-                    <FormControl>
+                    <FormControl isInvalid={!!errors.username}>
                         <FormLabel
                           fontWeight="semibold"
                           fontSize="md"
                         >
-                          🏷️ Event Name
+                          Username
                         </FormLabel>
                         <Input
-                          {...register("name")}
+                          {...register("username")}
                           type="text"
-                          placeholder="Enter event name"
+                          placeholder="Enter username"
                         />
-                        </FormControl>
-                                   
-                          <FormLabel
-                                     fontWeight="semibold"
-                                     color={EventDesignSystem.form.label.color}
-                                     fontSize="md"
-                                   >
-                                     📅 Event Date
-                                   </FormLabel>
-                                   <Input
-                                     {...register("event_date")}
-                                     type="date"
-                                   
-                                   />
-                                   <FormLabel
-                                     fontWeight="semibold"
-                                     color={EventDesignSystem.form.label.color}
-                                     fontSize="md"
-                                   >
-                                     📍 Location
-                                   </FormLabel>
-                                   <Input
-                                     {...register("location")}
-                                     type="text"
-                          
-                                   />
+                        <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
+                    </FormControl>
 
-                    <FormControl isInvalid={!!errors.event_status}>
+                    <FormControl isInvalid={!!errors.password}>
                         <FormLabel
                           fontWeight="semibold"
                           color={EventDesignSystem.form.label.color}
                           fontSize="md"
                         >
-                          📊 Event Status
+                           Password
+                        </FormLabel>
+                        <Input
+                          {...register("password")}
+                          type="password"
+                          placeholder="Enter password"
+                        />
+                        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+                    </FormControl>
+
+                   { isNew &&  <FormControl isInvalid={!!errors.role}>
+                        <FormLabel
+                          fontWeight="semibold"
+                          color={EventDesignSystem.form.label.color}
+                          fontSize="md"
+                        >
+                          Role
                         </FormLabel>
                         <Select
-                          {...register("event_status")}
-                          placeholder="Select status"
+                          {...register("role")}
+                          placeholder="Select role"
                           bg="white"
-              
+
                           size="lg"
                         >
-                            <option value="todo">Todo</option>
-                            <option value="in_progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                            <option value="postponed">Postponed</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value="any">any</option>
                         </Select>
-                        <FormErrorMessage>{errors.event_status?.message}</FormErrorMessage>
-                    </FormControl>
+                        <FormErrorMessage>{errors.role?.message}</FormErrorMessage>
+                    </FormControl>}
 
                     <Button
                       type="submit"
@@ -148,8 +134,9 @@ export default function EventForm(props: EventFormProps) {
                       fontSize="md"
                       fontWeight="bold"
                       mt={2}
+                      cursor={"pointer"}
                     >
-                      {isSubmitting ? "Saving..." : (title.includes("Edit") ? "Update Event" : "Create Event")}
+                      {isSubmitting ? "Saving..." : `${title}`}
                     </Button>
                 </VStack>
             </form>
