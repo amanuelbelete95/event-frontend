@@ -2,14 +2,14 @@ import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { EventAPIResponse } from "../../events/events.type";
-import { CreateUpdateUser, createUpdateUserSchema } from "../schema";
 import { EventDesignSystem } from "../../events/designSystem";
+import { CreateUpdateUser, logInSchema, registerSchema } from "../schema";
+import { UserAPIResponse } from "../users.type";
 
 export interface UserFormProps {
     initialValues?: CreateUpdateUser;
-    onConfirm?: (data: CreateUpdateUser) => Promise<EventAPIResponse>
-    onSuccess?: (data: EventAPIResponse) => void;
+    onConfirm?: (data: CreateUpdateUser) => Promise<UserAPIResponse>
+    onSuccess?: (data:any) => void;
     onError?: (error: any) => void;
     title: string;
     isNew: boolean;
@@ -23,6 +23,7 @@ export default function UserForm(props: UserFormProps) {
         onError,
         title,
         isNew = false,
+
     } = props;
 
     const {
@@ -32,7 +33,7 @@ export default function UserForm(props: UserFormProps) {
     } = useForm<CreateUpdateUser>({
         defaultValues: initialValues,
         mode: "onTouched",
-        resolver: yupResolver(createUpdateUserSchema),
+        resolver: yupResolver(isNew ? registerSchema : logInSchema),
     });
 
     const { mutate } = useMutation({
@@ -73,7 +74,7 @@ export default function UserForm(props: UserFormProps) {
                           fontWeight="semibold"
                           fontSize="md"
                         >
-                          👤 Username
+                          Username
                         </FormLabel>
                         <Input
                           {...register("username")}
@@ -89,7 +90,7 @@ export default function UserForm(props: UserFormProps) {
                           color={EventDesignSystem.form.label.color}
                           fontSize="md"
                         >
-                          🔒 Password
+                           Password
                         </FormLabel>
                         <Input
                           {...register("password")}
@@ -105,7 +106,7 @@ export default function UserForm(props: UserFormProps) {
                           color={EventDesignSystem.form.label.color}
                           fontSize="md"
                         >
-                          👔 Role
+                          Role
                         </FormLabel>
                         <Select
                           {...register("role")}
@@ -114,9 +115,7 @@ export default function UserForm(props: UserFormProps) {
 
                           size="lg"
                         >
-                            <option value="admin">Admin</option>
-                            <option value="employee">Employee</option>
-                            <option value="any">User</option>
+                            <option value="any">any</option>
                         </Select>
                         <FormErrorMessage>{errors.role?.message}</FormErrorMessage>
                     </FormControl>}
@@ -135,6 +134,7 @@ export default function UserForm(props: UserFormProps) {
                       fontSize="md"
                       fontWeight="bold"
                       mt={2}
+                      cursor={"pointer"}
                     >
                       {isSubmitting ? "Saving..." : `${title}`}
                     </Button>

@@ -1,18 +1,20 @@
 import {
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from "react";
-import { logInUser } from "../users/api/logInUser";
 import { BASE_URL } from "../events/constants";
+import { logInUser } from "../users/api/logInUser";
+import { CreateUpdateUser } from "../users/schema";
+import { UserAPIResponse } from "../users/users.type";
 
 export interface User {
   id: string;
   username: string;
   role: "admin" | "employee" | "any";
-  password: string,
+  password?: string,
 }
 
 interface AuthContextType {
@@ -20,10 +22,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: Error | null;
   isAuthenticated: boolean;
-  isAdminUser: boolean;
-  isRandomUser: boolean;
-  isEmployeeUser: boolean;
-  login: (userName: string, password: string) => Promise<void>;
+  login:(data: CreateUpdateUser) => Promise<UserAPIResponse>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -40,9 +39,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [error, setError] = useState<Error | null>(null);
 
   const isAuthenticated = !!user;
-  const isAdminUser = user?.role === "admin";
-  const isRandomUser = user?.role === "any";
-  const isEmployeeUser = user?.role === "employee";
 
   const fetchUser = async () => {
     try {
@@ -50,8 +46,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
       const token = localStorage.getItem("token");
       if (!token) {
-        setUser(null);
-        return;
+      setUser(null);
+      return;
       }
 
       const response = await fetch(`${BASE_URL}/api/me`, {
@@ -71,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         id: data.id,
         username: data.username,
         role: data.role,
-        password: data.password,
+  
       };
 
       setUser(transformedUser);
@@ -83,14 +79,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const login = async (userName: string, password: string) => {
+  const login = async (data: CreateUpdateUser) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const { token } = await logInUser(userName, password);
+      const { token, user } = await logInUser(data);
       localStorage.setItem("token", token); 
-      await fetchUser();
+      setIsLoading(false)
+      setUser(user)
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Login failed"));
       throw err;
@@ -116,9 +113,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isLoading,
     error,
     isAuthenticated,
-    isAdminUser,
-    isRandomUser,
-    isEmployeeUser,
     login,
     logout,
     refreshUser,

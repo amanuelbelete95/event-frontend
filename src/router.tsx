@@ -17,8 +17,9 @@ import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import NewUser from "./admin/users/UserNew";
-import UserLoginLayout from "./components/users/components/UserLoginLayout";
+import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
+import LogInPage from "./components/LogInPage";
+import RegisterPage from "./components/RegisterPage";
 // Import authentication components (placeholder for future auth)
 // import AdminLayout from "./components/layout/AdminLayout";
 // import UserLayout from "./components/layout/UserLayout";
@@ -55,12 +56,12 @@ export const router = createBrowserRouter([
   {
     path: ROUTE_PATHS.HOME,
     element: 
-      <ProtectedRoute redirectPath="/login">
-          <Layout />
-      </ProtectedRoute>,
+       <ProtectedRoute redirectPath="/login" requiredRole="admin">
+          <Layout />,
+     </ProtectedRoute>,
     children: [
       // Public routes
-      { path: ROUTE_PATHS.HOME, element: <Home /> },
+      { index: true, element: <Home /> },
 
       // User routes - accessible to all users
       {
@@ -117,7 +118,15 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <UserLoginLayout/>,
+    element: <UserLogInRegisterLayout/>,
+    children: [
+      {
+        index: true, element: <LogInPage/>
+      },
+       {
+        path: "register", element: <RegisterPage/>
+      }
+    ]
   }
 ]);
 
