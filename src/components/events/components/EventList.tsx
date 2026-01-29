@@ -10,13 +10,20 @@ import { onDelete } from '../api/deleteEvents';
 import getAllEvents from '../api/getAllEvents';
 
 
-interface EventListProps {
-  isAdmin: boolean
-}
 
 
-const EventList = (props: EventListProps) => {
-  const {isAdmin} = props
+export const loader: LoaderFunction = async () => {
+  try {
+    const events = await getAllEvents();
+    return events;
+  } catch (error) {
+    return Promise.reject(error)
+  }
+
+};
+
+
+const EventList = () => {
   const navigate = useNavigate();
   const events = useLoaderData() as EventAPIResponse[];
   const [searchTerm, setSearchTerm] = useState('');
@@ -69,7 +76,7 @@ const EventList = (props: EventListProps) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </InputGroup>
-       { isAdmin && <Button
+        <Button
           leftIcon={<AddIcon />}
           bg={EventDesignSystem.primaryColor}
           color="white"
@@ -80,7 +87,7 @@ const EventList = (props: EventListProps) => {
           boxShadow="md"
         >
           Add New Event
-        </Button>}
+        </Button>
       </Flex>
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={16} borderRadius={"md"} >
@@ -132,10 +139,9 @@ const EventList = (props: EventListProps) => {
               <HStack spacing={3} mt={4} justify="flex-end" p={3} bg="gray.50" borderRadius="md">
 
                 <DetailActions
-                handleEdit={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
-                handleView={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
-                handleDelete={() => handleDelete(event.event_id)}
-                isAdmin={isAdmin}
+                  handleEdit={() => navigate(EVENTS_ROUTES.EVENTS_EDIT.getAbsoluteLink(event.event_id))}
+                  handleView={() => navigate(EVENTS_ROUTES.EVENTS_DETAIL.getAbsoluteLink(event.event_id))}
+                  handleDelete={() => handleDelete(event.event_id)}
                 />
               </HStack>
             </CardBody>
@@ -143,7 +149,7 @@ const EventList = (props: EventListProps) => {
         ))}
       </SimpleGrid>
 
-      {filteredEvents.length === 0 && isAdmin && (
+      {filteredEvents.length === 0 && (
         <Box textAlign="center" py={10} bg="white" borderRadius="lg" borderWidth="1px" borderColor="gray.200">
           <Text fontSize="xl" color="gray.500" fontWeight="medium">
             {searchTerm ? '🔍 No events found matching your search.' : '📅 No events available.'}

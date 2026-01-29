@@ -1,19 +1,18 @@
 import { Box, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import UserForm from '../../components/users/components/UserForm';
-import { addUser } from '../../components/users/api/registerUser';
+import { registerUser } from '../../components/users/api/getUser';
 
 function NewUser() {
     const toast = useToast();
     const navigate = useNavigate();
-
     const handleSuccess = () => {
         toast({
-             title: "User created",
-             description: "User created successfully",
-             status: "success",
-             duration: 5000,
-             isClosable: true,
+            title: "User created",
+            description: "User created successfully",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
         });
     };
 
@@ -35,7 +34,7 @@ function NewUser() {
                     password: '',
                     role: '',
                 }}
-                onConfirm={addUser}
+                onConfirm={registerUser}
                 onSuccess={handleSuccess}
                 onError={handleError}
                 title="Create New User"
