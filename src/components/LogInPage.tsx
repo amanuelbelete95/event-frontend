@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import UserForm from './users/components/UserForm'
-import { Button, createStandaloneToast } from '@chakra-ui/react';
+import { Button, Card, CardBody, CardHeader, createStandaloneToast, Heading, VStack } from '@chakra-ui/react';
 import { useAuth } from './auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { CreateUpdateUser } from './users/schema';
+import { CalendarIcon } from '@chakra-ui/icons';
 
-const {toast} = createStandaloneToast();
+const { toast } = createStandaloneToast();
 
 
 function LogInPage() {
-const { user, isAuthenticated, login, logout, isLoading } = useAuth();
-const navigate = useNavigate();
+  const { user, isAuthenticated, login, logout, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (user: CreateUpdateUser) => {
-    const {username, password} = user;
+    const { username, password } = user;
     try {
       if (!username || !password) {
         toast({
@@ -69,23 +70,20 @@ const navigate = useNavigate();
   }
 
   return (
-     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <UserForm isNew={false} title="Log In" onConfirm={(data) => handleLogin(data)} />
-                  {isAuthenticated && user && (
-                    <div style={{ marginTop: '16px', padding: '16px', background: '#f0f0f0', borderRadius: '8px' }}>
-                      <p>Currently logged in as: <strong>{user.username}</strong></p>
-                      <p>Role: <strong>{user.role}</strong></p>
-                      <Button
-                        colorScheme="red"
-                        size="sm"
-                        mt={2}
-                        onClick={() => handleLogout}
-                      >
-                        Logout
-                      </Button>
-                    </div>
-                  )}
-                </div>
+    <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
+      <Card>
+        <CardHeader className='tex-center'>
+          <Heading size='md'>Welcome to EventHub</Heading>
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary">
+            Sign in to access company events
+          </div>
+
+        </CardHeader>
+        <CardBody>
+          <UserForm isNew={false} onConfirm={(data) => handleLogin(data)} title='SignIn' />
+        </CardBody>
+      </Card>
+    </div>
   )
 }
 
