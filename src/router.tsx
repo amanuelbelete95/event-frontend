@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
         path: ROUTE_PATHS.EVENTS,
         children: [
           { index: true, element: <EventList />, loader: eventListLoader },
-          { path: "new", element: <EventNew />, loader: eventDetailUserLoader },
+          { path: "new", element: <EventNew /> },
           { path: "detail/:id", element: <EventDetailUser />, loader: eventDetailUserLoader },
         ]
       },

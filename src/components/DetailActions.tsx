@@ -30,7 +30,7 @@ const DetailActions: React.FC<DetailActionProps> = ({
           View
         </Button>
 
-        {isAdmin && <Button
+        <Button
           aria-label="edit"
           size="sm"
           colorScheme="brand"
@@ -39,9 +39,9 @@ const DetailActions: React.FC<DetailActionProps> = ({
           onClick={handleEdit}
         >
           Edit
-        </Button>}
+        </Button>
 
-        {isAdmin && <Button
+        <Button
           aria-label="remove"
           size="sm"
           colorScheme="brand"
@@ -50,7 +50,7 @@ const DetailActions: React.FC<DetailActionProps> = ({
           onClick={handleDelete}
         >
           Delete
-        </Button>}
+        </Button>
       </ButtonGroup>
     </HStack>
   );
