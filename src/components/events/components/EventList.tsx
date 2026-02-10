@@ -5,6 +5,7 @@ import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
 import getAllEvents from '../api/getAllEvents';
 import { EventAPIResponse } from '../events.type';
 import EventCard from "./EventCard";
+import { EventDesignSystem } from '../designSystem';
 
 
 
@@ -42,10 +43,9 @@ const EventList = () => {
           leftIcon={<AddIcon />}
           onClick={() => navigate("new")}
           size="md"
-          variant={"outline"}
-          colorScheme='green'
-          boxShadow="md"
-          borderRadius={"md"}
+          bg={EventDesignSystem.primaryColor}
+          color="white"
+          variant="outline"
         >
           New Event
         </Button>

@@ -44,6 +44,7 @@ const EventDetail = () => {
           <Badge
             colorScheme={EventDesignSystem.statusColors[event.event_status as keyof typeof EventDesignSystem.statusColors] || EventDesignSystem.statusColors.default}
             variant="solid"
+            bg={EventDesignSystem.primaryColor}
             px={3}
             py={1}
             borderRadius="full"

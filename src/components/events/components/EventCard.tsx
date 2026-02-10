@@ -4,6 +4,7 @@ import { FiMapPin } from "react-icons/fi"
 import { Event, EventAPIResponse } from "../events.type"
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
+import { EventDesignSystem } from "../designSystem";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -59,13 +60,10 @@ const EventCard = (props: EventCardProps) => {
                             {event.name}
                         </Heading>
                         <Badge
-                            variant="solid"
+                            variant="outline"
                             fontSize="xs"
-                            px={2}
-                            py={1}
-                            rounded="full"
+                            colorScheme="#389999"
                             textTransform="uppercase"
-                            fontWeight="600"
                         >
                             {event.event_status || "todo"}
                         </Badge>
@@ -127,7 +125,8 @@ const EventCard = (props: EventCardProps) => {
 
                     <Button
                         rightIcon={<ChevronRightIcon />}
-                        colorScheme="blue"
+                        bg={EventDesignSystem.primaryColor}
+                        color="white"
                         variant="outline"
                         size="sm"
                         w="full"
