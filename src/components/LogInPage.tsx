@@ -10,42 +10,8 @@ const { toast } = createStandaloneToast();
 
 
 function LogInPage() {
-  const { user, isAuthenticated, login, logout, isLoading } = useAuth();
+  const { isAuthenticated, login, logout, isLoading } = useAuth();
   const navigate = useNavigate();
-
-  const handleLogin = async (user: CreateUpdateUser) => {
-    const { username, password } = user;
-    try {
-      if (!username || !password) {
-        toast({
-          title: "Missing credentials",
-          description: "Please provide both username and password",
-          status: "warning",
-          duration: 3000,
-          isClosable: true,
-        });
-        return;
-      }
-      await login(user)
-      toast({
-        title: "Login successful",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-      navigate("/");
-    } catch (error) {
-      toast({
-        title: "Login failed",
-        description: error instanceof Error ? error.message : "Failed to login",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
-
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
@@ -64,10 +30,31 @@ function LogInPage() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary">
             Sign in to access company events
           </div>
-
         </CardHeader>
         <CardBody>
-          <UserForm isNew={false} onConfirm={(data) => handleLogin(data)} title='SignIn' />
+          <UserForm
+            isNew={false}
+            onConfirm={login}
+            onSuccess={() => {
+              toast({
+                title: "You have successfully signed in!",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+
+              });
+              navigate("/");
+            }}
+            onError={() => {
+              toast({
+                title: "Login failed",
+                description: "Login Failed please try again",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+              });
+            }}
+            title='SignIn' />
         </CardBody>
       </Card>
     </div>

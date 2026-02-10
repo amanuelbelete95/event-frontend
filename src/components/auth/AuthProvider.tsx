@@ -22,7 +22,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: Error | null;
   isAuthenticated: boolean;
-  login:(data: CreateUpdateUser) => Promise<UserAPIResponse>;
+  login: (data: CreateUpdateUser) => Promise<UserAPIResponse>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -46,8 +46,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
       const token = localStorage.getItem("token");
       if (!token) {
-      setUser(null);
-      return;
+        setUser(null);
+        return;
       }
 
       const response = await fetch(`${BASE_URL}/api/me`, {
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         id: data.id,
         username: data.username,
         role: data.role,
-  
+
       };
 
       setUser(transformedUser);
@@ -82,10 +82,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (data: CreateUpdateUser) => {
     setIsLoading(true);
     setError(null);
-
     try {
       const { token, user } = await logInUser(data);
-      localStorage.setItem("token", token); 
+      localStorage.setItem("token", token);
       setIsLoading(false)
       setUser(user)
     } catch (err) {
@@ -103,7 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const refreshUser = async () => {
     await fetchUser();
   };
-  
+
   useEffect(() => {
     fetchUser();
   }, []);
