@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import EventList, { loader as eventListLoader } from "./components/events/components/EventList";
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
 import EventNew from "./admin/events/EventNew";
+import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
@@ -34,7 +35,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <EventList />, loader: eventListLoader },
           { path: "new", element: <EventNew /> },
-          { path: "detail/:id", element: <EventDetailUser />, loader: eventDetailUserLoader },
+          { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
         ]
       },
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },

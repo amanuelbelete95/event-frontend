@@ -1,8 +1,9 @@
 import { Box, Flex, Text, Heading, VStack, Badge, Divider } from '@chakra-ui/react'
-import { LoaderFunction } from 'react-router-dom'
+import { LoaderFunction, useLoaderData } from 'react-router-dom'
 import getEvent from './api/getEvent'
 import { EventAPIResponse } from './events.type'
 import { EventDesignSystem } from './designSystem'
+import { formatDate } from '../../utils/dateUtility'
 
 // Shared loader function
 export const loader: LoaderFunction = async ({ params }) => {
@@ -19,18 +20,10 @@ export const loader: LoaderFunction = async ({ params }) => {
   return event;
 };
 
-// Base event detail component with shared UI elements
-interface EventDetailBaseProps {
-  event: EventAPIResponse;
-  children?: React.ReactNode;
-  showAdminBadge?: boolean;
-}
 
-export const EventDetailBase: React.FC<EventDetailBaseProps> = ({
-  event,
-  children,
-  showAdminBadge = false
-}) => {
+
+const EventDetail = () => {
+  const event = useLoaderData() as EventAPIResponse;
   return (
     <Box
       maxW="1000px"
@@ -58,11 +51,6 @@ export const EventDetailBase: React.FC<EventDetailBaseProps> = ({
           >
             {event.event_status}
           </Badge>
-          {showAdminBadge && (
-            <Badge colorScheme="purple" variant="solid" px={3} py={1} borderRadius="full" fontSize="sm">
-              Admin View
-            </Badge>
-          )}
         </Flex>
       </Flex>
 
@@ -77,21 +65,17 @@ export const EventDetailBase: React.FC<EventDetailBaseProps> = ({
         <Box width="100%">
           <Text fontSize="sm" color="gray.500" fontWeight="medium" mb={2}>📅 DATE & TIME</Text>
           <Text fontSize="lg" color="gray.700">
-            {new Date(event.event_date).toLocaleDateString()} at {new Date(event.event_date).toLocaleTimeString()}
+            {formatDate(event.event_date)}
           </Text>
         </Box>
-
-        {event.description && (
-          <Box width="100%">
-            <Text fontSize="sm" color="gray.500" fontWeight="medium" mb={2}>📝 DESCRIPTION</Text>
-            <Text fontSize="lg" color="gray.700" whiteSpace="pre-line">
-              {event.description}
-            </Text>
-          </Box>
-        )}
-
-        {children}
+        <Box width="100%">
+          <Text fontSize="sm" color="gray.500" fontWeight="medium" mb={2}>📝 DESCRIPTION</Text>
+          <Text fontSize="lg" color="gray.700" whiteSpace="pre-line">
+            {event.description}
+          </Text>
+        </Box>
       </VStack>
     </Box>
   )
 }
+export default EventDetail;

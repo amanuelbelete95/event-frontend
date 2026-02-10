@@ -1,43 +1,144 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box } from "@chakra-ui/react"
-import { Event } from "../events.type"
+import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack } from "@chakra-ui/react"
+import { CalendarIcon, TimeIcon, ChevronRightIcon } from "@chakra-ui/icons"
+import { FiMapPin } from "react-icons/fi"
+import { Event, EventAPIResponse } from "../events.type"
+import { useNavigate } from "react-router-dom";
+import { formatDate } from "../../../utils/dateUtility";
 
 interface EventCardProps {
-    event: Event;
+    event: EventAPIResponse;
 }
 
 const EventCard = (props: EventCardProps) => {
     const { event } = props
+    const navigate = useNavigate();
+
+    const formatTime = (dateString: string) => {
+        const date = new Date(dateString)
+        return date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+    }
     return (
-        <Box boxShadow={"md"}>
+        <Box
+            borderRadius="xl"
+            overflow="hidden"
+            boxShadow="lg"
+            transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+            _hover={{
+                transform: 'translateY(-4px)',
+                boxShadow: 'xl',
+            }}
+            border="1px"
+        >
             <Card
-                borderRadius={"lg"}
+                p={4}
+                position="relative"
                 overflow="hidden"
-                bg="white"
-                padding={8}
-                display={"flex"}
-                flexDirection={"column"}
             >
-                <CardHeader>
-                    <Box display={"flex"} flexDirection={"column"} alignItems={"start"}>
-                        <Heading size="lg" fontWeight="semibold">
+                <Box
+                    position="absolute"
+                    top="-20"
+                    right="-20"
+                    w="40"
+                    h="40"
+                    bg="white"
+                    opacity="10"
+                    borderRadius="full"
+                />
+                <Stack direction="row" justify="space-between" align="flex-start">
+                    <Box flex={1}>
+                        <Heading
+                            size="md"
+                            color="gray"
+                            fontWeight="bold"
+                            noOfLines={2}
+                            mb={2}
+                        >
                             {event.name}
                         </Heading>
-                        <Text fontSize="sm" color="gray.600" noOfLines={2} mt={2} p={2} bg="gray.50" borderRadius="md">
+                        <Badge
+                            variant="solid"
+                            fontSize="xs"
+                            px={2}
+                            py={1}
+                            rounded="full"
+                            textTransform="uppercase"
+                            fontWeight="600"
+                        >
+                            {event.event_status || "todo"}
+                        </Badge>
+                    </Box>
+                </Stack>
+                <CardBody p={6}>
+                    {event.description && (
+                        <Text
+                            fontSize="sm"
+                            color="gray.600"
+                            noOfLines={3}
+                            mb={4}
+                            lineHeight="1.5"
+                        >
                             {event.description}
                         </Text>
-                    </Box>
-                </CardHeader>
-                <CardBody>
-                    <VStack align="start" spacing={2}>
-                        <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                            <strong>Location:</strong> {event.location}
-                        </Text>
-                        <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                            <strong>Date:</strong> {new Date(event.event_date).toLocaleDateString()}
-                        </Text>
+                    )}
+
+                    {/* Event Details */}
+                    <VStack spacing={3} align="stretch" mb={4}>
+                        <HStack spacing={3}>
+                            <Icon
+                                as={CalendarIcon}
+                                color="blue.500"
+                                boxSize={4}
+                                flexShrink={0}
+                            />
+                            <Text fontSize="sm" fontWeight="500">
+                                {formatDate(event.event_date)}
+                            </Text>
+                        </HStack>
+
+                        <HStack spacing={3}>
+                            <Icon
+                                as={TimeIcon}
+                                color="green.500"
+                                boxSize={4}
+                                flexShrink={0}
+                            />
+                            <Text fontSize="sm" fontWeight="500">
+                                {formatTime(event.event_date)}
+                            </Text>
+                        </HStack>
+
+                        <HStack spacing={3}>
+                            <Icon
+                                as={FiMapPin}
+                                color="red.500"
+                                boxSize={4}
+                                flexShrink={0}
+                            />
+                            <Text fontSize="sm" fontWeight="500" noOfLines={1}>
+                                {event.location}
+                            </Text>
+                        </HStack>
                     </VStack>
+
+                    <Divider my={4} />
+
+                    <Button
+                        rightIcon={<ChevronRightIcon />}
+                        colorScheme="blue"
+                        variant="outline"
+                        size="sm"
+                        w="full"
+                        onClick={() => navigate(`/events/${event.event_id}/detail`)}
+                    >
+                        View Details
+                    </Button>
                 </CardBody>
             </Card>
+
+
         </Box>
     )
 }

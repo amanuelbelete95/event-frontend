@@ -26,7 +26,6 @@ function LogInPage() {
         });
         return;
       }
-
       await login(user)
       toast({
         title: "Login successful",
@@ -34,7 +33,6 @@ function LogInPage() {
         duration: 3000,
         isClosable: true,
       });
-      // Redirect to home after successful login
       navigate("/");
     } catch (error) {
       toast({
@@ -45,17 +43,6 @@ function LogInPage() {
         isClosable: true,
       });
     }
-  };
-
-  // Handle logout action
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged out",
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-    });
   };
 
   // Redirect if already authenticated

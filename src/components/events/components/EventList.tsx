@@ -35,7 +35,7 @@ const EventList = () => {
 
   return (
     <Box p={6} w={"100%"} mx="auto" minHeight="100vh">
-      <Flex mb={6} align="center" background={"gray.400"}>
+      <Flex mb={6} align="center">
         <Heading size="xl" fontWeight="bold">Events</Heading>
         <Spacer />
         <Button
