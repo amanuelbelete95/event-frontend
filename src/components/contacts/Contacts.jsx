@@ -17,6 +17,7 @@ import {
   CardBody,
   Divider
 } from '@chakra-ui/react';
+import { EventDesignSystem } from '../events/designSystem';
 
 function Contacts() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ function Contacts() {
       <Card shadow="md">
         <CardBody>
           <VStack spacing={6} align="stretch">
-            <Heading size="lg" textAlign="center" color="blue.600">
+            <Heading size="lg" textAlign="center">
               Contact Us
             </Heading>
 
@@ -113,10 +114,10 @@ function Contacts() {
 
                 <Button
                   type="submit"
-                  colorScheme="blue"
+                  bg={EventDesignSystem.primaryColor}
+                  color="white"
                   size="lg"
                   width="full"
-                  _hover={{ bg: "blue.600" }}
                 >
                   Submit Request
                 </Button>

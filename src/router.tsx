@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
         index: true, element: <LogInPage />
       },
       {
-        path: "register", element: <RegisterPage />
+        path: "new", element: <RegisterPage />
       }
     ]
   }
