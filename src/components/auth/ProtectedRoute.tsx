@@ -17,20 +17,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children
 }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  
-  console.log("isLoading", isLoading)
+
   if (isLoading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
- 
+
 
   if (!isAuthenticated) {
     return <Navigate to={redirectPath} replace={true} />;
-  }
-
-  if (isAuthenticated && !requiredRole) {
-    return <Navigate to={redirectPath} replace ={true} />;
   }
 
   return children ? <>{children}</> : <Outlet />;

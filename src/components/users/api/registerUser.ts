@@ -3,7 +3,7 @@ import { BASE_URL } from "../constants";
 import { UserAPIResponse } from "../users.type";
 import { CreateUpdateUser } from "../schema";
 
-export const registerUserUser = async (
+export const registerUser = async (
     user: CreateUpdateUser
 ): Promise<UserAPIResponse> => {
     try {
@@ -11,10 +11,10 @@ export const registerUserUser = async (
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-              },
+            },
             body: JSON.stringify(user),
         });
-         if (!response.ok) {
+        if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to create user');
         }
