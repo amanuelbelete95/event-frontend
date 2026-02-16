@@ -20,6 +20,8 @@ import getAllEvents from "../api/getAllEvents";
 import { EventAPIResponse } from "../events.type";
 import EventCard from "./EventCard";
 import { EventDesignSystem } from "../designSystem";
+import { PermissionGuard } from "../../PermissionGuard";
+import { useAuth } from "../../auth/AuthProvider";
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -32,6 +34,8 @@ export const loader: LoaderFunction = async () => {
 const EventList = () => {
   const navigate = useNavigate();
   const events = useLoaderData() as EventAPIResponse[];
+  const { user } = useAuth();
+  console.log("user", user)
   const [searchTerm, setSearchTerm] = useState("");
   const pageBg = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
@@ -120,18 +124,19 @@ const EventList = () => {
                 ? "Try adjusting your search keywords."
                 : "Start by creating your first event."}
             </Text>
-
-            {!searchTerm && (
-              <Button
-                leftIcon={<AddIcon />}
-                bg={EventDesignSystem.primaryColor}
-                color="white"
-                variant="outline"
-                onClick={() => navigate("new")}
-              >
-                Create Event
-              </Button>
-            )}
+            <PermissionGuard allowedRoles={["admin"]} requireAdmin={true}>
+              {!searchTerm && (
+                <Button
+                  leftIcon={<AddIcon />}
+                  bg={EventDesignSystem.primaryColor}
+                  color="white"
+                  variant="outline"
+                  onClick={() => navigate("new")}
+                >
+                  Create Event
+                </Button>
+              )}
+            </PermissionGuard>
           </Box>
         )}
       </VStack>

@@ -9,11 +9,12 @@ import { BASE_URL } from "../events/constants";
 import { logInUser } from "../users/api/logInUser";
 import { CreateUpdateUser } from "../users/schema";
 import { UserAPIResponse } from "../users/users.type";
+import { UserRole } from "../events/events.type";
 
 export interface User {
   id: string;
   username: string;
-  role: "admin" | "employee" | "any";
+  role: UserRole;
   password?: string,
 }
 
