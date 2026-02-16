@@ -66,18 +66,21 @@ const EventList = () => {
             </HStack>
           </Box>
 
-          <Button
-            leftIcon={<AddIcon />}
-            onClick={() => navigate("new")}
-            size="md"
-            borderRadius="lg"
-            boxShadow="sm"
-            bg={EventDesignSystem.primaryColor}
-            color="white"
-            variant="outline"
-          >
-            Create Event
-          </Button>
+
+          <PermissionGuard allowedRoles={["admin"]}>
+            <Button
+              leftIcon={<AddIcon />}
+              onClick={() => navigate("new")}
+              size="md"
+              borderRadius="lg"
+              boxShadow="sm"
+              bg={EventDesignSystem.primaryColor}
+              color="white"
+              variant="outline"
+            >
+              Create Event
+            </Button>
+          </PermissionGuard>
         </Flex>
 
         <Box maxW="400px">
@@ -124,7 +127,7 @@ const EventList = () => {
                 ? "Try adjusting your search keywords."
                 : "Start by creating your first event."}
             </Text>
-            <PermissionGuard allowedRoles={["admin"]} requireAdmin={true}>
+            <PermissionGuard allowedRoles={["admin"]}>
               {!searchTerm && (
                 <Button
                   leftIcon={<AddIcon />}
