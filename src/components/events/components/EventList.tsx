@@ -76,6 +76,7 @@ const EventList = () => {
               boxShadow="sm"
               bg={EventDesignSystem.primaryColor}
               color="white"
+              _hover={{ opacity: 0.9 }}
               variant="outline"
             >
               Create Event

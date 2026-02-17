@@ -1,11 +1,11 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, CardFooter } from "@chakra-ui/react"
-import { CalendarIcon, TimeIcon, ChevronRightIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons"
-import { FiMapPin, FiTrash } from "react-icons/fi"
+import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack } from "@chakra-ui/react"
+import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
+import { FiMapPin } from "react-icons/fi"
 import { Event, EventAPIResponse } from "../events.type"
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
-import { EventDesignSystem } from "../designSystem";
 import { PermissionGuard } from "../../PermissionGuard";
+import { EventDesignSystem } from "../designSystem";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -33,11 +33,18 @@ const EventCard = (props: EventCardProps) => {
                 boxShadow: 'xl',
             }}
             border="1px"
+            h="380px"
+            display="flex"
+            flexDirection="column"
+            position="relative"
         >
             <Card
                 p={4}
-                position="relative"
+
                 overflow="hidden"
+                flex={1}
+                display="flex"
+                flexDirection="column"
             >
                 <Box
                     position="absolute"
@@ -70,7 +77,7 @@ const EventCard = (props: EventCardProps) => {
                         </Badge>
                     </Box>
                 </Stack>
-                <CardBody p={6}>
+                <CardBody p={6} flex={1} display="flex" flexDirection="column">
                     {event.description && (
                         <Text
                             fontSize="sm"
@@ -122,42 +129,42 @@ const EventCard = (props: EventCardProps) => {
                         </HStack>
                     </VStack>
 
-                    <Divider my={4} />
+                    <Divider mt={4} mb={0} />
 
-                    <CardFooter className="flex gap-4">
+                    <HStack spacing={2} w="full" position={"absolute"} bottom={2} left={0} p={2}>
                         <Button
-                            rightIcon={<ChevronRightIcon />}
+                            // flex={1}
+                            size="sm"
                             bg={EventDesignSystem.primaryColor}
                             color="white"
-                            variant="outline"
-                            size="xs"
-                            w="full"
+                            _hover={{ opacity: 0.9 }}
                             onClick={() => navigate(`/events/${event.event_id}/detail`)}
                         >
-                            View
+                            View Details
                         </Button>
                         <PermissionGuard allowedRoles={["admin"]}>
                             <Button
-                                variant="outline"
+                                size="sm"
                                 bg={EventDesignSystem.primaryColor}
                                 color="white"
-                                size="xs"
+                                _hover={{ opacity: 0.9 }}
                                 onClick={() => navigate(`/events/${event.event_id}/edit`)}
-                                rightIcon={<EditIcon />}>
+                            >
                                 Edit
                             </Button>
                             <Button
-                                variant="destructive"
-                                bg={EventDesignSystem.accentColor}
+                                size="sm"
+                                bg="red.500"
                                 color="white"
-                                size="xs" onClick={() => {
+                                _hover={{ bg: "red.600" }}
+                                onClick={() => {
                                     // removeEventFn()
                                 }}
-                                rightIcon={<DeleteIcon />}>
+                            >
                                 Delete
                             </Button>
                         </PermissionGuard>
-                    </CardFooter>
+                    </HStack>
                 </CardBody>
             </Card>
 

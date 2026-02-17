@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { EventAPIResponse } from "../events.type";
 import { CreateUpdateEvent, createUpdateEventSchema } from "../schema";
 import { EventDesignSystem } from "../designSystem";
+import { useEffect } from "react";
 
 
 
@@ -27,24 +28,30 @@ export default function EventForm(props: EventFormProps) {
     title,
   } = props;
 
-  const formattedInitialValues = initialValues
-    ? {
-      ...initialValues,
-      event_date: initialValues.event_date
-        ? initialValues.event_date.split("T")[0]
-        : "",
-    }
-    : undefined;
+
+
+
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateUpdateEvent>({
-    defaultValues: formattedInitialValues,
+    defaultValues: initialValues,
     mode: "onTouched",
     resolver: yupResolver(createUpdateEventSchema),
   });
+
+  useEffect(() => {
+    if (initialValues) {
+      reset({
+        ...initialValues,
+        event_date: initialValues.event_date?.split("T")[0], // fix date
+        event_status: initialValues.event_status, // already "published"
+      });
+    }
+  }, [initialValues, reset]);
 
   const { mutate } = useMutation({
     mutationFn: onConfirm,
@@ -101,7 +108,7 @@ export default function EventForm(props: EventFormProps) {
             color={EventDesignSystem.form.label.color}
             fontSize="md"
           >
-            Event Date
+            Date
           </FormLabel>
           <Input
             {...register("event_date")}
@@ -127,13 +134,14 @@ export default function EventForm(props: EventFormProps) {
               color={EventDesignSystem.form.label.color}
               fontSize="md"
             >
-              Event Status
+              Status
             </FormLabel>
             <Select
               {...register("event_status")}
               placeholder="Select status"
               bg="white"
               size="lg"
+
             >
               <option value="draft">draft</option>
               <option value="published"> published</option>
@@ -163,6 +171,6 @@ export default function EventForm(props: EventFormProps) {
           </Button>
         </VStack>
       </form>
-    </Box>
+    </Box >
   );
 }
