@@ -41,45 +41,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!user;
 
-  const fetchUser = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setUser(null);
-        return;
-      }
-
-      const response = await fetch(`${BASE_URL}/api/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        setUser(null);
-        return;
-      }
-
-      const data = await response.json();
-
-      const transformedUser: User = {
-        id: data.id,
-        username: data.username,
-        role: data.role,
-
-      };
-
-      setUser(transformedUser);
-    } catch (err) {
-      setUser(null);
-      setError(err instanceof Error ? err : new Error("Failed to fetch user"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const login = async (data: CreateUpdateUser) => {
     setIsLoading(true);
     setError(null);
@@ -100,22 +61,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
 
-  const refreshUser = async () => {
-    await fetchUser();
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
   const contextValue: AuthContextType = {
     user,
     isLoading,
     error,
     isAuthenticated,
     login,
-    logout,
-    refreshUser,
+    logout
   };
 
   return (

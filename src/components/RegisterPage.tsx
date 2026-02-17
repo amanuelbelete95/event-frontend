@@ -9,16 +9,29 @@ function RegisterPage() {
   const navigate = useNavigate();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <UserForm isNew={true} title={"Register"} onConfirm={registerUser} onSuccess={() => {
-        toast({
-          title: "You have successfully registered!",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
+      <UserForm isNew={true} title={"Register"}
+        onConfirm={registerUser}
+        onSuccess={() => {
+          toast({
+            title: "You have successfully registered!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
 
-        });
-        navigate("/login")
-      }} />
+          });
+
+          navigate("/login")
+        }}
+        onError={(error: { message: string }) => toast({
+          title: "Error Registering the User",
+          status: "error",
+          duration: 3000,
+          description: `${error.message}`,
+          isClosable: true,
+          position: "top-right"
+
+        })}
+      />
     </div>
   )
 }

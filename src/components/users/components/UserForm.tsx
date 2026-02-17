@@ -6,10 +6,16 @@ import { EventDesignSystem } from "../../events/designSystem";
 import { CreateUpdateUser, logInSchema, registerSchema } from "../schema";
 import { UserAPIResponse } from "../users.type";
 
+interface UserLogInResponse {
+  message: string,
+  user: UserAPIResponse,
+  token?: string
+}
+
 export interface UserFormProps {
   initialValues?: CreateUpdateUser;
   onConfirm?: (data: CreateUpdateUser) => Promise<UserAPIResponse>
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: Partial<UserLogInResponse>) => void;
   onError?: (error: any) => void;
   title: string;
   isNew: boolean;

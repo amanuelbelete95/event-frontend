@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import Contacts from "./components/contacts/Contacts";
-import EventDetailUser, { loader as eventDetailUserLoader } from "./components/events/EventDetailUser";
 import Home from "./components/home/Home";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
@@ -56,5 +55,4 @@ export const router = createBrowserRouter([
   }
 ]);
 
-// Export route paths for use throughout the application
 export { ROUTE_PATHS };
