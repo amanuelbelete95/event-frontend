@@ -1,10 +1,11 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack } from "@chakra-ui/react"
-import { CalendarIcon, TimeIcon, ChevronRightIcon } from "@chakra-ui/icons"
-import { FiMapPin } from "react-icons/fi"
+import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, CardFooter } from "@chakra-ui/react"
+import { CalendarIcon, TimeIcon, ChevronRightIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons"
+import { FiMapPin, FiTrash } from "react-icons/fi"
 import { Event, EventAPIResponse } from "../events.type"
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
 import { EventDesignSystem } from "../designSystem";
+import { PermissionGuard } from "../../PermissionGuard";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -123,22 +124,45 @@ const EventCard = (props: EventCardProps) => {
 
                     <Divider my={4} />
 
-                    <Button
-                        rightIcon={<ChevronRightIcon />}
-                        bg={EventDesignSystem.primaryColor}
-                        color="white"
-                        variant="outline"
-                        size="sm"
-                        w="full"
-                        onClick={() => navigate(`/events/${event.event_id}/detail`)}
-                    >
-                        View Details
-                    </Button>
+                    <CardFooter className="flex gap-4">
+                        <Button
+                            rightIcon={<ChevronRightIcon />}
+                            bg={EventDesignSystem.primaryColor}
+                            color="white"
+                            variant="outline"
+                            size="xs"
+                            w="full"
+                            onClick={() => navigate(`/events/${event.event_id}/detail`)}
+                        >
+                            View
+                        </Button>
+                        <PermissionGuard allowedRoles={["admin"]}>
+                            <Button
+                                variant="outline"
+                                bg={EventDesignSystem.primaryColor}
+                                color="white"
+                                size="xs"
+                                onClick={() => navigate(`/events/${event.event_id}/edit`)}
+                                rightIcon={<EditIcon />}>
+                                Edit
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                bg={EventDesignSystem.accentColor}
+                                color="white"
+                                size="xs" onClick={() => {
+                                    // removeEventFn()
+                                }}
+                                rightIcon={<DeleteIcon />}>
+                                Delete
+                            </Button>
+                        </PermissionGuard>
+                    </CardFooter>
                 </CardBody>
             </Card>
 
 
-        </Box>
+        </Box >
     )
 }
 

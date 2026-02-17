@@ -10,6 +10,7 @@ import EventList, { loader as eventListLoader } from "./components/events/compon
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
 import EventNew from "./admin/events/EventNew";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
+import EventEdit from "./admin/events/EventEdit";
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <EventList />, loader: eventListLoader },
           { path: "new", element: <EventNew /> },
+          { path: ":id/edit", element: <EventEdit />, loader: eventDetailLoader },
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
         ]
       },
