@@ -6,7 +6,7 @@ import NoMatch from "./components/nomatch/NoMatch";
 import LogInPage from "./components/LogInPage";
 import RegisterPage from "./components/RegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import EventList, { loader as eventListLoader } from "./components/events/components/EventList";
+import EventList from "./components/events/components/EventList";
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
 import EventNew from "./admin/events/EventNew";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTE_PATHS.EVENTS,
         children: [
-          { index: true, element: <EventList />, loader: eventListLoader },
+          { index: true, element: <EventList /> },
           { path: "new", element: <EventNew /> },
           { path: ":id/edit", element: <EventEdit />, loader: eventDetailLoader },
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },

@@ -1,4 +1,4 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack } from "@chakra-ui/react"
+import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast } from "@chakra-ui/react"
 import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
 import { FiMapPin } from "react-icons/fi"
 import { Event, EventAPIResponse } from "../events.type"
@@ -6,14 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
 import { PermissionGuard } from "../../PermissionGuard";
 import { EventDesignSystem } from "../designSystem";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { onDelete } from "../api/deleteEvents";
 
 interface EventCardProps {
     event: EventAPIResponse;
+    onDeleteEvent: (id: string) => void
 }
 
 const EventCard = (props: EventCardProps) => {
-    const { event } = props
+    const { event, onDeleteEvent } = props
     const navigate = useNavigate();
+    const toast = useToast()
+    const queryClient = useQueryClient()
 
     const formatTime = (dateString: string) => {
         const date = new Date(dateString)
@@ -156,10 +161,9 @@ const EventCard = (props: EventCardProps) => {
                                 size="sm"
                                 bg="red.500"
                                 color="white"
+                                type="button"
                                 _hover={{ bg: "red.600" }}
-                                onClick={() => {
-                                    // removeEventFn()
-                                }}
+                                onClick={onDeleteEvent}
                             >
                                 Delete
                             </Button>

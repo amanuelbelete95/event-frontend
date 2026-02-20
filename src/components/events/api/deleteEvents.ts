@@ -1,20 +1,14 @@
 import { BASE_URL } from "../constants";
 
-export const onDelete = async (event_id: string): Promise<Response> => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/events/${event_id}`, {
+export const onDelete = async (event_id: string): Promise<void> => {
+  const response = await fetch(`${BASE_URL}/api/events/${event_id}/delete`, {
     method: "DELETE",
     headers: {
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) {
+  if (response.status !== 200) {
     throw new Error("Failed to delete event");
   }
   return await response.json();
-
-  } catch (error) {
-    throw error;
-  }
-  
-};
+}

@@ -12,33 +12,34 @@ import {
   VStack,
   HStack,
   useColorModeValue,
-  Badge
+  Badge,
+  useToast
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { LoaderFunction, useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import getAllEvents from "../api/getAllEvents";
-import { EventAPIResponse } from "../events.type";
 import EventCard from "./EventCard";
 import { EventDesignSystem } from "../designSystem";
 import { PermissionGuard } from "../../PermissionGuard";
 import { useAuth } from "../../auth/AuthProvider";
-
-export const loader: LoaderFunction = async () => {
-  try {
-    return await getAllEvents();
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { onDelete } from "../api/deleteEvents";
 
 const EventList = () => {
   const navigate = useNavigate();
-  const events = useLoaderData() as EventAPIResponse[];
   const { user } = useAuth();
-  console.log("user", user)
   const [searchTerm, setSearchTerm] = useState("");
   const pageBg = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
+
+  const { data: events = [], refetch } = useQuery({
+    queryKey: ["events"],
+    queryFn: getAllEvents,
+  });
+
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
   const filteredEvents = useMemo(() => {
     return events.filter((event) =>
       [event.name, event.location, event.event_status]
@@ -47,6 +48,32 @@ const EventList = () => {
         .includes(searchTerm.toLowerCase())
     );
   }, [events, searchTerm]);
+
+  const { mutate: deleteEventFn } = useMutation({
+    mutationFn: (id: string) => onDelete(id),
+    onSuccess: () => {
+      refetch();
+      toast({
+        title: "Event deleted",
+        description: "Event deleted successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      })
+      navigate("/events")
+
+    },
+    onError: () => {
+      toast({
+        title: "Event delete Failed ",
+        description: "Event delete failed ",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+  });
+
 
   return (
     <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8}>
@@ -106,7 +133,7 @@ const EventList = () => {
             spacing={6}
           >
             {filteredEvents.map((event) => (
-              <EventCard key={event.event_id} event={event} />
+              <EventCard key={event.event_id} event={event} onDeleteEvent={() => deleteEventFn(event.event_id)} />
             ))}
           </SimpleGrid>
         ) : (
