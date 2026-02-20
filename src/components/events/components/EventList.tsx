@@ -63,10 +63,10 @@ const EventList = () => {
       navigate("/events")
 
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: "Event delete Failed ",
-        description: "Event delete failed ",
+        description: `${error.message}`,
         status: "error",
         duration: 5000,
         isClosable: true,
