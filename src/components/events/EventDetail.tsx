@@ -1,0 +1,82 @@
+import { Box, Flex, Text, Heading, VStack, Badge, Divider } from '@chakra-ui/react'
+import { LoaderFunction, useLoaderData } from 'react-router-dom'
+import getEvent from './api/getEvent'
+import { EventAPIResponse } from './events.type'
+import { EventDesignSystem } from './designSystem'
+import { formatDate } from '../../utils/dateUtility'
+
+// Shared loader function
+export const loader: LoaderFunction = async ({ params }) => {
+  const id = params.id;
+  if (!id) {
+    throw new Response("Event ID is missing", { status: 400 });
+  }
+
+  const event = await getEvent(id);
+  if (!event) {
+    throw new Response("Event not found", { status: 404 });
+  }
+
+  return event;
+};
+
+
+
+const EventDetail = () => {
+  const event = useLoaderData() as EventAPIResponse;
+  return (
+    <Box
+      maxW="1000px"
+      mx="auto"
+      my={8}
+      p={6}
+      bg="white"
+      borderRadius="lg"
+      boxShadow="md"
+      borderWidth="1px"
+      borderColor="gray.200"
+    >
+      <Flex justifyContent="space-between" alignItems="center" mb={6}>
+        <Heading size="xl" color={EventDesignSystem.primaryColor} fontWeight="bold">
+          {event.name}
+        </Heading>
+        <Flex alignItems="center" gap={3}>
+          <Badge
+            colorScheme={EventDesignSystem.statusColors[event.event_status as keyof typeof EventDesignSystem.statusColors] || EventDesignSystem.statusColors.default}
+            variant="solid"
+            bg={EventDesignSystem.primaryColor}
+            px={3}
+            py={1}
+            borderRadius="full"
+            fontSize="sm"
+          >
+            {event.event_status}
+          </Badge>
+        </Flex>
+      </Flex>
+
+      <Divider mb={6} />
+
+      <VStack align="start" spacing={6}>
+        <Box width="100%">
+          <Text fontSize="sm" color="gray.500" fontWeight="medium" mb={2}>📍 LOCATION</Text>
+          <Text fontSize="lg" color="gray.700">{event.location}</Text>
+        </Box>
+
+        <Box width="100%">
+          <Text fontSize="sm" color="gray.500" fontWeight="medium" mb={2}>📅 DATE & TIME</Text>
+          <Text fontSize="lg" color="gray.700">
+            {formatDate(event.event_date)}
+          </Text>
+        </Box>
+        <Box width="100%">
+          <Text fontSize="sm" color="gray.500" fontWeight="medium" mb={2}>📝 DESCRIPTION</Text>
+          <Text fontSize="lg" color="gray.700" whiteSpace="pre-line">
+            {event.description}
+          </Text>
+        </Box>
+      </VStack>
+    </Box>
+  )
+}
+export default EventDetail;
