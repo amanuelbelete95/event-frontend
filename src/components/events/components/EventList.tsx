@@ -1,29 +1,28 @@
 import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Box,
   Button,
   Flex,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
   SimpleGrid,
   Text,
-  VStack,
-  HStack,
   useColorModeValue,
-  Badge,
-  useToast
+  useToast,
+  VStack
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getAllEvents from "../api/getAllEvents";
-import EventCard from "./EventCard";
-import { EventDesignSystem } from "../designSystem";
 import { PermissionGuard } from "../../PermissionGuard";
-import { useAuth } from "../../auth/AuthProvider";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { onDelete } from "../api/deleteEvents";
+import getAllEvents from "../api/getAllEvents";
+import { EventDesignSystem } from "../designSystem";
+import EventCard from "./EventCard";
 
 const EventList = () => {
   const navigate = useNavigate();

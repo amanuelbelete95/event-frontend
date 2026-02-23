@@ -12,15 +12,10 @@ export const addEvents = async (
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-              },
+            },
             body: JSON.stringify(event),
         });
-         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create event');
-        }
-        const newAddisEvent: EventAPIResponse = await response.json();
-        return newAddisEvent;
+        return await response.json();
     } catch (error) {
         return Promise.reject(error)
     }
