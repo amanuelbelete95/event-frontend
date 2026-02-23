@@ -37,14 +37,6 @@ const EventList = () => {
   });
   const toast = useToast()
 
-  // const filteredEvents = useMemo(() => {
-  //   return events.filter((event) =>
-  //     [event.name, event.location, event.event_status]
-  //       .join(" ")
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase())
-  //   );
-  // }, [events, searchTerm]);
 
   const { mutate: deleteEventFn } = useMutation({
     mutationFn: (id: string) => onDelete(id),
