@@ -163,7 +163,7 @@ const EventCard = (props: EventCardProps) => {
                                 color="white"
                                 type="button"
                                 _hover={{ bg: "red.600" }}
-                                onClick={onDeleteEvent}
+                                onClick={() => onDeleteEvent(event.event_id)}
                             >
                                 Delete
                             </Button>

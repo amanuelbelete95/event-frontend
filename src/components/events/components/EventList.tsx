@@ -27,7 +27,6 @@ import { onDelete } from "../api/deleteEvents";
 
 const EventList = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const pageBg = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
@@ -36,18 +35,16 @@ const EventList = () => {
     queryKey: ["events"],
     queryFn: getAllEvents,
   });
-
   const toast = useToast()
-  const queryClient = useQueryClient()
 
-  const filteredEvents = useMemo(() => {
-    return events.filter((event) =>
-      [event.name, event.location, event.event_status]
-        .join(" ")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-  }, [events, searchTerm]);
+  // const filteredEvents = useMemo(() => {
+  //   return events.filter((event) =>
+  //     [event.name, event.location, event.event_status]
+  //       .join(" ")
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase())
+  //   );
+  // }, [events, searchTerm]);
 
   const { mutate: deleteEventFn } = useMutation({
     mutationFn: (id: string) => onDelete(id),
@@ -88,7 +85,7 @@ const EventList = () => {
             <Heading size="lg">Events</Heading>
             <HStack mt={2}>
               <Badge colorScheme="blue" px={3} py={1} rounded="full">
-                {filteredEvents.length} Events
+                {events.length} Events
               </Badge>
             </HStack>
           </Box>
@@ -127,13 +124,21 @@ const EventList = () => {
           </InputGroup>
         </Box>
 
-        {filteredEvents.length > 0 ? (
+        {events.length > 0 ? (
           <SimpleGrid
             columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
             spacing={6}
           >
-            {filteredEvents.map((event) => (
-              <EventCard key={event.event_id} event={event} onDeleteEvent={() => deleteEventFn(event.event_id)} />
+            {events.map((event) => (
+              <EventCard
+                key={event.event_id}
+                event={event}
+                onDeleteEvent={(eventId) => {
+                  deleteEventFn(eventId);
+                  refetch();
+                }}
+
+              />
             ))}
           </SimpleGrid>
         ) : (
@@ -156,17 +161,15 @@ const EventList = () => {
                 : "Start by creating your first event."}
             </Text>
             <PermissionGuard allowedRoles={["admin"]}>
-              {!searchTerm && (
-                <Button
-                  leftIcon={<AddIcon />}
-                  bg={EventDesignSystem.primaryColor}
-                  color="white"
-                  variant="outline"
-                  onClick={() => navigate("new")}
-                >
-                  Create Event
-                </Button>
-              )}
+              <Button
+                leftIcon={<AddIcon />}
+                bg={EventDesignSystem.primaryColor}
+                color="white"
+                variant="outline"
+                onClick={() => navigate("new")}
+              >
+                Create Event
+              </Button>
             </PermissionGuard>
           </Box>
         )}
