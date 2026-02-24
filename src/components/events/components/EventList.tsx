@@ -122,7 +122,7 @@ const EventList = () => {
           >
             {events.map((event) => (
               <EventCard
-                key={event.event_id}
+                key={event.id}
                 event={event}
                 onDeleteEvent={(eventId) => {
                   deleteEventFn(eventId);

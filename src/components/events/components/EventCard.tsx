@@ -143,7 +143,7 @@ const EventCard = (props: EventCardProps) => {
                             bg={EventDesignSystem.primaryColor}
                             color="white"
                             _hover={{ opacity: 0.9 }}
-                            onClick={() => navigate(`/events/${event.event_id}/detail`)}
+                            onClick={() => navigate(`/events/${event.id}/detail`)}
                         >
                             View Details
                         </Button>
@@ -153,7 +153,7 @@ const EventCard = (props: EventCardProps) => {
                                 bg={EventDesignSystem.primaryColor}
                                 color="white"
                                 _hover={{ opacity: 0.9 }}
-                                onClick={() => navigate(`/events/${event.event_id}/edit`)}
+                                onClick={() => navigate(`/events/${event.id}/edit`)}
                             >
                                 Edit
                             </Button>
@@ -163,7 +163,7 @@ const EventCard = (props: EventCardProps) => {
                                 color="white"
                                 type="button"
                                 _hover={{ bg: "red.600" }}
-                                onClick={() => onDeleteEvent(event.event_id)}
+                                onClick={() => onDeleteEvent(event.id)}
                             >
                                 Delete
                             </Button>

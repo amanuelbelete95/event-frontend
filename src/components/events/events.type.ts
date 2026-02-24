@@ -22,7 +22,7 @@ export interface Event {
 }
 
 export interface EventAPIResponse {
-  event_id: string;
+  id: string;
   name: string;
   location: string;
   event_date: string;

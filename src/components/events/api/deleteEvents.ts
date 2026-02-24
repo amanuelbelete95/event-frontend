@@ -5,9 +5,9 @@ interface DeleteEventAPiResponse {
   message: string
 }
 
-export const onDelete = async (event_id: string): Promise<DeleteEventAPiResponse> => {
+export const onDelete = async (eventId: string): Promise<DeleteEventAPiResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/events/${event_id}/delete`, {
+    const response = await fetch(`${BASE_URL}/api/events/${eventId}/delete`, {
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json',
