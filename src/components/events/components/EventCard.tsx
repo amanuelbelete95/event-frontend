@@ -168,6 +168,15 @@ const EventCard = (props: EventCardProps) => {
                                 Delete
                             </Button>
                         </PermissionGuard>
+                        <Button
+                            size="sm"
+                            bg={EventDesignSystem.primaryColor}
+                            color="white"
+                            _hover={{ opacity: 0.9 }}
+                            onClick={() => navigate(`/events/${event.id}/register-event`)}
+                        >
+                            Join Events
+                        </Button>
                     </HStack>
                 </CardBody>
             </Card>

@@ -15,7 +15,6 @@ export interface Event {
   description: string;
   location: string;
   capacity: number;
-  enrolledUsers: string[];
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -29,4 +28,11 @@ export interface EventAPIResponse {
   event_status: string;
   description?: string;
   capacity: Number;
+}
+
+export interface UserAPIResponse {
+  id?: string;
+  username: string;
+  role?: UserRole | undefined;
+  password: string;
 }

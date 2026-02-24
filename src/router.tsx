@@ -11,6 +11,7 @@ import UserLogInRegisterLayout from "./components/users/components/UserLoginLayo
 import EventNew from "./admin/events/EventNew";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
 import EventEdit from "./admin/events/EventEdit";
+import EventRegisterForm from "./components/register-events/EventRegisterForm";
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
           { path: "new", element: <EventNew /> },
           { path: ":id/edit", element: <EventEdit />, loader: eventDetailLoader },
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
+          { path: ":id/register-event", element: <EventRegisterForm /> },
         ]
       },
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },
