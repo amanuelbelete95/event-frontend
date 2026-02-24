@@ -127,7 +127,7 @@ export default function EventForm(props: EventFormProps) {
             type="text"
 
           />
-          <FormControl>
+          <FormControl isInvalid={!!errors.capacity}>
             <FormLabel
               fontWeight="semibold"
               fontSize="md"
