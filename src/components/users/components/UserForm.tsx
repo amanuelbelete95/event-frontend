@@ -6,10 +6,16 @@ import { EventDesignSystem } from "../../events/designSystem";
 import { CreateUpdateUser, logInSchema, registerSchema } from "../schema";
 import { UserAPIResponse } from "../users.type";
 
+interface UserLogInResponse {
+  message: string,
+  user: UserAPIResponse,
+  token?: string
+}
+
 export interface UserFormProps {
   initialValues?: CreateUpdateUser;
   onConfirm?: (data: CreateUpdateUser) => Promise<UserAPIResponse>
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: Partial<UserLogInResponse>) => void;
   onError?: (error: any) => void;
   title: string;
   isNew: boolean;
@@ -92,7 +98,7 @@ export default function UserForm(props: UserFormProps) {
               color={EventDesignSystem.form.label.color}
               fontSize="md"
             >
-              Password
+              Enter Password
             </FormLabel>
             <Input
               {...register("password")}
@@ -101,27 +107,23 @@ export default function UserForm(props: UserFormProps) {
             />
             <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
           </FormControl>
-
-          {isNew && <FormControl isInvalid={!!errors.role}>
-            <FormLabel
-              fontWeight="semibold"
-              color={EventDesignSystem.form.label.color}
-              fontSize="md"
-            >
-              Role
-            </FormLabel>
-            <Select
-              {...register("role")}
-              placeholder="Select role"
-              bg="white"
-
-              size="lg"
-            >
-              <option value="any">any</option>
-            </Select>
-            <FormErrorMessage>{errors.role?.message}</FormErrorMessage>
-          </FormControl>}
-
+          {
+            isNew && <FormControl isInvalid={!!errors}>
+              <FormLabel
+                fontWeight="semibold"
+                color={EventDesignSystem.form.label.color}
+                fontSize="md"
+              >
+                Confirm Password
+              </FormLabel>
+              <Input
+                {...register("confirmPassword")}
+                type="password"
+                placeholder="confirm password"
+              />
+              <FormErrorMessage>{errors.confirmPassword?.message}</FormErrorMessage>
+            </FormControl>
+          }
           <Button
             type="submit"
             bg={EventDesignSystem.primaryColor}

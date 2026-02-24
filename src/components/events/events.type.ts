@@ -1,10 +1,24 @@
 
+export type UserRole = 'admin' | 'employee' | 'user';
+
+export interface User {
+  id?: string;
+  username: string;
+  role?: UserRole | undefined;
+  password: string;
+  confirmPassword?: string
+}
+
 export interface Event {
-  name: string;
-  event_date: string;
-  event_status: string;
+  id: string;
+  title: string;
+  description: string;
   location: string;
-  description?: string;
+  capacity: number;
+  enrolledUsers: string[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface EventAPIResponse {

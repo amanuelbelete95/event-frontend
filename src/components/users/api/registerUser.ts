@@ -6,13 +6,14 @@ import { CreateUpdateUser } from "../schema";
 export const registerUser = async (
     user: CreateUpdateUser
 ): Promise<UserAPIResponse> => {
+    const { username, password, confirmPassword } = user
     try {
         const response = await fetch(`${BASE_URL}/api/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({ username, password, confirmPassword }),
         });
         if (!response.ok) {
             const errorData = await response.json();

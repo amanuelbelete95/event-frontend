@@ -16,13 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectPath = '/',
   children
 }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to={redirectPath} replace={true} />;

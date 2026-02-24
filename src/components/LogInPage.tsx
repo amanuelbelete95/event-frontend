@@ -8,40 +8,41 @@ const { toast } = createStandaloneToast();
 
 
 function LogInPage() {
-  const { isAuthenticated, login, logout, isLoading } = useAuth();
+  const { isAuthenticated, login, error } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  if (isLoading) {
-    return <div>Loading authentication status...</div>;
-  }
+    navigate("/login")
+  }, [isAuthenticated, error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
       <UserForm
         isNew={false}
         onConfirm={login}
-        onSuccess={() => {
+        onSuccess={(data) => {
+          console.log(data)
           toast({
-            title: "You have successfully signed in!",
+            title: "Login successful!",
             status: "success",
             duration: 3000,
             isClosable: true,
+            position: "top-right"
 
           });
           navigate("/");
         }}
-        onError={() => {
+        onError={(error) => {
+          console.log(error)
           toast({
             title: "Login failed",
-            description: "Login Failed please try again",
+            description: `${error.message}`,
             status: "error",
             duration: 3000,
             isClosable: true,
+            position: "top-right"
           });
         }}
         title='SignIn' />

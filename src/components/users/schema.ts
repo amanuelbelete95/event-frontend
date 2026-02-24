@@ -14,10 +14,10 @@ export const logInSchema = yup.object({
 
 export const registerSchema = yup.object({
   ...baseUserSchema,
-  role: yup
+  confirmPassword: yup
     .string()
-    .required("Role is required")
-    .oneOf(["admin", "user"], "Role must be either admin or user"),
+    .required("Confirm the password")
+    .oneOf([yup.ref("password")], "Passwords must match")
 });
 
 export type CreateUpdateUser = yup.InferType<typeof registerSchema>;

@@ -7,3 +7,8 @@ export const formatDate = (dateString: string) => {
         day: 'numeric'
     })
 }
+
+export const formatDateISO = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toISOString().split('T')[0]
+}

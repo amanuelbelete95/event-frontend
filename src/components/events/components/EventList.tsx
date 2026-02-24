@@ -1,48 +1,67 @@
 import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Box,
   Button,
   Flex,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
   SimpleGrid,
   Text,
-  VStack,
-  HStack,
   useColorModeValue,
-  Badge
+  useToast,
+  VStack
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
-import { LoaderFunction, useLoaderData, useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PermissionGuard } from "../../PermissionGuard";
+import { onDelete } from "../api/deleteEvents";
 import getAllEvents from "../api/getAllEvents";
-import { EventAPIResponse } from "../events.type";
-import EventCard from "./EventCard";
 import { EventDesignSystem } from "../designSystem";
-
-export const loader: LoaderFunction = async () => {
-  try {
-    return await getAllEvents();
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
+import EventCard from "./EventCard";
 
 const EventList = () => {
   const navigate = useNavigate();
-  const events = useLoaderData() as EventAPIResponse[];
   const [searchTerm, setSearchTerm] = useState("");
   const pageBg = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
-  const filteredEvents = useMemo(() => {
-    return events.filter((event) =>
-      [event.name, event.location, event.event_status]
-        .join(" ")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-  }, [events, searchTerm]);
+
+  const { data: events = [], refetch } = useQuery({
+    queryKey: ["events"],
+    queryFn: getAllEvents,
+  });
+  const toast = useToast()
+
+
+  const { mutate: deleteEventFn } = useMutation({
+    mutationFn: (id: string) => onDelete(id),
+    onSuccess: () => {
+      refetch();
+      toast({
+        title: "Event deleted",
+        description: "Event deleted successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      })
+      navigate("/events")
+
+    },
+    onError: (error) => {
+      toast({
+        title: "Event delete Failed ",
+        description: `${error.message}`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+  });
+
 
   return (
     <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8}>
@@ -57,23 +76,27 @@ const EventList = () => {
             <Heading size="lg">Events</Heading>
             <HStack mt={2}>
               <Badge colorScheme="blue" px={3} py={1} rounded="full">
-                {filteredEvents.length} Events
+                {events.length} Events
               </Badge>
             </HStack>
           </Box>
 
-          <Button
-            leftIcon={<AddIcon />}
-            onClick={() => navigate("new")}
-            size="md"
-            borderRadius="lg"
-            boxShadow="sm"
-            bg={EventDesignSystem.primaryColor}
-            color="white"
-            variant="outline"
-          >
-            Create Event
-          </Button>
+
+          <PermissionGuard allowedRoles={["admin"]}>
+            <Button
+              leftIcon={<AddIcon />}
+              onClick={() => navigate("new")}
+              size="md"
+              borderRadius="lg"
+              boxShadow="sm"
+              bg={EventDesignSystem.primaryColor}
+              color="white"
+              _hover={{ opacity: 0.9 }}
+              variant="outline"
+            >
+              Create Event
+            </Button>
+          </PermissionGuard>
         </Flex>
 
         <Box maxW="400px">
@@ -92,13 +115,21 @@ const EventList = () => {
           </InputGroup>
         </Box>
 
-        {filteredEvents.length > 0 ? (
+        {events.length > 0 ? (
           <SimpleGrid
             columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
             spacing={6}
           >
-            {filteredEvents.map((event) => (
-              <EventCard key={event.event_id} event={event} />
+            {events.map((event) => (
+              <EventCard
+                key={event.event_id}
+                event={event}
+                onDeleteEvent={(eventId) => {
+                  deleteEventFn(eventId);
+                  refetch();
+                }}
+
+              />
             ))}
           </SimpleGrid>
         ) : (
@@ -120,8 +151,7 @@ const EventList = () => {
                 ? "Try adjusting your search keywords."
                 : "Start by creating your first event."}
             </Text>
-
-            {!searchTerm && (
+            <PermissionGuard allowedRoles={["admin"]}>
               <Button
                 leftIcon={<AddIcon />}
                 bg={EventDesignSystem.primaryColor}
@@ -131,7 +161,7 @@ const EventList = () => {
               >
                 Create Event
               </Button>
-            )}
+            </PermissionGuard>
           </Box>
         )}
       </VStack>

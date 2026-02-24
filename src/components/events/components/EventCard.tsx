@@ -1,18 +1,24 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack } from "@chakra-ui/react"
-import { CalendarIcon, TimeIcon, ChevronRightIcon } from "@chakra-ui/icons"
+import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast } from "@chakra-ui/react"
+import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
 import { FiMapPin } from "react-icons/fi"
 import { Event, EventAPIResponse } from "../events.type"
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
+import { PermissionGuard } from "../../PermissionGuard";
 import { EventDesignSystem } from "../designSystem";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { onDelete } from "../api/deleteEvents";
 
 interface EventCardProps {
     event: EventAPIResponse;
+    onDeleteEvent: (id: string) => void
 }
 
 const EventCard = (props: EventCardProps) => {
-    const { event } = props
+    const { event, onDeleteEvent } = props
     const navigate = useNavigate();
+    const toast = useToast()
+    const queryClient = useQueryClient()
 
     const formatTime = (dateString: string) => {
         const date = new Date(dateString)
@@ -32,11 +38,18 @@ const EventCard = (props: EventCardProps) => {
                 boxShadow: 'xl',
             }}
             border="1px"
+            h="380px"
+            display="flex"
+            flexDirection="column"
+            position="relative"
         >
             <Card
                 p={4}
-                position="relative"
+
                 overflow="hidden"
+                flex={1}
+                display="flex"
+                flexDirection="column"
             >
                 <Box
                     position="absolute"
@@ -69,7 +82,7 @@ const EventCard = (props: EventCardProps) => {
                         </Badge>
                     </Box>
                 </Stack>
-                <CardBody p={6}>
+                <CardBody p={6} flex={1} display="flex" flexDirection="column">
                     {event.description && (
                         <Text
                             fontSize="sm"
@@ -121,24 +134,46 @@ const EventCard = (props: EventCardProps) => {
                         </HStack>
                     </VStack>
 
-                    <Divider my={4} />
+                    <Divider mt={4} mb={0} />
 
-                    <Button
-                        rightIcon={<ChevronRightIcon />}
-                        bg={EventDesignSystem.primaryColor}
-                        color="white"
-                        variant="outline"
-                        size="sm"
-                        w="full"
-                        onClick={() => navigate(`/events/${event.event_id}/detail`)}
-                    >
-                        View Details
-                    </Button>
+                    <HStack spacing={2} w="full" position={"absolute"} bottom={2} left={0} p={2}>
+                        <Button
+                            // flex={1}
+                            size="sm"
+                            bg={EventDesignSystem.primaryColor}
+                            color="white"
+                            _hover={{ opacity: 0.9 }}
+                            onClick={() => navigate(`/events/${event.event_id}/detail`)}
+                        >
+                            View Details
+                        </Button>
+                        <PermissionGuard allowedRoles={["admin"]}>
+                            <Button
+                                size="sm"
+                                bg={EventDesignSystem.primaryColor}
+                                color="white"
+                                _hover={{ opacity: 0.9 }}
+                                onClick={() => navigate(`/events/${event.event_id}/edit`)}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                size="sm"
+                                bg="red.500"
+                                color="white"
+                                type="button"
+                                _hover={{ bg: "red.600" }}
+                                onClick={() => onDeleteEvent(event.event_id)}
+                            >
+                                Delete
+                            </Button>
+                        </PermissionGuard>
+                    </HStack>
                 </CardBody>
             </Card>
 
 
-        </Box>
+        </Box >
     )
 }
 
