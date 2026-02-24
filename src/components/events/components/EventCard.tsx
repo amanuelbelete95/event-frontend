@@ -173,7 +173,7 @@ const EventCard = (props: EventCardProps) => {
                             bg={EventDesignSystem.primaryColor}
                             color="white"
                             _hover={{ opacity: 0.9 }}
-                            onClick={() => navigate(`/events/${event.id}/register-event`)}
+                            onClick={() => navigate(`/events/${event.id}/register`)}
                         >
                             Join Events
                         </Button>
