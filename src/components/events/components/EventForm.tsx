@@ -127,6 +127,19 @@ export default function EventForm(props: EventFormProps) {
             type="text"
 
           />
+          <FormControl>
+            <FormLabel
+              fontWeight="semibold"
+              fontSize="md"
+            >
+              Event Capacity
+            </FormLabel>
+            <Input
+              {...register("capacity")}
+              type="number"
+              placeholder="Enter Capacity"
+            />
+          </FormControl>
 
           <FormControl isInvalid={!!errors.event_status}>
             <FormLabel

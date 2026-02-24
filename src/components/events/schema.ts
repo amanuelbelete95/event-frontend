@@ -7,7 +7,8 @@ export const createUpdateEventSchema = yup
     location: yup.string().required(),
     event_status: yup.string().required(),
     event_date: yup.string().required(),
+    capacity: yup.number().required(),
 
   });
 
-export type CreateUpdateEvent = yup.InferType<typeof createUpdateEventSchema >
+export type CreateUpdateEvent = yup.InferType<typeof createUpdateEventSchema>
