@@ -74,13 +74,16 @@ const EventRegisterForm = () => {
             </Heading>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box maxW="600px"
+                    display={"flex"}
+                    flexDirection={"column"}
                     mx="auto"
                     p={8}
+                    gap={4}
                     borderRadius={EventDesignSystem.card.borderRadius}
                     boxShadow={EventDesignSystem.card.shadow}
                     borderWidth={EventDesignSystem.card.borderWidth}
                     borderColor={EventDesignSystem.card.borderColor}>
-                    <FormControl cursor={"pointer"} isInvalid={!!errors.event_id}>
+                    <FormControl isInvalid={!!errors.event_id}>
                         <FormLabel
                             fontWeight="semibold"
                             fontSize="md"
@@ -91,12 +94,12 @@ const EventRegisterForm = () => {
                         <Input
                             {...register("event_id")}
                             type="number"
-                            placeholder="Enter event name"
+                            placeholder="Please provide event name"
                             name="event_id"
                         />
                         <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
                     </FormControl>
-                    <FormControl cursor={"pointer"} isInvalid={!!errors.user_id}>
+                    <FormControl isInvalid={!!errors.user_id}>
                         <FormLabel
                             fontWeight="semibold"
                             fontSize="md"
@@ -106,11 +109,11 @@ const EventRegisterForm = () => {
                         <Input
                             {...register("user_id")}
                             type="number"
-                            placeholder="PLease select your name"
+                            placeholder="Please provide your name"
                         />
                         <FormErrorMessage>{errors.user_id?.message}</FormErrorMessage>
                     </FormControl>
-                    <FormControl cursor={"pointer"} isInvalid={!!errors.reason}>
+                    <FormControl isInvalid={!!errors.reason}>
                         <FormLabel
                             fontWeight="semibold"
                             fontSize="md"
@@ -121,7 +124,6 @@ const EventRegisterForm = () => {
                             {...register("reason")}
                             type="text"
                             placeholder="Please specify why you want to join the event"
-
                         />
                         <FormErrorMessage>{errors.reason?.message}</FormErrorMessage>
                     </FormControl>
