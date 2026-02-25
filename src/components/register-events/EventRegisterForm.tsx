@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, useToast } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { EventAPIResponse } from "../events/events.type";
 import { UserAPIResponse } from "../users/users.type";
@@ -7,6 +7,8 @@ import { registerToEvent } from "./api/registerToEvent";
 import { EventDesignSystem } from "../events/designSystem";
 import getEventById from "../events/api/getEvent";
 import { useNavigate, useParams } from "react-router-dom";
+import { eventRegistrationSchema } from "./schema";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export interface CreateUpdateRegistration {
     event_id: string;
@@ -19,7 +21,9 @@ export interface RegisterEventResponse extends CreateUpdateRegistration {
     user: UserAPIResponse;
 }
 const EventRegisterForm = () => {
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting }, } = useForm<CreateUpdateRegistration>();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting }, } = useForm<CreateUpdateRegistration>({
+        resolver: yupResolver(eventRegistrationSchema),
+    });
     const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
         registerEventFn(data)
     }
@@ -36,23 +40,24 @@ const EventRegisterForm = () => {
         mutationFn: registerToEvent,
         onSuccess: () => {
             toast({
-                title: "Event Joined",
+                title: "Event join success",
                 description: "Event joined successfully",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
             });
+            reset()
             navigate("/events");
         },
         onError: (error) => {
-            console.log(error)
             toast({
-                title: "Event Failed",
+                title: "Event Join Failed",
                 description: `${error.message}`,
                 status: "error",
                 duration: 5000,
                 isClosable: true,
             });
+            reset()
         }
     })
 
@@ -76,7 +81,7 @@ const EventRegisterForm = () => {
                     boxShadow={EventDesignSystem.card.shadow}
                     borderWidth={EventDesignSystem.card.borderWidth}
                     borderColor={EventDesignSystem.card.borderColor}>
-                    <FormControl cursor={"pointer"}>
+                    <FormControl cursor={"pointer"} isInvalid={!!errors.event_id}>
                         <FormLabel
                             fontWeight="semibold"
                             fontSize="md"
@@ -91,8 +96,9 @@ const EventRegisterForm = () => {
                             placeholder="Enter event name"
                             name="event_id"
                         />
+                        <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
                     </FormControl>
-                    <FormControl cursor={"pointer"}>
+                    <FormControl cursor={"pointer"} isInvalid={!!errors.user_id}>
                         <FormLabel
                             fontWeight="semibold"
                             fontSize="md"
@@ -104,8 +110,9 @@ const EventRegisterForm = () => {
                             type="number"
                             placeholder="PLease select your name"
                         />
+                        <FormErrorMessage>{errors.user_id?.message}</FormErrorMessage>
                     </FormControl>
-                    <FormControl cursor={"pointer"}>
+                    <FormControl cursor={"pointer"} isInvalid={!!errors.reason}>
                         <FormLabel
                             fontWeight="semibold"
                             fontSize="md"
@@ -118,6 +125,7 @@ const EventRegisterForm = () => {
                             placeholder="Please specify why you want to join the event"
 
                         />
+                        <FormErrorMessage>{errors.reason?.message}</FormErrorMessage>
                     </FormControl>
                     <Button
                         type="submit"
