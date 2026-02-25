@@ -13,8 +13,7 @@ export const registerToEvent = async (
     });
     const data = await response.json()
     if (!response.ok) {
-        const error = data;
-        throw new Error(error.message)
+        throw new Error(data.message)
     }
     return data;
 };
