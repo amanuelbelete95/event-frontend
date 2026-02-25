@@ -17,8 +17,6 @@ interface EventCardProps {
 const EventCard = (props: EventCardProps) => {
     const { event, onDeleteEvent } = props
     const navigate = useNavigate();
-    const toast = useToast()
-    const queryClient = useQueryClient()
 
     const formatTime = (dateString: string) => {
         const date = new Date(dateString)
@@ -42,14 +40,17 @@ const EventCard = (props: EventCardProps) => {
             display="flex"
             flexDirection="column"
             position="relative"
+            cursor={"pointer"}
+            onClick={() =>
+                navigate(`/events/${event.id}/detail`)}
         >
             <Card
                 p={4}
-
                 overflow="hidden"
                 flex={1}
                 display="flex"
                 flexDirection="column"
+
             >
                 <Box
                     position="absolute"
