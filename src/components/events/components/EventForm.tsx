@@ -47,8 +47,8 @@ export default function EventForm(props: EventFormProps) {
     if (initialValues) {
       reset({
         ...initialValues,
-        event_date: initialValues.event_date?.split("T")[0], // fix date
-        event_status: initialValues.event_status, // already "published"
+        event_date: initialValues.event_date?.split("T")[0],
+        event_status: initialValues.event_status,
       });
     }
   }, [initialValues, reset]);
@@ -63,8 +63,6 @@ export default function EventForm(props: EventFormProps) {
   const onSubmit: SubmitHandler<CreateUpdateEvent> = (data) => {
     mutate(data);
   };
-
-  ;
 
 
   return (
@@ -89,7 +87,7 @@ export default function EventForm(props: EventFormProps) {
       </Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4} align="stretch">
-          <FormControl>
+          <FormControl isInvalid={!!errors.name}>
             <FormLabel
               fontWeight="semibold"
               fontSize="md"
@@ -101,32 +99,48 @@ export default function EventForm(props: EventFormProps) {
               type="text"
               placeholder="Enter event name"
             />
+            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
           </FormControl>
+          <FormControl isInvalid={!!errors.event_date}>
+            <FormLabel
+              fontWeight="semibold"
+              color={EventDesignSystem.form.label.color}
+              fontSize="md"
+            >
+              Date
+            </FormLabel>
+            <Input
+              {...register("event_date")}
+              type="date"
 
-          <FormLabel
-            fontWeight="semibold"
-            color={EventDesignSystem.form.label.color}
-            fontSize="md"
-          >
-            Date
-          </FormLabel>
-          <Input
-            {...register("event_date")}
-            type="date"
-
-          />
-          <FormLabel
-            fontWeight="semibold"
-            color={EventDesignSystem.form.label.color}
-            fontSize="md"
-          >
-            Location
-          </FormLabel>
-          <Input
-            {...register("location")}
-            type="text"
-
-          />
+            />
+            <FormErrorMessage>{errors.event_date?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={!!errors.location}>
+            <FormLabel
+              fontWeight="semibold"
+              color={EventDesignSystem.form.label.color}
+              fontSize="md"
+            >
+              Location
+            </FormLabel>
+            <Input
+              {...register("location")}
+            />
+            <FormErrorMessage>{errors.location?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl>
+            <FormLabel
+              fontWeight="semibold"
+              color={EventDesignSystem.form.label.color}
+              fontSize="md"
+            >
+              Description
+            </FormLabel>
+            <Input
+              {...register("description")}
+            />
+          </FormControl>
           <FormControl isInvalid={!!errors.capacity}>
             <FormLabel
               fontWeight="semibold"
@@ -139,6 +153,7 @@ export default function EventForm(props: EventFormProps) {
               type="number"
               placeholder="Enter Capacity"
             />
+            {/* <FormErrorMessage>{errors.capacity?.message}</FormErrorMessage> */}
           </FormControl>
 
           <FormControl isInvalid={!!errors.event_status}>

@@ -36,7 +36,8 @@ function NewEvent() {
                     location: '',
                     event_status: '',
                     event_date: '',
-                    capacity: '',
+                    capacity: 0,
+                    description: ""
                 }}
                 onConfirm={addEvents}
                 onSuccess={handleSuccess}
