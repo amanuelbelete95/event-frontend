@@ -1,26 +1,26 @@
 import { Box, Button, Flex, FormControl, FormLabel, Heading, Input } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { User, Event, EventAPIResponse } from "../events/events.type";
+import { EventAPIResponse } from "../events/events.type";
 import { UserAPIResponse } from "../users/users.type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { registerToEvent } from "./api/registerToEvent";
 import { EventDesignSystem } from "../events/designSystem";
 import getEventById from "../events/api/getEvent";
-
-import { URLSearchParams } from "url";
-import { BASE_URL } from "../events/constants";
 import { useParams } from "react-router-dom";
 
-interface RegisterEventInput {
+export interface CreateUpdateRegistration {
     event_id: string;
     user_id: string;
     reason: string;
-    event?: EventAPIResponse;
-    user?: UserAPIResponse;
+}
+
+export interface RegisterEventResponse extends CreateUpdateRegistration {
+    event: EventAPIResponse;
+    user: UserAPIResponse;
 }
 const EventRegisterForm = () => {
-    const { register, handleSubmit, watch, formState: { errors, isSubmitting }, } = useForm<RegisterEventInput>();
-    const onSubmit: SubmitHandler<RegisterEventInput> = (data) => {
+    const { register, handleSubmit, watch, formState: { errors, isSubmitting }, } = useForm<CreateUpdateRegistration>();
+    const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
         registerEventFn(data)
     }
 
