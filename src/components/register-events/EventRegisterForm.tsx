@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormLabel, Heading, Input } from "@chakra-ui/react"
+import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, useToast } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { EventAPIResponse } from "../events/events.type";
 import { UserAPIResponse } from "../users/users.type";
@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { registerToEvent } from "./api/registerToEvent";
 import { EventDesignSystem } from "../events/designSystem";
 import getEventById from "../events/api/getEvent";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export interface CreateUpdateRegistration {
     event_id: string;
@@ -19,11 +19,13 @@ export interface RegisterEventResponse extends CreateUpdateRegistration {
     user: UserAPIResponse;
 }
 const EventRegisterForm = () => {
-    const { register, handleSubmit, watch, formState: { errors, isSubmitting }, } = useForm<CreateUpdateRegistration>();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting }, } = useForm<CreateUpdateRegistration>();
     const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
         registerEventFn(data)
     }
+    const navigate = useNavigate();
 
+    const toast = useToast();
     const { id } = useParams();
     const { data: event } = useQuery({
         queryKey: ["event", id],
@@ -32,8 +34,26 @@ const EventRegisterForm = () => {
     });
     const { mutate: registerEventFn } = useMutation({
         mutationFn: registerToEvent,
-        onSuccess: undefined,
-        onError: undefined
+        onSuccess: () => {
+            toast({
+                title: "Event Joined",
+                description: "Event joined successfully",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+            });
+            navigate("/events");
+        },
+        onError: (error) => {
+            console.log(error)
+            toast({
+                title: "Event Failed",
+                description: `${error.message}`,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
     })
 
 

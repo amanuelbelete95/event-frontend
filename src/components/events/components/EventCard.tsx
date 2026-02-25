@@ -136,16 +136,15 @@ const EventCard = (props: EventCardProps) => {
 
                     <Divider mt={4} mb={0} />
 
-                    <HStack spacing={2} w="full" position={"absolute"} bottom={2} left={0} p={2}>
+                    <HStack spacing={2} w="full" position={"absolute"} bottom={5} left={5}>
                         <Button
-                            // flex={1}
                             size="sm"
                             bg={EventDesignSystem.primaryColor}
                             color="white"
                             _hover={{ opacity: 0.9 }}
                             onClick={() => navigate(`/events/${event.id}/detail`)}
                         >
-                            View Details
+                            View
                         </Button>
                         <PermissionGuard allowedRoles={["admin"]}>
                             <Button
@@ -175,7 +174,7 @@ const EventCard = (props: EventCardProps) => {
                             _hover={{ opacity: 0.9 }}
                             onClick={() => navigate(`/events/${event.id}/register`)}
                         >
-                            Join Events
+                            Join
                         </Button>
                     </HStack>
                 </CardBody>
