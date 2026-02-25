@@ -57,7 +57,6 @@ const EventRegisterForm = () => {
                 duration: 5000,
                 isClosable: true,
             });
-            reset()
         }
     })
 
@@ -86,7 +85,6 @@ const EventRegisterForm = () => {
                             fontWeight="semibold"
                             fontSize="md"
                             id="event_id"
-
                         >
                             Event Name
                         </FormLabel>
