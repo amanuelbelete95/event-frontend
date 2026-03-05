@@ -19,7 +19,7 @@ export interface User {
 }
 
 interface AuthContextType {
-  user: User;
+  user: User | null;
   isLoading: boolean;
   error: Error | null;
   isAuthenticated: boolean;
