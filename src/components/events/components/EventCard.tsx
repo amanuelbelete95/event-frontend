@@ -1,13 +1,14 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast } from "@chakra-ui/react"
-import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
-import { FiMapPin } from "react-icons/fi"
-import { Event, EventAPIResponse } from "../events.type"
+import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
+import { Badge, Box, Button, Card, CardBody, Divider, Heading, HStack, Icon, Stack, Text, useToast, VStack } from "@chakra-ui/react";
+import { FiMapPin } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
 import { PermissionGuard } from "../../PermissionGuard";
 import { EventDesignSystem } from "../designSystem";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { onDelete } from "../api/deleteEvents";
+import { EventAPIResponse } from "../events.type";
+import { registerToEvent } from "../../register-events/api/registerToEvent";
+import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "../../auth/AuthProvider";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -18,6 +19,10 @@ const EventCard = (props: EventCardProps) => {
     const { event, onDeleteEvent } = props
     const navigate = useNavigate();
 
+    const {user} = useAuth();
+
+    const toast = useToast();
+
     const formatTime = (dateString: string) => {
         const date = new Date(dateString)
         return date.toLocaleTimeString('en-US', {
@@ -25,6 +30,30 @@ const EventCard = (props: EventCardProps) => {
             minute: '2-digit'
         })
     }
+
+    const { mutate: registerEventFn } = useMutation({
+            mutationFn: registerToEvent,
+            onSuccess: () => {
+                toast({
+                    title: "Event join success",
+                    description: "Event joined successfully",
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                });
+                navigate("/events");
+            },
+            onError: (error) => {
+                toast({
+                    title: "Event Join Failed",
+                    description: `${error.message}`,
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        })
+    
     return (
         <Box
             borderRadius="xl"
@@ -173,7 +202,15 @@ const EventCard = (props: EventCardProps) => {
                             bg={EventDesignSystem.primaryColor}
                             color="white"
                             _hover={{ opacity: 0.9 }}
-                            onClick={() => navigate(`/events/${event.id}/register`)}
+                            onClick={() => {
+                                navigate(`/events/${event.id}/register`)
+                                registerEventFn({
+                                    event_id: event.id,
+                                    user_id: user.id,
+                                    reason: ""
+                                }) 
+                            }
+                            }
                         >
                             Join
                         </Button>
