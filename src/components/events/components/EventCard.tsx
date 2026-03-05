@@ -25,11 +25,10 @@ const formatTime = (dateString: string) => {
 
 const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     const navigate = useNavigate();
-    
     const handleView = useCallback(() => navigate(`/events/${event.id}/detail`), [event.id, navigate]);
-    const handleEdit = useCallback(() => navigate(`/events/${event.id}/edit`), [event.id, navigate]);
-    const handleJoin = useCallback(() => navigate(`/events/${event.id}/join`), [event.id, navigate]);
-    const handleDelete = useCallback(() => onDeleteEvent(event.id), [event.id, onDeleteEvent]);
+    const handleEdit = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
+    const handleJoin = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/join`) }, [event.id, navigate]);
+    const handleDelete = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
     return (
         <Box
             borderRadius="xl"
