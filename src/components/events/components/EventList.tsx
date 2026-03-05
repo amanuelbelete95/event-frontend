@@ -16,7 +16,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PermissionGuard } from "../../PermissionGuard";
 import { onDelete } from "../api/deleteEvents";
@@ -36,6 +36,16 @@ const EventList = () => {
   });
   const toast = useToast()
 
+  const filteredEvents = useMemo(() => {
+    if (!searchTerm) return events;
+    const lower = searchTerm.toLowerCase();
+    return events.filter(
+      (event) =>
+        event.name.toLowerCase().includes(lower) ||
+        event.location.toLowerCase().includes(lower) ||
+        event.event_status?.toLowerCase().includes(lower)
+    );
+  }, [events, searchTerm]);
 
   const { mutate: deleteEventFn } = useMutation({
     mutationFn: (id: string) => onDelete(id),
@@ -115,20 +125,16 @@ const EventList = () => {
           </InputGroup>
         </Box>
 
-        {events.length > 0 ? (
+        {filteredEvents.length > 0 ? (
           <SimpleGrid
             columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
             spacing={6}
           >
-            {events.map((event) => (
+            {filteredEvents.map((event) => (
               <EventCard
                 key={event.id}
                 event={event}
-                onDeleteEvent={(eventId) => {
-                  deleteEventFn(eventId);
-                  refetch();
-                }}
-
+                onDeleteEvent={deleteEventFn}
               />
             ))}
           </SimpleGrid>
