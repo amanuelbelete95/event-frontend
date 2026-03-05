@@ -28,7 +28,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     
     const handleView = useCallback(() => navigate(`/events/${event.id}/detail`), [event.id, navigate]);
     const handleEdit = useCallback(() => navigate(`/events/${event.id}/edit`), [event.id, navigate]);
-    const handleJoin = useCallback(() => navigate(`/events/${event.id}/register`), [event.id, navigate]);
+    const handleJoin = useCallback(() => navigate(`/events/${event.id}/join`), [event.id, navigate]);
     const handleDelete = useCallback(() => onDeleteEvent(event.id), [event.id, onDeleteEvent]);
     return (
         <Box
@@ -144,15 +144,6 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                     <Divider mt={4} mb={0} />
 
                     <HStack spacing={2} w="full" position={"absolute"} bottom={5} left={5}>
-                        <Button
-                            size="sm"
-                            bg={EventDesignSystem.primaryColor}
-                            color="white"
-                            _hover={{ opacity: 0.9 }}
-                            onClick={handleView}
-                        >
-                            View
-                        </Button>
                         <PermissionGuard allowedRoles={["admin"]}>
                             <Button
                                 size="sm"
@@ -161,7 +152,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                 _hover={{ opacity: 0.9 }}
                                 onClick={handleEdit}
                             >
-                                Edit
+                            Edit
                             </Button>
                             <Button
                                 size="sm"
@@ -171,9 +162,18 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                 _hover={{ bg: "red.600" }}
                                 onClick={handleDelete}
                             >
-                                Delete
+                            Delete
                             </Button>
                         </PermissionGuard>
+                         <Button
+                            size="sm"
+                            bg={EventDesignSystem.primaryColor}
+                            color="white"
+                            _hover={{ opacity: 0.9 }}
+                            onClick={handleView}
+                        >
+                            View
+                        </Button>
                         <Button
                             size="sm"
                             bg={EventDesignSystem.primaryColor}
@@ -183,6 +183,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                         >
                             Join
                         </Button>
+
                     </HStack>
                 </CardBody>
             </Card>

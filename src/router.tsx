@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
           { path: "new", element: <EventNew /> },
           { path: ":id/edit", element: <EventEdit />, loader: eventDetailLoader },
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
-          { path: ":id/register", element: <EventRegisterForm /> },
+          { path: ":id/join", element: <EventRegisterForm /> },
         ]
       },
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },
