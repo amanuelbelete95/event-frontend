@@ -32,14 +32,40 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     const handleJoin = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/join`) }, [event.id, navigate]);
     const handleDelete = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
 
-
+   
     
     
-    const {isOpen, onOpen, onClose} = useDisclosure()
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    
+    const toast = useToast();
+    
+      const { mutate: registerEventFn  } = useMutation({
+        mutationFn: registerToEvent,
+        onSuccess: () => {
+          toast({
+            title: "Event joined",
+            description: "Event joined successfully",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          })
+          navigate("/events")
+    
+        },
+        onError: (error) => {
+          toast({
+            title: "Event delete",
+            description: `${error.message}`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+      });
     return (
         <>
         
-        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerToEvent}  title={event.name} eventId={event.id} onClose={onClose}/>
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerEventFn}  title={event.name} eventId={event.id} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"

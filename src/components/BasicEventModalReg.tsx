@@ -20,6 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { useAuth } from "./auth/AuthProvider";
+import { EventDesignSystem } from "./events/designSystem";
 
 interface BasicEventModalRegProps{
   isOpen: boolean;
@@ -82,7 +83,7 @@ export default function BasicEventModalRegModal(
     },
   });
 
-  const submitAction : SubmitHandler<BasicActionForm> =  (data) => {
+  const onSubmit : SubmitHandler<BasicActionForm> =  (data) => {
     mutate({
       ...data,
       event_id: eventId,
@@ -125,7 +126,7 @@ export default function BasicEventModalRegModal(
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody display={"flex"} flexDirection={"column"} gap={8}>
-                  <form onSubmit={handleSubmit(submitAction)}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" value={eventId} name="event_id" />
                     <input type="hidden" value={user?.id || ""} name="user_id" />
                     <FormControl marginY={4}>
@@ -138,8 +139,9 @@ export default function BasicEventModalRegModal(
 
                     <Flex mt={8} justifyContent={"flex-end"}>
                       <Button
-                        colorScheme="red"
+                        // colorScheme={EventDesignSystem.primaryColor}
                         mr={3}
+                        bg={EventDesignSystem.primaryColor}
                         type="submit"
                         isDisabled={isPending}
                         isLoading={isPending}
