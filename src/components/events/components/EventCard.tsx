@@ -1,4 +1,4 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast } from "@chakra-ui/react"
+import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast, useDisclosure } from "@chakra-ui/react"
 import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
 import { FiMapPin } from "react-icons/fi"
 import { Event, EventAPIResponse } from "../events.type"
@@ -9,6 +9,8 @@ import { EventDesignSystem } from "../designSystem";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { onDelete } from "../api/deleteEvents";
 import { memo, useCallback } from "react";
+import BasicEventModalRegModal from "../../BasicEventModalReg";
+import { registerToEvent } from "../../register-events/api/registerToEvent";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -29,7 +31,15 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     const handleEdit = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
     const handleJoin = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/join`) }, [event.id, navigate]);
     const handleDelete = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
+
+
+    
+    
+    const {isOpen, onOpen, onClose} = useDisclosure()
     return (
+        <>
+        
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerToEvent}  title={event.name} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"
@@ -161,7 +171,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                 _hover={{ bg: "red.600" }}
                                 onClick={handleDelete}
                             >
-                            Delete
+                             Delete
                             </Button>
                         </PermissionGuard>
                          <Button
@@ -178,7 +188,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                             bg={EventDesignSystem.primaryColor}
                             color="white"
                             _hover={{ opacity: 0.9 }}
-                            onClick={handleJoin}
+                            onClick={onOpen}
                         >
                             Join
                         </Button>
@@ -189,6 +199,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
 
 
         </Box >
+        </>
     )
 });
 
