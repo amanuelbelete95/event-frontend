@@ -73,6 +73,8 @@ const EventList = () => {
   });
 
 
+
+
   return (
     <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8}>
       <VStack spacing={8} align="stretch" maxW="1400px" mx="auto">

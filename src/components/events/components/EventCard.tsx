@@ -39,7 +39,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     return (
         <>
         
-        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerToEvent}  title={event.name} onClose={onClose}/>
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerToEvent}  title={event.name} eventId={event.id} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"
@@ -188,7 +188,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                             bg={EventDesignSystem.primaryColor}
                             color="white"
                             _hover={{ opacity: 0.9 }}
-                            onClick={onOpen}
+                            onClick={(e) => { e.stopPropagation(); onOpen(); }}
                         >
                             Join
                         </Button>

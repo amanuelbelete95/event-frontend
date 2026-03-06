@@ -17,13 +17,15 @@ import {
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import { Form, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { useAuth } from "./auth/AuthProvider";
 
 interface BasicEventModalRegProps{
   isOpen: boolean;
   title: string;
   actionName?: string;
+  eventId: string;
   onClose: () => void;
   onConfirm: (
     data: BasicActionForm
@@ -48,9 +50,11 @@ export default function BasicEventModalRegModal(
   const {
     isOpen,
     title,
+    eventId,
     onConfirm,
     onClose,
   } = props;
+  const { user } = useAuth();
   const { toast } = createStandaloneToast();
   const { register, handleSubmit } = useForm<BasicActionForm>({
           resolver: yupResolver(validationSchema),
@@ -79,7 +83,11 @@ export default function BasicEventModalRegModal(
   });
 
   const submitAction : SubmitHandler<BasicActionForm> =  (data) => {
-    mutate(data)
+    mutate({
+      ...data,
+      event_id: eventId,
+      user_id: user?.id || ""
+    })
   }
 
   return (
@@ -117,39 +125,14 @@ export default function BasicEventModalRegModal(
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody display={"flex"} flexDirection={"column"} gap={8}>
-                  <Form noValidate onSubmit={handleSubmit(submitAction)}>
-                    <FormControl>
-                    <FormLabel
-                        fontWeight="semibold"
-                        fontSize="md"
-                        id="event_id"
-                    >
-                        Event Name
-                    </FormLabel>
-                    <Input
-                        {...register("event_id")}
-                        type="number"
-                        placeholder="Please provide event name"
-                        name="event_id"
-                    />
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel
-                            fontWeight="semibold"
-                            fontSize="md"
-                        >
-                            User
-                        </FormLabel>
-                        <Input
-                            {...register("user_id")}
-                            type="number"
-                            placeholder="Please provide your name"
-                        />
-                        </FormControl>
+                  <form onSubmit={handleSubmit(submitAction)}>
+                    <input type="hidden" value={eventId} name="event_id" />
+                    <input type="hidden" value={user?.id || ""} name="user_id" />
                     <FormControl marginY={4}>
                       <FormLabel>Reason</FormLabel>
                       <Input
                         {...register("reason")}
+                        placeholder="Please provide your reason for joining"
                       />
                     </FormControl>
 
@@ -167,7 +150,7 @@ export default function BasicEventModalRegModal(
                       </Button>
                       <Button onClick={onClose}>Close</Button>
                     </Flex>
-                  </Form>
+                  </form>
           </ModalBody>
         </ModalContent>
       </Modal>
