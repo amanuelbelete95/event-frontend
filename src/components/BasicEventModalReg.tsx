@@ -21,6 +21,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { useAuth } from "./auth/AuthProvider";
 import { EventDesignSystem } from "./events/designSystem";
+import { RegisterEventResponse } from "./register-events/EventRegisterForm";
+export interface CreateUpdateRegistration {
+    event_id: string;
+    user_id: string;
+    reason: string;
+}
 
 interface BasicEventModalRegProps{
   isOpen: boolean;
@@ -29,14 +35,8 @@ interface BasicEventModalRegProps{
   eventId: string;
   onClose: () => void;
   onConfirm: (
-    data: BasicActionForm
-  ) => Promise<any>;
-}
-
-interface BasicActionForm {
-  reason: string;
-  user_id: string;
-  event_id: string;
+    data: CreateUpdateRegistration
+  ) => Promise<RegisterEventResponse>;
 }
 
 const validationSchema = Yup.object().shape({
@@ -57,7 +57,7 @@ export default function BasicEventModalRegModal(
   } = props;
   const { user } = useAuth();
   const { toast } = createStandaloneToast();
-  const { register, handleSubmit } = useForm<BasicActionForm>({
+  const { register, handleSubmit } = useForm<CreateUpdateRegistration>({
           resolver: yupResolver(validationSchema),
       });
   const { mutate, isPending } = useMutation
@@ -83,7 +83,7 @@ export default function BasicEventModalRegModal(
     },
   });
 
-  const onSubmit : SubmitHandler<BasicActionForm> =  (data) => {
+  const onSubmit : SubmitHandler<CreateUpdateRegistration> =  (data) => {
     mutate({
       ...data,
       event_id: eventId,
@@ -139,7 +139,6 @@ export default function BasicEventModalRegModal(
 
                     <Flex mt={8} justifyContent={"flex-end"}>
                       <Button
-                        // colorScheme={EventDesignSystem.primaryColor}
                         mr={3}
                         bg={EventDesignSystem.primaryColor}
                         type="submit"

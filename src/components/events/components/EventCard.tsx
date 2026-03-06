@@ -1,16 +1,15 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast, useDisclosure } from "@chakra-ui/react"
-import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
-import { FiMapPin } from "react-icons/fi"
-import { Event, EventAPIResponse } from "../events.type"
+import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
+import { Badge, Box, Button, Card, CardBody, Divider, Heading, HStack, Icon, Stack, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { memo, useCallback } from "react";
+import { FiMapPin } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
-import { PermissionGuard } from "../../PermissionGuard";
-import { EventDesignSystem } from "../designSystem";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { onDelete } from "../api/deleteEvents";
-import { memo, useCallback } from "react";
 import BasicEventModalRegModal from "../../BasicEventModalReg";
+import { PermissionGuard } from "../../PermissionGuard";
 import { registerToEvent } from "../../register-events/api/registerToEvent";
+import { EventDesignSystem } from "../designSystem";
+import { EventAPIResponse } from "../events.type";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -26,20 +25,13 @@ const formatTime = (dateString: string) => {
 }
 
 const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const toast = useToast();
     const navigate = useNavigate();
     const handleView = useCallback(() => navigate(`/events/${event.id}/detail`), [event.id, navigate]);
     const handleEdit = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
-    const handleJoin = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/join`) }, [event.id, navigate]);
     const handleDelete = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
-
-   
-    
-    
-    const {isOpen, onOpen, onClose} = useDisclosure();
-    
-    const toast = useToast();
-    
-      const { mutate: registerEventFn  } = useMutation({
+    const { mutate: registerEventFn  } = useMutation({
         mutationFn: registerToEvent,
         onSuccess: () => {
           toast({
@@ -65,7 +57,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     return (
         <>
         
-        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerEventFn}  title={event.name} eventId={event.id} onClose={onClose}/>
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerToEvent}  title={event.name} eventId={event.id} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"
