@@ -14,20 +14,21 @@ import {
     ModalHeader,
     ModalOverlay,
     PortalManager,
+    Select,
     Text
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Form, SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { useAuth } from "./auth/AuthProvider";
 import { EventDesignSystem } from "./events/designSystem";
 import { RegisterEventResponse } from "./register-events/EventRegisterForm";
 import { PermissionGuard } from "./PermissionGuard";
 export interface CreateUpdateRegistration {
-    event_id: string;
-    user_id: string;
-    reason: string;
+    event_id: string  | undefined;
+    user_id: number | undefined;
+    reason: number;
 }
 
 interface BasicEventModalRegProps{
@@ -43,8 +44,8 @@ interface BasicEventModalRegProps{
 
 const validationSchema = Yup.object().shape({
   reason: Yup.string().required("reason is required"),
-  event_id: Yup.string().required("Event is required"),
-  user_id: Yup.string().required("User is required"),
+  event_id: Yup.number().required("Event is required").optional(),
+  user_id: Yup.number().required("User is required").optional(),
 });
 
 export default function BasicEventModalRegModal(
@@ -58,6 +59,16 @@ export default function BasicEventModalRegModal(
     onClose,
   } = props;
   const { user } = useAuth();
+
+
+const events = [
+ { id: "1", name: "React Conference", value: 1, },
+ { id: "2", name: "Tech Meetup", value: 2, }
+];
+const users = [
+ { id: "5", name: "John Doe" , value: 5},
+ { id: "6", name: "Sarah Smith", value: 6 }
+];
   const { toast } = createStandaloneToast();
   const { register, handleSubmit, getValues, formState: { errors } } = useForm<CreateUpdateRegistration>({
           resolver: yupResolver(validationSchema),
@@ -74,7 +85,8 @@ export default function BasicEventModalRegModal(
         description: ErrorMessage,
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if(data == undefined || null ) return;
       toast({
         status: "success",
         title: "Event joined successfully!",
@@ -84,6 +96,19 @@ export default function BasicEventModalRegModal(
       onClose();
     },
   });
+
+
+  const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
+
+  const payload = user?.role === "admin"
+    ? data
+    : {
+        ...data,
+        event_id: eventId,
+        user_id: user?.id,
+      };
+  mutate(payload);
+};
 
 
   return (
@@ -121,6 +146,7 @@ export default function BasicEventModalRegModal(
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody display={"flex"} flexDirection={"column"} gap={2}>
+            <form onSubmit={handleSubmit(onSubmit)}>
             <PermissionGuard allowedRoles={["admin"]}>
             <FormControl isInvalid={!!errors.event_id}>
               <FormLabel
@@ -130,13 +156,14 @@ export default function BasicEventModalRegModal(
               >
                   Event Name
               </FormLabel>
-              <Input
-                  {...register("event_id")}
-                  type="number"
-                  placeholder="Please provide event name"
-                  name="event_id"
-              />
-              <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
+             <Select placeholder="Select event" {...register("event_id")}>
+              {events?.map((event) => (
+              <option key={event.id} value={event.value}>
+               {event.name}
+              </option>
+              ))}
+              </Select>
+            <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!errors.user_id}>
               <FormLabel
@@ -145,11 +172,13 @@ export default function BasicEventModalRegModal(
               >
                   User
               </FormLabel>
-              <Input
-                  {...register("user_id")}
-                  type="number"
-                  placeholder="Please provide your name"
-              />
+              <Select placeholder="Select user" {...register("user_id")}>
+               {users?.map((user) => (
+                <option key={user.id} value={user.value}>
+                  {user.name}
+                </option>
+                ))}
+              </Select>
             <FormErrorMessage>{errors.user_id?.message}</FormErrorMessage>
             </FormControl>
             </PermissionGuard>   
@@ -169,14 +198,14 @@ export default function BasicEventModalRegModal(
               isLoading={isPending}
               spinnerPlacement="start"
               loadingText="Processing"
-              onClick={(data) => {
-                onConfirm(data);
-              }}
+              type="submit"
             >
               Join Event
             </Button>
             <Button onClick={onClose}>Close</Button>
+            
           </Flex>
+          </form>
           </ModalBody>
         </ModalContent>
       </Modal>
