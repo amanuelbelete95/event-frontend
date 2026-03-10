@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
 } from "react";
 import { BASE_URL } from "../events/constants";
 import { logInUser } from "../users/api/logInUser";
@@ -60,15 +61,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
-
-  const contextValue: AuthContextType = {
+  const contextValue = useMemo<AuthContextType>(() => ({
     user,
     isLoading,
     error,
     isAuthenticated,
     login,
     logout
-  };
+  }), [user, isLoading, error, isAuthenticated, login]);
 
   return (
     <AuthContext.Provider value={contextValue}>

@@ -9,11 +9,11 @@ function NewEvent() {
 
     const handleSuccess = () => {
         toast({
-             title: "Event created",
-             description: "Event created successfully",
-             status: "success",
-             duration: 5000,
-             isClosable: true,
+            title: "Event created",
+            description: "Event created successfully",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
         });
         navigate("/events");
     };
@@ -36,6 +36,8 @@ function NewEvent() {
                     location: '',
                     event_status: '',
                     event_date: '',
+                    capacity: 0,
+                    description: ""
                 }}
                 onConfirm={addEvents}
                 onSuccess={handleSuccess}

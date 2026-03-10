@@ -1,8 +1,8 @@
 
 import { BASE_URL } from "../constants";
-import { UserListResponse } from "../users.type";
+import { UserAPIResponse } from "../users.type";
 
-export const getAllUsers = async (): Promise<UserListResponse> => {
+export const getAllUsers = async (): Promise<UserAPIResponse[]> => {
     try {
         const response = await fetch(`${BASE_URL}/api/users`, {
             method: "GET",
@@ -14,7 +14,7 @@ export const getAllUsers = async (): Promise<UserListResponse> => {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to fetch users');
         }
-        const users: UserListResponse = await response.json();
+        const users: UserAPIResponse[] = await response.json();
         return users;
     } catch (error) {
         return Promise.reject(error)

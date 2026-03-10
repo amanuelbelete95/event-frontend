@@ -1,33 +1,63 @@
-import { Badge, Text, Card, CardBody, CardHeader, Flex, Heading, VStack, Box, Icon, HStack, Divider, useColorModeValue, Button, Stack, useToast } from "@chakra-ui/react"
-import { CalendarIcon, TimeIcon } from "@chakra-ui/icons"
-import { FiMapPin } from "react-icons/fi"
-import { Event, EventAPIResponse } from "../events.type"
+import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
+import { Badge, Box, Button, Card, CardBody, Divider, Heading, HStack, Icon, Stack, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { memo, useCallback } from "react";
+import { FiMapPin } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
+import BasicEventModalRegModal from "../../BasicEventModalReg";
 import { PermissionGuard } from "../../PermissionGuard";
+import { registerToEvent } from "../../register-events/api/registerToEvent";
 import { EventDesignSystem } from "../designSystem";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { onDelete } from "../api/deleteEvents";
+import { EventAPIResponse } from "../events.type";
 
 interface EventCardProps {
     event: EventAPIResponse;
     onDeleteEvent: (id: string) => void
 }
 
-const EventCard = (props: EventCardProps) => {
-    const { event, onDeleteEvent } = props
-    const navigate = useNavigate();
-    const toast = useToast()
-    const queryClient = useQueryClient()
+const formatTime = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+    })
+}
 
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString)
-        return date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit'
-        })
-    }
+const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const toast = useToast();
+    const navigate = useNavigate();
+    const handleView = useCallback(() => navigate(`/events/${event.id}/detail`), [event.id, navigate]);
+    const handleEdit = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
+    const handleDelete = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
+    const { mutate: registerEventFn  } = useMutation({
+        mutationFn: registerToEvent,
+        onSuccess: () => {
+          toast({
+            title: "Event joined",
+            description: "Event joined successfully",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          })
+          navigate("/events")
+    
+        },
+        onError: (error) => {
+          toast({
+            title: "Event Join failed",
+            description: `${error.message}`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+      });
     return (
+        <>
+        
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerEventFn}  title={event.name} eventId={event.id} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"
@@ -36,20 +66,24 @@ const EventCard = (props: EventCardProps) => {
             _hover={{
                 transform: 'translateY(-4px)',
                 boxShadow: 'xl',
+                bg: "gray"
             }}
             border="1px"
             h="380px"
             display="flex"
             flexDirection="column"
             position="relative"
+            cursor={"pointer"}
+            onClick={handleView}
+            _
         >
             <Card
                 p={4}
-
                 overflow="hidden"
                 flex={1}
                 display="flex"
                 flexDirection="column"
+
             >
                 <Box
                     position="absolute"
@@ -136,26 +170,16 @@ const EventCard = (props: EventCardProps) => {
 
                     <Divider mt={4} mb={0} />
 
-                    <HStack spacing={2} w="full" position={"absolute"} bottom={2} left={0} p={2}>
-                        <Button
-                            // flex={1}
-                            size="sm"
-                            bg={EventDesignSystem.primaryColor}
-                            color="white"
-                            _hover={{ opacity: 0.9 }}
-                            onClick={() => navigate(`/events/${event.event_id}/detail`)}
-                        >
-                            View Details
-                        </Button>
+                    <HStack spacing={2} w="full" position={"absolute"} bottom={5} left={5}>
                         <PermissionGuard allowedRoles={["admin"]}>
                             <Button
                                 size="sm"
                                 bg={EventDesignSystem.primaryColor}
                                 color="white"
                                 _hover={{ opacity: 0.9 }}
-                                onClick={() => navigate(`/events/${event.event_id}/edit`)}
+                                onClick={handleEdit}
                             >
-                                Edit
+                            Edit
                             </Button>
                             <Button
                                 size="sm"
@@ -163,18 +187,38 @@ const EventCard = (props: EventCardProps) => {
                                 color="white"
                                 type="button"
                                 _hover={{ bg: "red.600" }}
-                                onClick={() => onDeleteEvent(event.event_id)}
+                                onClick={handleDelete}
                             >
-                                Delete
+                             Delete
                             </Button>
                         </PermissionGuard>
+                         <Button
+                            size="sm"
+                            bg={EventDesignSystem.primaryColor}
+                            color="white"
+                            _hover={{ opacity: 0.9 }}
+                            onClick={handleView}
+                        >
+                            View
+                        </Button>
+                        <Button
+                            size="sm"
+                            bg={EventDesignSystem.primaryColor}
+                            color="white"
+                            _hover={{ opacity: 0.9 }}
+                            onClick={(e) => { e.stopPropagation(); onOpen(); }}
+                        >
+                            Join
+                        </Button>
+
                     </HStack>
                 </CardBody>
             </Card>
 
 
         </Box >
+        </>
     )
-}
+});
 
 export default EventCard;

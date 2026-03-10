@@ -1,28 +1,22 @@
 import { BASE_URL } from '../constants';
-import { Event, EventAPIResponse } from '../events.type';
+import { EventAPIResponse } from '../events.type';
 import { CreateUpdateEvent } from '../schema';
 
 
 
-const updateEvent = async (eventData: CreateUpdateEvent, id: string): Promise<EventAPIResponse> => {
-    try {
-        const response = await fetch(`${BASE_URL}/api/events/${id}/update`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(eventData),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to update event');
-        }
-        const updatedEvent = await response.json();
-        return updatedEvent;
-    } catch (error) {
-        return Promise.reject(error)
+const updateEvent = async (event: CreateUpdateEvent, id: string): Promise<EventAPIResponse> => {
+    const response = await fetch(`${BASE_URL}/api/events/${id}/update`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(event),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message);
     }
+    return data;
 }
 
 export default updateEvent;

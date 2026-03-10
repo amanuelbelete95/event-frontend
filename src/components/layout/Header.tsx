@@ -10,18 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 
+const NAV_ITEMS = [
+  { path: "/", label: "Home" },
+  { path: "/events", label: "Events" },
+  { path: "/settings", label: "Settings" },
+  { path: "/contact", label: "Contacts" }
+];
+
 function Header() {
   const location = useLocation();
 
   const bg = useColorModeValue("teal.600", "gray.900");
   const navHover = useColorModeValue("white", "teal.200");
-
-  const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/events", label: "Events" },
-    { path: "/settings", label: "Settings" },
-    { path: "/contact", label: "Contacts" }
-  ];
 
   return (
     <Flex
@@ -52,7 +52,7 @@ function Header() {
 
       {/* Navigation */}
       <HStack spacing={8}>
-        {navItems.map(({ path, label }) => {
+        {NAV_ITEMS.map(({ path, label }) => {
           const isActive = location.pathname === path;
 
           return (
