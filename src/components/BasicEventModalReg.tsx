@@ -25,8 +25,9 @@ import { useAuth } from "./auth/AuthProvider";
 import { EventDesignSystem } from "./events/designSystem";
 import { RegisterEventResponse } from "./register-events/EventRegisterForm";
 import { PermissionGuard } from "./PermissionGuard";
-import useFetchAllEvents from "./events/hooks/useFetchAllEvents";
+import useFetchAllEvents from "./events/hooks/useFetchEvent";
 import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
+import useFetchEvent from "./events/hooks/useFetchEvent";
 export interface CreateUpdateRegistration {
     event_id: string  | undefined;
     user_id: number | undefined;
@@ -63,12 +64,13 @@ export default function BasicEventModalRegModal(
   const { user } = useAuth();
 
 
-const { data: events, isLoading, error } = useFetchAllEvents();
+const { data: event, isLoading, error } = useFetchEvent(eventId);
 const {data: users} = useFetchAllUsers();
   const { toast } = createStandaloneToast();
-  const { register, handleSubmit, getValues, formState: { errors } } = useForm<CreateUpdateRegistration>({
+  const { register, handleSubmit, getValues,formState: { errors } } = useForm<CreateUpdateRegistration>({
           resolver: yupResolver(validationSchema),
       });
+
   const { mutate, isPending } = useMutation
   ({
     mutationFn: onConfirm,
@@ -97,10 +99,10 @@ const {data: users} = useFetchAllUsers();
   const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
 
   const payload = user?.role === "admin"
-    ? data
+    ? {...data, event_id: event?.id}
     : {
         ...data,
-        event_id: eventId,
+        event_id: event?.id,
         user_id: user?.id,
       };
   mutate(payload);
@@ -144,7 +146,7 @@ const {data: users} = useFetchAllUsers();
           <ModalBody display={"flex"} flexDirection={"column"} gap={2}>
             <form onSubmit={handleSubmit(onSubmit)}>
             <PermissionGuard allowedRoles={["admin"]}>
-            <FormControl isInvalid={!!errors.event_id}>
+            {/* <FormControl isInvalid={!!errors.event_id}>
               <FormLabel
                   fontWeight="semibold"
                   fontSize="md"
@@ -160,7 +162,7 @@ const {data: users} = useFetchAllUsers();
               ))}
               </Select>
             <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
-            </FormControl>
+            </FormControl> */}
             <FormControl isInvalid={!!errors.user_id}>
               <FormLabel
                   fontWeight="semibold"

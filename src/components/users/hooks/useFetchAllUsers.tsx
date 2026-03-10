@@ -3,7 +3,7 @@ import { getAllUsers } from "../api/getAllUsers";
 import { UserAPIResponse } from "../users.type";
 
 const useFetchAllUsers = () =>
-  useQuery<UserAPIResponse>({
+  useQuery<UserAPIResponse[]>({
     queryKey: ["users"],
     queryFn: getAllUsers,
   });
