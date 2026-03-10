@@ -115,12 +115,12 @@ export default function BasicEventModalRegModal(
               alignItems="center"
             >
             </Box>
-            <Text pt={4} textAlign="center" fontWeight={600} fontSize={"25px"}>
+            <Text pt={1} textAlign="center" fontWeight={600} fontSize={"25px"}>
               {title}
             </Text>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody display={"flex"} flexDirection={"column"} gap={8}>
+          <ModalBody display={"flex"} flexDirection={"column"} gap={2}>
             <PermissionGuard allowedRoles={["admin"]}>
             <FormControl isInvalid={!!errors.event_id}>
               <FormLabel
@@ -161,8 +161,7 @@ export default function BasicEventModalRegModal(
             />
             <FormErrorMessage>{errors.reason?.message}</FormErrorMessage>
             </FormControl>
-            
-          <Flex mt={8} justifyContent={"flex-end"}>
+          <Flex mt={2} justifyContent={"flex-end"}>
             <Button
               mr={3}
               bg={EventDesignSystem.primaryColor}

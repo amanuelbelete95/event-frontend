@@ -1,17 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
-import Contacts from "./components/contacts/Contacts";
-import Home from "./components/home/Home";
-import Layout from "./components/layout/Layout";
-import NoMatch from "./components/nomatch/NoMatch";
+import EventEdit from "./admin/events/EventEdit";
+import EventNew from "./admin/events/EventNew";
 import LogInPage from "./components/LogInPage";
 import RegisterPage from "./components/RegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import EventList from "./components/events/components/EventList";
-import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
-import EventNew from "./admin/events/EventNew";
+import Contacts from "./components/contacts/Contacts";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
-import EventEdit from "./admin/events/EventEdit";
-import EventRegisterForm from "./components/register-events/EventRegisterForm";
+import EventList from "./components/events/components/EventList";
+import Home from "./components/home/Home";
+import Layout from "./components/layout/Layout";
+import NoMatch from "./components/nomatch/NoMatch";
+import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
@@ -38,7 +37,6 @@ export const router = createBrowserRouter([
           { path: "new", element: <EventNew /> },
           { path: ":id/edit", element: <EventEdit />, loader: eventDetailLoader },
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
-          { path: ":id/join", element: <EventRegisterForm /> },
         ]
       },
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },
@@ -60,3 +58,4 @@ export const router = createBrowserRouter([
 ]);
 
 export { ROUTE_PATHS };
+
