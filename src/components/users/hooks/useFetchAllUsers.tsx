@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllUsers } from "../api/getAllUsers";
-import { UserListResponse } from "../users.type";
+import { UserAPIResponse } from "../users.type";
 
 const useFetchAllUsers = () =>
-  useQuery({
+  useQuery<UserAPIResponse>({
     queryKey: ["users"],
     queryFn: getAllUsers,
   });
