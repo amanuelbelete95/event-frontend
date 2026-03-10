@@ -5,7 +5,7 @@ export interface User {
   id?: string;
   username: string;
   role?: UserRole | undefined;
-  password: string;
+  password?: string;
   confirmPassword?: string
 }
 
@@ -28,11 +28,4 @@ export interface EventAPIResponse {
   event_status: string;
   description?: string;
   capacity: Number;
-}
-
-export interface UserAPIResponse {
-  id?: string;
-  username: string;
-  role?: UserRole | undefined;
-  password: string;
 }

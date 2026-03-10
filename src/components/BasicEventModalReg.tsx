@@ -25,6 +25,8 @@ import { useAuth } from "./auth/AuthProvider";
 import { EventDesignSystem } from "./events/designSystem";
 import { RegisterEventResponse } from "./register-events/EventRegisterForm";
 import { PermissionGuard } from "./PermissionGuard";
+import useFetchAllEvents from "./events/hooks/useFetchAllEvents";
+import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
 export interface CreateUpdateRegistration {
     event_id: string  | undefined;
     user_id: number | undefined;
@@ -61,14 +63,8 @@ export default function BasicEventModalRegModal(
   const { user } = useAuth();
 
 
-const events = [
- { id: "1", name: "React Conference", value: 1, },
- { id: "2", name: "Tech Meetup", value: 2, }
-];
-const users = [
- { id: "5", name: "John Doe" , value: 5},
- { id: "6", name: "Sarah Smith", value: 6 }
-];
+const { data: events, isLoading, error } = useFetchAllEvents();
+const {data: users} = useFetchAllUsers();
   const { toast } = createStandaloneToast();
   const { register, handleSubmit, getValues, formState: { errors } } = useForm<CreateUpdateRegistration>({
           resolver: yupResolver(validationSchema),
@@ -158,7 +154,7 @@ const users = [
               </FormLabel>
              <Select placeholder="Select event" {...register("event_id")}>
               {events?.map((event) => (
-              <option key={event.id} value={event.value}>
+              <option key={event.id} value={event.id}>
                {event.name}
               </option>
               ))}
@@ -174,8 +170,8 @@ const users = [
               </FormLabel>
               <Select placeholder="Select user" {...register("user_id")}>
                {users?.map((user) => (
-                <option key={user.id} value={user.value}>
-                  {user.name}
+                <option key={user.id} value={user.id}>
+                  {user.username}
                 </option>
                 ))}
               </Select>
