@@ -46,7 +46,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
         },
         onError: (error) => {
           toast({
-            title: "Event delete",
+            title: "Event Join failed",
             description: `${error.message}`,
             status: "error",
             duration: 5000,
@@ -57,7 +57,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     return (
         <>
         
-        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerToEvent}  title={event.name} eventId={event.id} onClose={onClose}/>
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerEventFn}  title={event.name} eventId={event.id} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"

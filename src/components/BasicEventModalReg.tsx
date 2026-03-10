@@ -4,6 +4,7 @@ import {
     createStandaloneToast,
     Flex,
     FormControl,
+    FormErrorMessage,
     FormLabel,
     Input,
     Modal,
@@ -22,6 +23,7 @@ import * as Yup from "yup";
 import { useAuth } from "./auth/AuthProvider";
 import { EventDesignSystem } from "./events/designSystem";
 import { RegisterEventResponse } from "./register-events/EventRegisterForm";
+import { PermissionGuard } from "./PermissionGuard";
 export interface CreateUpdateRegistration {
     event_id: string;
     user_id: string;
@@ -57,7 +59,7 @@ export default function BasicEventModalRegModal(
   } = props;
   const { user } = useAuth();
   const { toast } = createStandaloneToast();
-  const { register, handleSubmit } = useForm<CreateUpdateRegistration>({
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm<CreateUpdateRegistration>({
           resolver: yupResolver(validationSchema),
       });
   const { mutate, isPending } = useMutation
@@ -83,13 +85,6 @@ export default function BasicEventModalRegModal(
     },
   });
 
-  const onSubmit : SubmitHandler<CreateUpdateRegistration> =  (data) => {
-    mutate({
-      ...data,
-      event_id: eventId,
-      user_id: user?.id || ""
-    })
-  }
 
   return (
     <PortalManager>
@@ -126,32 +121,63 @@ export default function BasicEventModalRegModal(
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody display={"flex"} flexDirection={"column"} gap={8}>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <input type="hidden" value={eventId} name="event_id" />
-                    <input type="hidden" value={user?.id || ""} name="user_id" />
-                    <FormControl marginY={4}>
-                      <FormLabel>Reason</FormLabel>
-                      <Input
-                        {...register("reason")}
-                        placeholder="Please provide your reason for joining"
-                      />
-                    </FormControl>
-
-                    <Flex mt={8} justifyContent={"flex-end"}>
-                      <Button
-                        mr={3}
-                        bg={EventDesignSystem.primaryColor}
-                        type="submit"
-                        isDisabled={isPending}
-                        isLoading={isPending}
-                        spinnerPlacement="start"
-                        loadingText="Processing"
-                      >
-                        Join Event
-                      </Button>
-                      <Button onClick={onClose}>Close</Button>
-                    </Flex>
-                  </form>
+            <PermissionGuard allowedRoles={["admin"]}>
+            <FormControl isInvalid={!!errors.event_id}>
+              <FormLabel
+                  fontWeight="semibold"
+                  fontSize="md"
+                  id="event_id"
+              >
+                  Event Name
+              </FormLabel>
+              <Input
+                  {...register("event_id")}
+                  type="number"
+                  placeholder="Please provide event name"
+                  name="event_id"
+              />
+              <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.user_id}>
+              <FormLabel
+                  fontWeight="semibold"
+                  fontSize="md"
+              >
+                  User
+              </FormLabel>
+              <Input
+                  {...register("user_id")}
+                  type="number"
+                  placeholder="Please provide your name"
+              />
+            <FormErrorMessage>{errors.user_id?.message}</FormErrorMessage>
+            </FormControl>
+            </PermissionGuard>   
+            <FormControl marginY={4} isInvalid={!!errors.reason}>
+            <FormLabel>Reason</FormLabel>
+            <Input
+              {...register("reason")}
+              placeholder="Please provide your reason for joining"
+            />
+            <FormErrorMessage>{errors.reason?.message}</FormErrorMessage>
+            </FormControl>
+            
+          <Flex mt={8} justifyContent={"flex-end"}>
+            <Button
+              mr={3}
+              bg={EventDesignSystem.primaryColor}
+              isDisabled={isPending}
+              isLoading={isPending}
+              spinnerPlacement="start"
+              loadingText="Processing"
+              onClick={(data) => {
+                onConfirm(data);
+              }}
+            >
+              Join Event
+            </Button>
+            <Button onClick={onClose}>Close</Button>
+          </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>
