@@ -1,37 +1,36 @@
 import {
-    Box,
-    Button,
-    createStandaloneToast,
-    Flex,
-    FormControl,
-    FormErrorMessage,
-    FormLabel,
-    Input,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalHeader,
-    ModalOverlay,
-    PortalManager,
-    Select,
-    Text
+  Box,
+  Button,
+  createStandaloneToast,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  PortalManager,
+  Select,
+  Text
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import { Form, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { PermissionGuard } from "./PermissionGuard";
 import { useAuth } from "./auth/AuthProvider";
 import { EventDesignSystem } from "./events/designSystem";
-import { RegisterEventResponse } from "./register-events/EventRegisterForm";
-import { PermissionGuard } from "./PermissionGuard";
-import useFetchAllEvents from "./events/hooks/useFetchEvent";
-import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
 import useFetchEvent from "./events/hooks/useFetchEvent";
+import { RegisterEventResponse } from "./register-events/EventRegisterForm";
+import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
 export interface CreateUpdateRegistration {
-    event_id: string  | undefined;
-    user_id: number | undefined;
-    reason: number;
+    event_id: number;
+    user_id: number;
+    reason: string;
 }
 
 interface BasicEventModalRegProps{
@@ -47,8 +46,8 @@ interface BasicEventModalRegProps{
 
 const validationSchema = Yup.object().shape({
   reason: Yup.string().required("reason is required"),
-  event_id: Yup.number().required("Event is required").optional(),
-  user_id: Yup.number().required("User is required").optional(),
+  event_id: Yup.number().optional(),
+  user_id: Yup.number().optional(),
 });
 
 export default function BasicEventModalRegModal(
@@ -61,13 +60,15 @@ export default function BasicEventModalRegModal(
     onConfirm,
     onClose,
   } = props;
-  const { user } = useAuth();
 
+// When user is signed in by himself we need the id of the user and the event id selected
+const { user } = useAuth();
+const { data: event } = useFetchEvent(eventId);
 
-const { data: event, isLoading, error } = useFetchEvent(eventId);
+// For the admin to select when registering the user for the event;
 const {data: users} = useFetchAllUsers();
   const { toast } = createStandaloneToast();
-  const { register, handleSubmit, getValues,formState: { errors } } = useForm<CreateUpdateRegistration>({
+  const { register, handleSubmit, formState: { errors } } = useForm<CreateUpdateRegistration>({
           resolver: yupResolver(validationSchema),
       });
 
@@ -84,7 +85,7 @@ const {data: users} = useFetchAllUsers();
       });
     },
     onSuccess: (data) => {
-      if(data == undefined || null ) return;
+      if(data == undefined || data === null ) return;
       toast({
         status: "success",
         title: "Event joined successfully!",
@@ -146,23 +147,6 @@ const {data: users} = useFetchAllUsers();
           <ModalBody display={"flex"} flexDirection={"column"} gap={2}>
             <form onSubmit={handleSubmit(onSubmit)}>
             <PermissionGuard allowedRoles={["admin"]}>
-            {/* <FormControl isInvalid={!!errors.event_id}>
-              <FormLabel
-                  fontWeight="semibold"
-                  fontSize="md"
-                  id="event_id"
-              >
-                  Event Name
-              </FormLabel>
-             <Select placeholder="Select event" {...register("event_id")}>
-              {events?.map((event) => (
-              <option key={event.id} value={event.id}>
-               {event.name}
-              </option>
-              ))}
-              </Select>
-            <FormErrorMessage>{errors.event_id?.message}</FormErrorMessage>
-            </FormControl> */}
             <FormControl isInvalid={!!errors.user_id}>
               <FormLabel
                   fontWeight="semibold"
