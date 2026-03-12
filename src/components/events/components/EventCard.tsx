@@ -57,7 +57,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     return (
         <>
         
-        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerEventFn}  title={event.name} eventId={event.id} onClose={onClose}/>
+        <BasicEventModalRegModal isOpen={isOpen} onConfirm={registerEventFn} event={event} onClose={onClose}/>
         <Box
             borderRadius="xl"
             overflow="hidden"

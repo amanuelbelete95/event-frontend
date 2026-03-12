@@ -5,7 +5,7 @@ import getEventById from "../api/getEvent";
 
 const useFetchEvent = (id: string) =>
   useQuery<EventAPIResponse>({
-    queryKey: ["event"],
+    queryKey: ["event", id],
     queryFn: () => getEventById(id),
   });
 

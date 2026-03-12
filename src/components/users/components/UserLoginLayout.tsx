@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { EventDesignSystem } from "../../events/designSystem";
 
 function UserLogInRegisterLayout() {
   const navigate = useNavigate();
@@ -24,6 +25,15 @@ function UserLogInRegisterLayout() {
 
   return (
     <Box minH="100vh" bg={bgPage} py={20} w={"100%"}>
+     <Heading
+                   size="xl"
+                   mb={2}
+                   textAlign="center"
+                   color={EventDesignSystem.primaryColor}
+                   fontWeight="bold"
+                 >
+                   Event Management System 
+          </Heading>
       <Container maxW="md">
         <Card bg={cardBg} boxShadow="xl" borderRadius="xl">
           <CardBody p={8}>

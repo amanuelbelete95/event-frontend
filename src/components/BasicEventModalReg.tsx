@@ -27,6 +27,7 @@ import { EventDesignSystem } from "./events/designSystem";
 import useFetchEvent from "./events/hooks/useFetchEvent";
 import { RegisterEventResponse } from "./register-events/EventRegisterForm";
 import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
+import { EventAPIResponse } from "./events/events.type";
 export interface CreateUpdateRegistration {
     event_id: number;
     user_id: number;
@@ -37,7 +38,7 @@ interface BasicEventModalRegProps{
   isOpen: boolean;
   title: string;
   actionName?: string;
-  eventId: string;
+  event: EventAPIResponse;
   onClose: () => void;
   onConfirm: (
     data: CreateUpdateRegistration
@@ -55,15 +56,16 @@ export default function BasicEventModalRegModal(
 ) {
   const {
     isOpen,
-    title,
-    eventId,
+    event,
     onConfirm,
     onClose,
   } = props;
 
 // When user is signed in by himself we need the id of the user and the event id selected
 const { user } = useAuth();
-const { data: event } = useFetchEvent(eventId);
+const { data: selectedEvent } = useFetchEvent(event.id);
+
+console.log("selected", selectedEvent)
 
 // For the admin to select when registering the user for the event;
 const {data: users} = useFetchAllUsers();
@@ -100,10 +102,10 @@ const {data: users} = useFetchAllUsers();
   const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
 
   const payload = user?.role === "admin"
-    ? {...data, event_id: event?.id}
+    ? {...data, event_id: selectedEvent?.id}
     : {
         ...data,
-        event_id: event?.id,
+        event_id: selectedEvent?.id,
         user_id: user?.id,
       };
   mutate(payload);
@@ -119,7 +121,11 @@ const {data: users} = useFetchAllUsers();
         blockScrollOnMount={true}
         size={"xl"}
       >
-        <ModalOverlay />
+        <ModalOverlay  
+        bg='none'
+        backdropFilter='auto'
+        backdropInvert='20%'
+        backdropBlur='2px'/>
         <ModalContent zIndex={1400} borderRadius={8} py={3}>
           <ModalHeader
             w="100%"
@@ -140,7 +146,7 @@ const {data: users} = useFetchAllUsers();
             >
             </Box>
             <Text pt={1} textAlign="center" fontWeight={600} fontSize={"25px"}>
-              {title}
+              {event.name}
             </Text>
           </ModalHeader>
           <ModalCloseButton />
