@@ -9,11 +9,10 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
-
 const NAV_ITEMS = [
   { path: "/", label: "Home" },
   { path: "/events", label: "Events" },
-  { path: "/settings", label: "Settings" },
+  { path: "/register-events", label: "My Events" },
   { path: "/contact", label: "Contacts" }
 ];
 

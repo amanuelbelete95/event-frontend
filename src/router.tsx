@@ -11,10 +11,11 @@ import Home from "./components/home/Home";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
+import RegisterEvents from "./components/register-events/RegeisterEvents";
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
-  ADMIN: "/admin",
+  REGISTER_EVENTS: "/register-events",
   CONTACT: "/contact",
   NOT_FOUND: "*",
   USER_EVENTS: "/events",
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
         ]
       },
+       { path: ROUTE_PATHS.REGISTER_EVENTS, element: <RegisterEvents /> },
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },
       { path: ROUTE_PATHS.NOT_FOUND, element: <NoMatch /> },
     ],
