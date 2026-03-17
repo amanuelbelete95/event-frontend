@@ -11,6 +11,7 @@ interface RegisterEventApiResponse {
     user: UserAPIResponse;
     id: string;
     user_id: string;
+    event_id: string;
     reason: string;
 }
 const columnHelper = createColumnHelper<RegisterEventApiResponse>();

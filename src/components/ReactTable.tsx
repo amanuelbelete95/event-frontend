@@ -28,8 +28,10 @@ import {
   InputLeftElement,
   Flex,
   IconButton,
+  chakra,
+  Table,
 } from '@chakra-ui/react';
-import { SearchIcon, ChevronLeftIcon, ChevronRightIcon, ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
+import { SearchIcon, ChevronLeftIcon, ChevronRightIcon, ArrowUpIcon, ArrowDownIcon, TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
 interface ReactTableProps<T> {
   columns: ColumnDef<T, any>[];
@@ -111,38 +113,63 @@ export function ReactTable<T extends object>({
           </InputGroup>
         </Flex>
       )}
-
-      <ChakraTable variant="simple" size="md">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <Th
-                  key={header.id}
-                  cursor={header.column.getCanSort() ? 'pointer' : 'default'}
-                  onClick={header.column.getToggleSortingHandler()}
-                  _hover={{ bg: 'gray.50' }}
-                  transition="background 0.2s"
-                >
-                  <HStack spacing={1}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {header.column.getCanSort() && (
-                      <Box as="span" pl={1}>
-                        {{
-                          asc: <ArrowUpIcon boxSize={3} />,
-                          desc: <ArrowDownIcon boxSize={3} />,
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </Box>
-                    )}
-                  </HStack>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
+      
+      <Table 
+            variant="simple"  
+            size={"sm"}
+            width={"100%"}
+            border="none"
+            overflow="scroll"
+            borderRadius={"20px"}
+            background={"#ffffff"}
+            style={{ overflow: "hidden" }}>
+              <Thead background={"#ffffff"} height={"70px"}>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Tr key={headerGroup.id} px={4}>
+                    {headerGroup.headers.map((header) => {
+                      const meta: any = header.column.columnDef.meta;
+                      return (
+                        <Th
+                          key={header.id}
+                          onClick={header.column.getToggleSortingHandler()}
+                          isNumeric={meta?.isNumeric}
+                          textTransform={"capitalize"}
+                          fontSize={"sm"}
+                          py={3}
+                          style={
+                            header.column.id === "select"
+                              ? { paddingTop: 15 }
+                              : { paddingTop: 0 }
+                          }
+                          colSpan={header.colSpan}
+                          fontWeight={"600"}
+                          cursor={sorting ? "pointer" : "inherit"}
+                          w={`${header.getSize()}px`}
+                        >
+                          {header.isPlaceholder ? null : (
+                            <>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              <chakra.span pl="4">
+                                {header.column.getIsSorted() ? (
+                                  header.column.getIsSorted() === "desc" ? (
+                                    <TriangleDownIcon aria-label="sorted descending" />
+                                  ) : (
+                                    <TriangleUpIcon aria-label="sorted ascending" />
+                                  )
+                                ) : null}
+                              </chakra.span>
+                            </>
+                          )}
+                        </Th>
+                      );
+                    })}
+                  </Tr>
+                ))}
+            
+            </Thead>
         <Tbody>
           {table.getRowModel().rows.length === 0 ? (
             <Tr>
@@ -162,7 +189,7 @@ export function ReactTable<T extends object>({
             ))
           )}
         </Tbody>
-      </ChakraTable>
+      </Table>
 
       {showPagination && (
         <Flex mt={4} align="center" justify="space-between" wrap="wrap" gap={2}>
