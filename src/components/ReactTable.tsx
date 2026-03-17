@@ -30,6 +30,7 @@ import {
   IconButton,
   chakra,
   Table,
+  Heading,
 } from '@chakra-ui/react';
 import { SearchIcon, ChevronLeftIcon, ChevronRightIcon, ArrowUpIcon, ArrowDownIcon, TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
@@ -41,6 +42,7 @@ interface ReactTableProps<T> {
   showPagination?: boolean;
   pageSizeOptions?: number[];
   initialPageSize?: number;
+  tableCaption?: string;
 }
 
 export function ReactTable<T extends object>({
@@ -51,6 +53,7 @@ export function ReactTable<T extends object>({
   showPagination = true,
   pageSizeOptions = [5, 10, 25, 50],
   initialPageSize = 10,
+  tableCaption = '',
 }: ReactTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -80,17 +83,17 @@ export function ReactTable<T extends object>({
     const total = table.getPageCount();
     const current = table.getState().pagination.pageIndex;
     const pages: number[] = [];
-    
+
     let start = Math.max(0, current - 2);
     let end = Math.min(total - 1, current + 2);
-    
+
     if (current < 3) {
       end = Math.min(4, total - 1);
     }
     if (current > total - 3) {
       start = Math.max(0, total - 5);
     }
-    
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
@@ -113,63 +116,75 @@ export function ReactTable<T extends object>({
           </InputGroup>
         </Flex>
       )}
-      
-      <Table 
-            variant="simple"  
-            size={"sm"}
-            width={"100%"}
-            border="none"
-            overflow="scroll"
-            borderRadius={"20px"}
-            background={"#ffffff"}
-            style={{ overflow: "hidden" }}>
-              <Thead background={"#ffffff"} height={"70px"}>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <Tr key={headerGroup.id} px={4}>
-                    {headerGroup.headers.map((header) => {
-                      const meta: any = header.column.columnDef.meta;
-                      return (
-                        <Th
-                          key={header.id}
-                          onClick={header.column.getToggleSortingHandler()}
-                          isNumeric={meta?.isNumeric}
-                          textTransform={"capitalize"}
-                          fontSize={"sm"}
-                          py={3}
-                          style={
-                            header.column.id === "select"
-                              ? { paddingTop: 15 }
-                              : { paddingTop: 0 }
-                          }
-                          colSpan={header.colSpan}
-                          fontWeight={"600"}
-                          cursor={sorting ? "pointer" : "inherit"}
-                          w={`${header.getSize()}px`}
-                        >
-                          {header.isPlaceholder ? null : (
-                            <>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              <chakra.span pl="4">
-                                {header.column.getIsSorted() ? (
-                                  header.column.getIsSorted() === "desc" ? (
-                                    <TriangleDownIcon aria-label="sorted descending" />
-                                  ) : (
-                                    <TriangleUpIcon aria-label="sorted ascending" />
-                                  )
-                                ) : null}
-                              </chakra.span>
-                            </>
-                          )}
-                        </Th>
-                      );
-                    })}
-                  </Tr>
-                ))}
-            
-            </Thead>
+
+      <Heading
+        as="h5"
+        size="sm"
+        w="100%"
+        fontWeight={"normal"}
+        textAlign={"left"}
+        flex={1}
+      >
+        <Text fontSize={"28px"} color={"black"} pb={2}>
+          {tableCaption}
+        </Text>
+      </Heading>
+      <Table
+        variant="simple"
+        size={"sm"}
+        width={"100%"}
+        border="none"
+        overflow="scroll"
+        borderRadius={"20px"}
+        background={"#ffffff"}
+        style={{ overflow: "hidden" }}>
+        <Thead background={"#ffffff"} height={"70px"}>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Tr key={headerGroup.id} px={4}>
+              {headerGroup.headers.map((header) => {
+                const meta: any = header.column.columnDef.meta;
+                return (
+                  <Th
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                    isNumeric={meta?.isNumeric}
+                    textTransform={"capitalize"}
+                    fontSize={"sm"}
+                    py={3}
+                    style={
+                      header.column.id === "select"
+                        ? { paddingTop: 15 }
+                        : { paddingTop: 0 }
+                    }
+                    colSpan={header.colSpan}
+                    fontWeight={"600"}
+                    cursor={sorting ? "pointer" : "inherit"}
+                    w={`${header.getSize()}px`}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        <chakra.span pl="4">
+                          {header.column.getIsSorted() ? (
+                            header.column.getIsSorted() === "desc" ? (
+                              <TriangleDownIcon aria-label="sorted descending" />
+                            ) : (
+                              <TriangleUpIcon aria-label="sorted ascending" />
+                            )
+                          ) : null}
+                        </chakra.span>
+                      </>
+                    )}
+                  </Th>
+                );
+              })}
+            </Tr>
+          ))}
+
+        </Thead>
         <Tbody>
           {table.getRowModel().rows.length === 0 ? (
             <Tr>

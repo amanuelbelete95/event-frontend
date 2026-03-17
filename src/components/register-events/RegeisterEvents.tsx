@@ -72,7 +72,7 @@ const RegisterEvents = () => {
     queryFn: getRegisterEvents,
   });
     return (
-        <ReactTable columns={basicColumns} data={registerEvents}/>
+        <ReactTable columns={basicColumns} data={registerEvents} tableCaption="Registered Events" />
     )
 }
 
