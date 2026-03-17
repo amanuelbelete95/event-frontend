@@ -9,46 +9,54 @@ import { getRegisterEvents } from "./api/getRegisterEvents";
 interface RegisterEventApiResponse {
     event: EventAPIResponse;
     user: UserAPIResponse;
+    id: string;
+    user_id: string;
     reason: string;
 }
 const columnHelper = createColumnHelper<RegisterEventApiResponse>();
 const basicColumns = [
-  columnHelper.accessor("event.id", {
-    header: "Event ID",
+  columnHelper.accessor(row => row.id, {
+    id: "id",
+    header: "Register Event ID",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
       return <Text>{value}</Text>;
     },
   }),
-  columnHelper.accessor("event.name", {   
-    header: "Event Name",
+  columnHelper.accessor(row => row.event.name, { 
+    id: "name",  
+    header:"Event Name",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
       return <Text>{value}</Text>;
     },
   }),
-  columnHelper.accessor("event.capacity", {
+  columnHelper.accessor(row => row.event.capacity, {
+    id: "capacity",
     header: "Capacity",
     cell: (info: CellContext<RegisterEventApiResponse, number>) => {
       const value = info.getValue();
         return <Text>{value}</Text>;
     }
   }),
-  columnHelper.accessor("user.username", {
+  columnHelper.accessor(row => row.user.username, {
+    id: "username",
     header: "Username",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
       return <Text>{value}</Text>;
     },
   }),
-  columnHelper.accessor("reason", {
+  columnHelper.accessor(row => row.reason, {
+    id: "reason",
     header: "Reason",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
         return <Text>{value}</Text>;
     },
   }),
-  columnHelper.accessor("event.description", {
+  columnHelper.accessor(row => row.event.description, {
+    id: "description",
     header: "Description",
     cell: (info: CellContext<RegisterEventApiResponse, string | undefined>) => {
       const value = info.getValue();
@@ -58,7 +66,6 @@ const basicColumns = [
 ];
 
 const RegisterEvents = () => {
-
     const { data: registerEvents    = [], refetch } = useQuery({
     queryKey: ["register-events"],
     queryFn: getRegisterEvents,
