@@ -5,6 +5,7 @@ import { EventAPIResponse } from "../events/events.type";
 import { UserAPIResponse } from "../users/users.type";
 import { useQuery } from "@tanstack/react-query";
 import { getRegisterEvents } from "./api/getRegisterEvents";
+import { useAuth } from "../auth/AuthProvider";
 
 interface RegisterEventApiResponse {
     event: EventAPIResponse;
@@ -66,10 +67,13 @@ const basicColumns = [
   }),
 ];
 
+
+
 const RegisterEvents = () => {
+    const {user} = useAuth()
     const { data: registerEvents    = [], refetch } = useQuery({
     queryKey: ["register-events"],
-    queryFn: getRegisterEvents,
+    queryFn: () =>  getRegisterEvents({ params: user?.role !== "admin" ? { userId : user?.id ?? "" } : undefined }),
   });
     return (
         <ReactTable columns={basicColumns} data={registerEvents} tableCaption="Registered Events" />

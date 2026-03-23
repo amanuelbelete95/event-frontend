@@ -10,11 +10,17 @@ interface RegisterEventApiResponse {
     event_id: string;
     reason: string;
 }
-export const getRegisterEvents = async () : Promise<RegisterEventApiResponse[]> => {
-    const response = await fetch(`${BASE_URL}/api/event-register`);
-     const data =  response.json();
-     if(!response.ok) {
-        throw new Error("Failed to fetch register events");
-     }
-     return data;
-}
+export const getRegisterEvents = async ({params}: {params?: Record<string, string>}) : Promise<RegisterEventApiResponse[]> => {
+  const queryString = params
+    ? "?" + new URLSearchParams(params).toString()
+    : "";
+
+  const response = await fetch(`${BASE_URL}/api/event-register${queryString}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch register events");
+  }
+
+  const data = await response.json();
+  return data;
+};
