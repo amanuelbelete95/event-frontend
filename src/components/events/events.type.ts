@@ -28,4 +28,5 @@ export interface EventAPIResponse {
   event_status: string;
   description?: string;
   capacity: Number;
+  registration_status: boolean
 }

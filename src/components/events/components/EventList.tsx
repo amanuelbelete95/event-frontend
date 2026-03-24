@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Heading,
   HStack,
   Input,
@@ -128,9 +129,9 @@ const EventList = () => {
         </Box>
 
         {filteredEvents.length > 0 ? (
-          <SimpleGrid
-            columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
-            spacing={6}
+          <Grid
+            spacing={2}
+            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
           >
             {filteredEvents.map((event) => (
               <EventCard
@@ -139,7 +140,7 @@ const EventList = () => {
                 onDeleteEvent={deleteEventFn}
               />
             ))}
-          </SimpleGrid>
+          </Grid>
         ) : (
           <Box
             textAlign="center"

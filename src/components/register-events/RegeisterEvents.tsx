@@ -17,14 +17,14 @@ interface RegisterEventApiResponse {
 }
 const columnHelper = createColumnHelper<RegisterEventApiResponse>();
 const basicColumns = [
-  columnHelper.accessor(row => row.id, {
-    id: "id",
-    header: "Register Event ID",
-    cell: (info: CellContext<RegisterEventApiResponse, string>) => {
-      const value = info.getValue();
-      return <Text>{value}</Text>;
-    },
-  }),
+  // columnHelper.accessor(row => row.id, {
+  //   id: "id",
+  //   header: "Register Event ID",
+  //   cell: (info: CellContext<RegisterEventApiResponse, string>) => {
+  //     const value = info.getValue();
+  //     return <Text>{value}</Text>;
+  //   },
+  // }),
   columnHelper.accessor(row => row.event.name, { 
     id: "name",  
     header:"Event Name",
@@ -51,7 +51,7 @@ const basicColumns = [
   }),
   columnHelper.accessor(row => row.reason, {
     id: "reason",
-    header: "Reason",
+    header: "Reason For Registering",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
         return <Text>{value}</Text>;
