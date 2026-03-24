@@ -59,7 +59,6 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     });
     return (
         <>
-
             <BasicEventModalRegModal
                 isOpen={isOpen}
                 onConfirm={registerEventFn}
@@ -83,17 +82,13 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                 onClick={handleView}
                 p={4}
                 w={"500px"}
-                _
             >
                 <Card
                     overflow="hidden"
                     flex={1}
                     display="flex"
                     flexDirection="column"
-
-                    p={2}
-
-                >
+                    p={2}>
                     <Box
                         position="absolute"
                         top="-20"
