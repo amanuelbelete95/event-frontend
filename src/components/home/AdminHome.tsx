@@ -42,6 +42,7 @@ import {
   FiActivity,
   FiClock,
   FiMapPin,
+  FiGlobe,
 } from "react-icons/fi";
 
 const StatCard = ({
@@ -109,7 +110,11 @@ const AdminHome = () => {
 
   const totalEvents = events.length;
   const activeEvents = events.filter(
-    (e: EventAPIResponse) => e.event_status === "in_progress" || e.event_status === "todo"
+    (e: EventAPIResponse) => e.event_status ===  "draft"
+  ).length;
+
+  const postedEvents = events.filter(
+    (e: EventAPIResponse) => e.event_status === "published"
   ).length;
   const completedEvents = events.filter(
     (e: EventAPIResponse) => e.event_status === "completed"
@@ -216,7 +221,7 @@ const AdminHome = () => {
           </Box>
 
           {/* Stats Grid */}
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 5 }} spacing={6}>
             <StatCard
               label="Total Events"
               value={totalEvents}
@@ -224,11 +229,19 @@ const AdminHome = () => {
               helpText="All time"
               colorScheme="blue"
             />
+           
             <StatCard
               label="Active Events"
               value={activeEvents}
               icon={FiActivity}
               helpText="In progress & todo"
+              colorScheme="green"
+            />
+             <StatCard
+              label="Posted Events"
+              value={postedEvents}
+              icon={FiGlobe}
+              helpText="Published events"
               colorScheme="green"
             />
             <StatCard
