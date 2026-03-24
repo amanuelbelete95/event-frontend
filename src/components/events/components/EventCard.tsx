@@ -215,7 +215,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     size="sm"
                                     bg={EventDesignSystem.primaryColor}
                                     color="white"
-                                    disabled={event.registration_status}
+                                    disabled={user?.role === "admin" ? false : event.registration_status}
                                     onClick={(e) => { e.stopPropagation(); onOpen(); }}
                                 >
                                     {user?.role === "admin" ? "Manage Registration" : "Register"}
