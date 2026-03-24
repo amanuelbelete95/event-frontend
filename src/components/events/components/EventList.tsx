@@ -78,8 +78,8 @@ const EventList = () => {
   const adminEvents = filteredEvents;
   const userEvents = filteredEvents.filter(event => event.event_status === "published");
   return (
-    <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8}>
-      <VStack spacing={8} align="stretch" maxW="1400px" mx="auto">
+    <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8} w={"100%"}>
+      <VStack spacing={8} align="stretch">
         <Flex
           direction={{ base: "column", md: "row" }}
           justify="space-between"

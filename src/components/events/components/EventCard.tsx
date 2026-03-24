@@ -31,9 +31,9 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     const { user } = useAuth();
     const toast = useToast();
     const navigate = useNavigate();
-    const handleView = useCallback(() => navigate(`/events/${event.id}/detail`), [event.id, navigate]);
-    const handleEdit = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
-    const handleDelete = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
+    const handleViewEvent = useCallback(() => navigate(`/events/${event.id}/detail`), [event.id, navigate]);
+    const handleUpdateEvent = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
+    const handleDeleteEvent = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
     const { mutate: registerEventFn } = useMutation({
         mutationFn: registerToEvent,
         onSuccess: () => {
@@ -79,7 +79,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                 flexDirection="column"
                 position="relative"
                 cursor={"pointer"}
-                onClick={handleView}
+                onClick={handleViewEvent}
                 p={4}
                 w={"500px"}
             >
@@ -181,9 +181,9 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     bg={EventDesignSystem.primaryColor}
                                     color="white"
                                     _hover={{ opacity: 0.9 }}
-                                    onClick={handleEdit}
+                                    onClick={handleUpdateEvent}
                                 >
-                                    Edit
+                                    Update Event
                                 </Button>
                                 <Button
                                     size="sm"
@@ -191,7 +191,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     color="white"
                                     type="button"
                                     _hover={{ bg: "red.600" }}
-                                    onClick={handleDelete}
+                                    onClick={handleDeleteEvent}
                                 >
                                     Delete
                                 </Button>
@@ -201,7 +201,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                 bg={EventDesignSystem.primaryColor}
                                 color="white"
                                 _hover={{ opacity: 0.9 }}
-                                onClick={handleView}
+                                onClick={handleViewEvent}
                             >
                                 View
                             </Button>
