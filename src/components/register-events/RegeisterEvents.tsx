@@ -25,14 +25,8 @@ const basicColumns = [
         return <Text>{value}</Text>;
     }
   }),
-  columnHelper.accessor(row => row.user.username, {
-    id: "username",
-    header: "Username",
-    cell: (info: CellContext<RegisterEventApiResponse, string>) => {
-      const value = info.getValue();
-      return <Text>{value}</Text>;
-    },
-  }),
+
+  // these column is private to the loged user and it only shows the username of the loged user
   columnHelper.accessor(row => row.reason, {
     id: "reason",
     header: "Reason For Registering",
@@ -59,7 +53,10 @@ const RegisterEvents = () => {
     queryFn: getRegisterEvents,
   });
     return (
-        <ReactTable columns={basicColumns} data={registerEvents} tableCaption="Registered Events" />
+        <ReactTable 
+         columns={basicColumns} 
+         data={registerEvents} 
+         tableCaption="Registered Events" />
     )
 }
 
