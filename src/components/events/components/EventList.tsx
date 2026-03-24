@@ -131,15 +131,15 @@ const EventList = () => {
 
         {filteredEvents.length > 0 ? (
           <Grid
-            spacing={2}
             gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+            gap={5}
           >
             {user?.role === "admin" ? 
             adminEvents.map((event) => (
-              <EventCard key={event.id} event={event} onDelete={deleteEventFn} />
+              <EventCard key={event.id} event={event} onDeleteEvent={deleteEventFn} />
             )) : 
             userEvents.map((event) => (
-              <EventCard key={event.id} event={event} onDelete={deleteEventFn} />
+              <EventCard key={event.id} event={event} onDeleteEvent={deleteEventFn} />
             ))}
           </Grid>
         ) : (

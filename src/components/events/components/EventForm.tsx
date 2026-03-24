@@ -167,11 +167,12 @@ export default function EventForm(props: EventFormProps) {
             <Select
               {...register("event_status")}
               placeholder="Select status"
+            
               bg="white"
               size="lg"
-
+              defaultValue={"draft"}
             >
-              <option value="draft">draft</option>
+              <option value="draft" set>draft</option>
               <option value="published"> published</option>
               <option value="completed">completed</option>
               <option value="cancelled"> cancelled</option>
