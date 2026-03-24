@@ -136,11 +136,21 @@ function Header() {
               </Text>
             </Box>
             <MenuDivider />
+             <MenuItem
+              as={Link}
+              to="/profile"
+              icon={<FiSettings />}
+              _hover={{ bg: "gray.300" }}
+              color={"gray"}
+            >
+              Profile
+            </MenuItem>
             <MenuItem
               as={Link}
               to="/"
               icon={<FiSettings />}
-              _hover={{ bg: "gray.100" }}
+              _hover={{ bg: "gray.300" }}
+              color={"gray"}
             >
               Settings
             </MenuItem>

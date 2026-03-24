@@ -1,6 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-// import EventEdit from "./admin/events/EventEdit";
-// import EventNew from "./admin/events/EventNew";
 import LogInPage from "./components/LogInPage";
 import RegisterPage from "./components/RegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -16,6 +14,8 @@ import RegisterEvents from "./components/register-events/RegeisterEvents";
 import UserList from "./components/users/components/UserList";
 import { loader as userListLoader } from "./components/users/components/UserList";
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
+
+
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
