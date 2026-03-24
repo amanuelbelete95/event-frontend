@@ -1,17 +1,14 @@
-import { CellContext, createColumnHelper } from "@tanstack/react-table";
-import ReactTable from "../ReactTable"
 import { Text } from "@chakra-ui/react";
-import { EventAPIResponse } from "../events/events.type";
-import { UserAPIResponse } from "../users/users.type";
 import { useQuery } from "@tanstack/react-query";
+import { CellContext, createColumnHelper } from "@tanstack/react-table";
+import ReactTable from "../ReactTable";
 import { getRegisterEvents, RegisterEventApiResponse } from "./api/getRegisterEvents";
-import { useAuth } from "../auth/AuthProvider";
 
 const columnHelper = createColumnHelper<RegisterEventApiResponse>();
 const basicColumns = [
-  columnHelper.accessor(row => row.event.name, { 
-    id: "name",  
-    header:"Event Name",
+  columnHelper.accessor(row => row.event.name, {
+    id: "name",
+    header: "Event Name",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
       return <Text>{value}</Text>;
@@ -22,17 +19,15 @@ const basicColumns = [
     header: "Capacity",
     cell: (info: CellContext<RegisterEventApiResponse, number>) => {
       const value = info.getValue();
-        return <Text>{value}</Text>;
+      return <Text>{value}</Text>;
     }
   }),
-
-  // these column is private to the loged user and it only shows the username of the loged user
   columnHelper.accessor(row => row.reason, {
     id: "reason",
     header: "Reason For Registering",
     cell: (info: CellContext<RegisterEventApiResponse, string>) => {
       const value = info.getValue();
-        return <Text>{value}</Text>;
+      return <Text>{value}</Text>;
     },
   }),
   columnHelper.accessor(row => row.event.description, {
@@ -48,16 +43,16 @@ const basicColumns = [
 
 
 const RegisterEvents = () => {
-    const { data: registerEvents = [] } = useQuery<RegisterEventApiResponse[]>({
+  const { data: registerEvents = [] } = useQuery<RegisterEventApiResponse[]>({
     queryKey: ["register-events"],
     queryFn: getRegisterEvents,
   });
-    return (
-        <ReactTable 
-         columns={basicColumns} 
-         data={registerEvents} 
-         tableCaption="Registered Events" />
-    )
+  return (
+    <ReactTable
+      columns={basicColumns}
+      data={registerEvents}
+      tableCaption="Registered Events" />
+  )
 }
 
 export default RegisterEvents;
