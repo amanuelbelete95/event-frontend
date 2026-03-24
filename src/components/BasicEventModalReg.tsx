@@ -29,8 +29,8 @@ import { RegisterEventResponse } from "./register-events/EventRegisterForm";
 import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
 import { EventAPIResponse } from "./events/events.type";
 export interface CreateUpdateRegistration {
-    event_id: number;
-    user_id: number;
+    event_id: string;
+    user_id: string;
     reason: string;
 }
 
@@ -40,15 +40,13 @@ interface BasicEventModalRegProps{
   actionName?: string;
   event: EventAPIResponse;
   onClose: () => void;
-  onConfirm: (
-    data: CreateUpdateRegistration
-  ) => Promise<RegisterEventResponse>;
+  onConfirm: (data: CreateUpdateRegistration) => any;
 }
 
 const validationSchema = Yup.object().shape({
   reason: Yup.string().required("reason is required"),
-  event_id: Yup.number().optional(),
-  user_id: Yup.number().optional(),
+  event_id: Yup.string().optional(),
+  user_id: Yup.string().optional(),
 });
 
 export default function BasicEventModalRegModal(
@@ -70,7 +68,7 @@ console.log("selected", selectedEvent)
 // For the admin to select when registering the user for the event;
 const {data: users} = useFetchAllUsers();
   const { toast } = createStandaloneToast();
-  const { register, handleSubmit, formState: { errors } } = useForm<CreateUpdateRegistration>({
+  const { register, handleSubmit, formState: { errors } } = useForm({
           resolver: yupResolver(validationSchema),
       });
 
@@ -99,14 +97,14 @@ const {data: users} = useFetchAllUsers();
   });
 
 
-  const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
+  const onSubmit: SubmitHandler<any> = (data) => {
 
   const payload = user?.role === "admin"
-    ? {...data, event_id: selectedEvent?.id}
+    ? {...data, event_id: selectedEvent?.id as string}
     : {
         ...data,
-        event_id: selectedEvent?.id,
-        user_id: user?.id,
+        event_id: selectedEvent?.id as string,
+        user_id: user?.id as string,
       };
   mutate(payload);
 };

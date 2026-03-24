@@ -42,7 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!user;
 
-  const login = async (data: CreateUpdateUser) => {
+  const login = async (data: CreateUpdateUser): Promise<UserAPIResponse> => {
     setIsLoading(true);
     setError(null);
     try {
@@ -50,6 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.setItem("token", token);
       setIsLoading(false)
       setUser(user)
+      return user;
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Login failed"));
       throw err;
@@ -61,13 +62,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  const refreshUser = async () => {
+    // Implementation can be added later if needed
+  };
+
   const contextValue = useMemo<AuthContextType>(() => ({
     user,
     isLoading,
     error,
     isAuthenticated,
     login,
-    logout
+    logout,
+    refreshUser
   }), [user, isLoading, error, isAuthenticated, login]);
 
   return (

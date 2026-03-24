@@ -4,27 +4,11 @@ import { Text } from "@chakra-ui/react";
 import { EventAPIResponse } from "../events/events.type";
 import { UserAPIResponse } from "../users/users.type";
 import { useQuery } from "@tanstack/react-query";
-import { getRegisterEvents } from "./api/getRegisterEvents";
+import { getRegisterEvents, RegisterEventApiResponse } from "./api/getRegisterEvents";
 import { useAuth } from "../auth/AuthProvider";
 
-interface RegisterEventApiResponse {
-    event: EventAPIResponse;
-    user: UserAPIResponse;
-    id: string;
-    user_id: string;
-    event_id: string;
-    reason: string;
-}
 const columnHelper = createColumnHelper<RegisterEventApiResponse>();
 const basicColumns = [
-  // columnHelper.accessor(row => row.id, {
-  //   id: "id",
-  //   header: "Register Event ID",
-  //   cell: (info: CellContext<RegisterEventApiResponse, string>) => {
-  //     const value = info.getValue();
-  //     return <Text>{value}</Text>;
-  //   },
-  // }),
   columnHelper.accessor(row => row.event.name, { 
     id: "name",  
     header:"Event Name",
@@ -70,10 +54,9 @@ const basicColumns = [
 
 
 const RegisterEvents = () => {
-    const {user} = useAuth()
-    const { data: registerEvents    = [], refetch } = useQuery({
+    const { data: registerEvents = [] } = useQuery<RegisterEventApiResponse[]>({
     queryKey: ["register-events"],
-    queryFn: () =>  getRegisterEvents({ params: user?.role !== "admin" ? { userId : user?.id ?? "" } : undefined }),
+    queryFn: getRegisterEvents,
   });
     return (
         <ReactTable columns={basicColumns} data={registerEvents} tableCaption="Registered Events" />

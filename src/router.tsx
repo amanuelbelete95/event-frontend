@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Contacts from "./components/contacts/Contacts";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
 import EventList from "./components/events/components/EventList";
-import Home from "./components/home/Home";
+import RoleBasedHome from "./components/home/RoleBasedHome";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
         <Layout />,
       </ProtectedRoute >,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <RoleBasedHome /> },
       {
         path: ROUTE_PATHS.EVENTS,
         children: [

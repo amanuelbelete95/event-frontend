@@ -2,7 +2,7 @@ import { AddIcon, SearchIcon } from '@chakra-ui/icons';
 import { Badge, Box, Button, Card, CardBody, CardHeader, Flex, Heading, HStack, Input, InputGroup, InputLeftElement, SimpleGrid, Spacer, Text, useToast, VStack } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
-import { UserAPIResponse, UserListResponse } from '../users.type';
+import { UserAPIResponse } from '../users.type';
 import { EventDesignSystem } from '../../events/designSystem';
 import DetailActions from '../../DetailActions';
 import { getAllUsers } from '../api/getAllUsers';
@@ -24,15 +24,14 @@ export const loader: LoaderFunction = async () => {
 const UserList = (props: UserListProps) => {
   const {isAdmin} = props
   const navigate = useNavigate();
-  const usersResponse = useLoaderData() as UserListResponse;
-  const users = usersResponse.users;
+  const users = useLoaderData() as UserAPIResponse[];
   const [searchTerm, setSearchTerm] = useState('');
   const toast = useToast();
 
   const filteredUsers = useMemo(() => {
     return users.filter((user: UserAPIResponse) =>
       user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
+      (user.role && user.role.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   }, [users, searchTerm]);
 
@@ -68,7 +67,7 @@ const UserList = (props: UserListProps) => {
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={16} borderRadius={"md"} >
         {filteredUsers.map((user: UserAPIResponse) => (
           <Card
-            key={user.user_id}
+            key={user.id}
             shadow={EventDesignSystem.card.shadow}
             borderRadius={"lg"}
             overflow="hidden"
@@ -99,17 +98,14 @@ const UserList = (props: UserListProps) => {
             <CardBody pt={0}>
               <VStack align="start" spacing={2}>
                 <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                  🆔 <strong>User ID:</strong> {user.user_id}
+                  🆔 <strong>User ID:</strong> {user.id}
                 </Text>
               </VStack>
 
               <HStack spacing={3} mt={4} justify="flex-end" p={3} bg="gray.50" borderRadius="md">
 
                 <DetailActions
-                handleView={() => navigate(`/admin/users/detail/${user.user_id}`)}
-                isAdmin={isAdmin}
-                showEdit={false}
-                showDelete={false}
+                handleView={() => navigate(`/admin/users/detail/${user.id}`)}
                 />
               </HStack>
             </CardBody>

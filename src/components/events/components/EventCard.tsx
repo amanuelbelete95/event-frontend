@@ -35,7 +35,10 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     const handleUpdateEvent = useCallback((e: React.MouseEvent) => { e.stopPropagation(); navigate(`/events/${event.id}/edit`) }, [event.id, navigate]);
     const handleDeleteEvent = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onDeleteEvent(event.id) }, [event.id, onDeleteEvent]);
     const { mutate: registerEventFn } = useMutation({
-        mutationFn: registerToEvent,
+        mutationFn: async (data: any) => {
+            const result = await registerToEvent(data);
+            return result;
+        },
         onSuccess: () => {
             toast({
                 title: "Event joined",
@@ -61,6 +64,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
         <>
             <BasicEventModalRegModal
                 isOpen={isOpen}
+                title="Register for Event"
                 onConfirm={registerEventFn}
                 event={event} onClose={onClose}
             />
