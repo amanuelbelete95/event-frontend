@@ -27,9 +27,10 @@ import { EventDesignSystem } from "./events/designSystem";
 import useFetchEvent from "./events/hooks/useFetchEvent";
 import { RegisterEventResponse } from "./register-events/EventRegisterForm";
 import useFetchAllUsers from "./users/hooks/useFetchAllUsers";
+import { EventAPIResponse } from "./events/events.type";
 export interface CreateUpdateRegistration {
-    event_id: number;
-    user_id: number;
+    event_id: string;
+    user_id: string;
     reason: string;
 }
 
@@ -37,17 +38,15 @@ interface BasicEventModalRegProps{
   isOpen: boolean;
   title: string;
   actionName?: string;
-  eventId: string;
+  event: EventAPIResponse;
   onClose: () => void;
-  onConfirm: (
-    data: CreateUpdateRegistration
-  ) => Promise<RegisterEventResponse>;
+  onConfirm: (data: CreateUpdateRegistration) => any;
 }
 
 const validationSchema = Yup.object().shape({
   reason: Yup.string().required("reason is required"),
-  event_id: Yup.number().optional(),
-  user_id: Yup.number().optional(),
+  event_id: Yup.string().optional(),
+  user_id: Yup.string().optional(),
 });
 
 export default function BasicEventModalRegModal(
@@ -55,20 +54,21 @@ export default function BasicEventModalRegModal(
 ) {
   const {
     isOpen,
-    title,
-    eventId,
+    event,
     onConfirm,
     onClose,
   } = props;
 
 // When user is signed in by himself we need the id of the user and the event id selected
 const { user } = useAuth();
-const { data: event } = useFetchEvent(eventId);
+const { data: selectedEvent } = useFetchEvent(event.id);
+
+console.log("selected", selectedEvent)
 
 // For the admin to select when registering the user for the event;
 const {data: users} = useFetchAllUsers();
   const { toast } = createStandaloneToast();
-  const { register, handleSubmit, formState: { errors } } = useForm<CreateUpdateRegistration>({
+  const { register, handleSubmit, formState: { errors } } = useForm({
           resolver: yupResolver(validationSchema),
       });
 
@@ -97,14 +97,14 @@ const {data: users} = useFetchAllUsers();
   });
 
 
-  const onSubmit: SubmitHandler<CreateUpdateRegistration> = (data) => {
+  const onSubmit: SubmitHandler<any> = (data) => {
 
   const payload = user?.role === "admin"
-    ? {...data, event_id: event?.id}
+    ? {...data, event_id: selectedEvent?.id as string}
     : {
         ...data,
-        event_id: event?.id,
-        user_id: user?.id,
+        event_id: selectedEvent?.id as string,
+        user_id: user?.id as string,
       };
   mutate(payload);
 };
@@ -119,7 +119,11 @@ const {data: users} = useFetchAllUsers();
         blockScrollOnMount={true}
         size={"xl"}
       >
-        <ModalOverlay />
+        <ModalOverlay  
+        bg='none'
+        backdropFilter='auto'
+        backdropInvert='20%'
+        backdropBlur='2px'/>
         <ModalContent zIndex={1400} borderRadius={8} py={3}>
           <ModalHeader
             w="100%"
@@ -140,7 +144,7 @@ const {data: users} = useFetchAllUsers();
             >
             </Box>
             <Text pt={1} textAlign="center" fontWeight={600} fontSize={"25px"}>
-              {title}
+              {event.name}
             </Text>
           </ModalHeader>
           <ModalCloseButton />

@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EventDesignSystem } from "../../events/designSystem";
-import { CreateUpdateUser, logInSchema, registerSchema } from "../schema";
+import { CreateUpdateUserWithRole, logInSchema, registerWithRoleSchema } from "../schema";
 import { UserAPIResponse } from "../users.type";
 
 interface UserLogInResponse {
@@ -13,8 +13,8 @@ interface UserLogInResponse {
 }
 
 export interface UserFormProps {
-  initialValues?: CreateUpdateUser;
-  onConfirm?: (data: CreateUpdateUser) => Promise<UserAPIResponse>
+  initialValues?: any;
+  onConfirm?: (data: any) => Promise<any>
   onSuccess?: (data: Partial<UserLogInResponse>) => void;
   onError?: (error: any) => void;
   title: string;
@@ -34,14 +34,16 @@ export default function UserForm(props: UserFormProps) {
 
   } = props;
 
+  const schema = isNew ? registerWithRoleSchema : logInSchema;
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateUpdateUser>({
+  } = useForm({
     defaultValues: initialValues,
     mode: "onTouched",
-    resolver: yupResolver(isNew ? registerSchema : logInSchema),
+    resolver: yupResolver(schema),
   });
 
   const { mutate } = useMutation({
@@ -51,7 +53,7 @@ export default function UserForm(props: UserFormProps) {
 
   });
 
-  const onSubmit: SubmitHandler<CreateUpdateUser> = (data) => {
+  const onSubmit: SubmitHandler<any> = (data) => {
     mutate(data);
   };
 
@@ -89,7 +91,7 @@ export default function UserForm(props: UserFormProps) {
               type="text"
               placeholder="Enter username"
             />
-            <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors.username?.message as string}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.password}>
@@ -105,24 +107,43 @@ export default function UserForm(props: UserFormProps) {
               type="password"
               placeholder="Enter password"
             />
-            <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors.password?.message as string}</FormErrorMessage>
           </FormControl>
           {
-            isNew && <FormControl isInvalid={!!errors}>
-              <FormLabel
-                fontWeight="semibold"
-                color={EventDesignSystem.form.label.color}
-                fontSize="md"
-              >
-                Confirm Password
-              </FormLabel>
-              <Input
-                {...register("confirmPassword")}
-                type="password"
-                placeholder="confirm password"
-              />
-              <FormErrorMessage>{errors.confirmPassword?.message}</FormErrorMessage>
-            </FormControl>
+            isNew && (
+              <>
+                <FormControl isInvalid={!!errors.role}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    color={EventDesignSystem.form.label.color}
+                    fontSize="md"
+                  >
+                    Role
+                  </FormLabel>
+                  <Select {...register("role")} placeholder="Select role">
+                    <option value="admin">Admin</option>
+                    <option value="employee">Employee</option>
+                    <option value="user">User</option>
+                  </Select>
+                  <FormErrorMessage>{errors.role?.message as string}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors}>
+                  <FormLabel
+                    fontWeight="semibold"
+                    color={EventDesignSystem.form.label.color}
+                    fontSize="md"
+                  >
+                    Confirm Password
+                  </FormLabel>
+                  <Input
+                    {...register("confirmPassword")}
+                    type="password"
+                    placeholder="confirm password"
+                  />
+                  <FormErrorMessage>{errors.confirmPassword?.message as string}</FormErrorMessage>
+                </FormControl>
+              </>
+            )
           }
           <Button
             type="submit"

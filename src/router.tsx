@@ -1,20 +1,26 @@
 import { createBrowserRouter } from "react-router-dom";
-import EventEdit from "./admin/events/EventEdit";
-import EventNew from "./admin/events/EventNew";
 import LogInPage from "./components/LogInPage";
 import RegisterPage from "./components/RegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Contacts from "./components/contacts/Contacts";
 import EventDetail, { loader as eventDetailLoader } from "./components/events/EventDetail";
+import EventEdit from "./components/events/EventEdit";
+import EventNew from "./components/events/EventNew";
 import EventList from "./components/events/components/EventList";
-import Home from "./components/home/Home";
+import RoleBasedHome from "./components/home/RoleBasedHome";
 import Layout from "./components/layout/Layout";
 import NoMatch from "./components/nomatch/NoMatch";
+import RegisterEvents from "./components/register-events/RegeisterEvents";
+import UserList from "./components/users/components/UserList";
+import { loader as userListLoader } from "./components/users/components/UserList";
 import UserLogInRegisterLayout from "./components/users/components/UserLoginLayout";
+
+
 const ROUTE_PATHS = {
   HOME: "/",
   EVENTS: "/events",
-  ADMIN: "/admin",
+  USERS: "/users",
+  REGISTER_EVENTS: "/register-events",
   CONTACT: "/contact",
   NOT_FOUND: "*",
   USER_EVENTS: "/events",
@@ -29,7 +35,7 @@ export const router = createBrowserRouter([
         <Layout />,
       </ProtectedRoute >,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <RoleBasedHome /> },
       {
         path: ROUTE_PATHS.EVENTS,
         children: [
@@ -39,7 +45,14 @@ export const router = createBrowserRouter([
           { path: ":id/detail", element: <EventDetail />, loader: eventDetailLoader },
         ]
       },
+      {
+       path: ROUTE_PATHS.USERS,
+       element: <UserList/>,
+       loader: userListLoader,
+      },
+      { path: ROUTE_PATHS.REGISTER_EVENTS, element: <RegisterEvents /> },
       { path: ROUTE_PATHS.CONTACT, element: <Contacts /> },
+
       { path: ROUTE_PATHS.NOT_FOUND, element: <NoMatch /> },
     ],
   },

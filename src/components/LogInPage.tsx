@@ -1,8 +1,9 @@
-import { createStandaloneToast } from '@chakra-ui/react';
+import { createStandaloneToast, Heading } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthProvider';
 import UserForm from './users/components/UserForm';
+import { EventDesignSystem } from './events/designSystem';
 
 const { toast } = createStandaloneToast();
 

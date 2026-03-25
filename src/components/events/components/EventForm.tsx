@@ -37,10 +37,10 @@ export default function EventForm(props: EventFormProps) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateUpdateEvent>({
+  } = useForm({
     defaultValues: initialValues,
     mode: "onTouched",
-    resolver: yupResolver(createUpdateEventSchema),
+    resolver: yupResolver(createUpdateEventSchema) as any,
   });
 
   useEffect(() => {
@@ -167,9 +167,10 @@ export default function EventForm(props: EventFormProps) {
             <Select
               {...register("event_status")}
               placeholder="Select status"
+            
               bg="white"
               size="lg"
-
+              defaultValue={"draft"}
             >
               <option value="draft">draft</option>
               <option value="published"> published</option>

@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Heading,
   HStack,
   Input,
@@ -23,13 +24,14 @@ import { onDelete } from "../api/deleteEvents";
 import getAllEvents from "../api/getAllEvents";
 import { EventDesignSystem } from "../designSystem";
 import EventCard from "./EventCard";
+import { useAuth } from "../../auth/AuthProvider";
 
 const EventList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const pageBg = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
-
+  const {user} = useAuth();
   const { data: events = [], refetch } = useQuery({
     queryKey: ["events"],
     queryFn: getAllEvents,
@@ -41,9 +43,9 @@ const EventList = () => {
     const lower = searchTerm.toLowerCase();
     return events.filter(
       (event) =>
-        event.name.toLowerCase().includes(lower) ||
-        event.location.toLowerCase().includes(lower) ||
-        event.event_status?.toLowerCase().includes(lower)
+        (event.name.toLowerCase().includes(lower) ||
+          event.location.toLowerCase().includes(lower) ||
+          event.event_status?.toLowerCase().includes(lower))
     );
   }, [events, searchTerm]);
 
@@ -73,11 +75,11 @@ const EventList = () => {
   });
 
 
-
-
+  const adminEvents = filteredEvents;
+  const userEvents = filteredEvents.filter(event => event.event_status === "published");
   return (
-    <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8}>
-      <VStack spacing={8} align="stretch" maxW="1400px" mx="auto">
+    <Box bg={pageBg} minH="100vh" px={{ base: 4, md: 8 }} py={8} w={"100%"}>
+      <VStack spacing={8} align="stretch">
         <Flex
           direction={{ base: "column", md: "row" }}
           justify="space-between"
@@ -128,18 +130,18 @@ const EventList = () => {
         </Box>
 
         {filteredEvents.length > 0 ? (
-          <SimpleGrid
-            columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
-            spacing={6}
+          <Grid
+            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+            gap={5}
           >
-            {filteredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onDeleteEvent={deleteEventFn}
-              />
+            {user?.role === "admin" ? 
+            adminEvents.map((event) => (
+              <EventCard key={event.id} event={event} onDeleteEvent={deleteEventFn} />
+            )) : 
+            userEvents.map((event) => (
+              <EventCard key={event.id} event={event} onDeleteEvent={deleteEventFn} />
             ))}
-          </SimpleGrid>
+          </Grid>
         ) : (
           <Box
             textAlign="center"

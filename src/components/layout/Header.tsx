@@ -6,22 +6,44 @@ import {
   Link as ChakraLink,
   Image,
   HStack,
-  useColorModeValue
+  useColorModeValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+  Avatar,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/AuthProvider";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { EventDesignSystem } from "../events/designSystem";
+import { FiSettings, FiLogOut } from "react-icons/fi";
 
-const NAV_ITEMS = [
-  { path: "/", label: "Home" },
+const NAV_ITEMS_ADMIN = [
+  { path: "/", label: "Dashboard" },
   { path: "/events", label: "Events" },
-  { path: "/settings", label: "Settings" },
+  { path: "/users", label: "Users" },
   { path: "/contact", label: "Contacts" }
+];
+
+const NAV_ITEMS_USER = [
+  { path: "/", label: "Home" },
+  { path: "/events", label: "Browse Events" },
+  { path: "/register-events", label: "My Registrations" },
+  { path: "/contact", label: "Contact" }
 ];
 
 function Header() {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const bg = useColorModeValue("teal.600", "gray.900");
   const navHover = useColorModeValue("white", "teal.200");
+  const cardBg = useColorModeValue("white", "gray.800");
+
+  const navItems = user?.role === "admin" ? NAV_ITEMS_ADMIN : NAV_ITEMS_USER;
 
   return (
     <Flex
@@ -45,14 +67,14 @@ function Header() {
           </Text>
 
           <Text fontSize="xs" opacity={0.85}>
-            Manage and organize your events efficiently
+            {user?.role === "admin" ? "Admin Dashboard" : "Discover Events"}
           </Text>
         </Box>
       </HStack>
 
       {/* Navigation */}
       <HStack spacing={8}>
-        {NAV_ITEMS.map(({ path, label }) => {
+        {navItems.map(({ path, label }) => {
           const isActive = location.pathname === path;
 
           return (
@@ -83,6 +105,65 @@ function Header() {
             </ChakraLink>
           );
         })}
+
+        {/* User Menu */}
+        <Menu>
+          <MenuButton
+            as={Button}
+            variant="ghost"
+            _hover={{ bg: "whiteAlpha.200" }}
+            _active={{ bg: "whiteAlpha.300" }}
+            rightIcon={<ChevronDownIcon />}
+            color="white"
+          >
+            <HStack spacing={2}>
+              <Avatar
+                size="sm"
+                name={user?.username}
+                bg="white"
+                color={EventDesignSystem.primaryColor}
+              />
+              <Text fontSize="sm" fontWeight="medium">
+                {user?.username}
+              </Text>
+            </HStack>
+          </MenuButton>
+          <MenuList bg={cardBg} borderColor="gray.200">
+            <Box px={3} py={2}>
+              <Text fontWeight="semibold">{user?.username}</Text>
+              <Text fontSize="sm" color="gray.500" textTransform="capitalize">
+                {user?.role}
+              </Text>
+            </Box>
+            <MenuDivider />
+             <MenuItem
+              as={Link}
+              to="/profile"
+              icon={<FiSettings />}
+              _hover={{ bg: "gray.300" }}
+              color={"gray"}
+            >
+              Profile
+            </MenuItem>
+            <MenuItem
+              as={Link}
+              to="/"
+              icon={<FiSettings />}
+              _hover={{ bg: "gray.300" }}
+              color={"gray"}
+            >
+              Settings
+            </MenuItem>
+            <MenuItem
+              onClick={logout}
+              icon={<FiLogOut />}
+              _hover={{ bg: "gray.100" }}
+              color="red.500"
+            >
+              Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </HStack>
     </Flex>
   );
