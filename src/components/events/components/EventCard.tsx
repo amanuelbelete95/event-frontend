@@ -66,7 +66,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
     // Check if the user is an admin, they can manage registration regardless of the event date is expired or not, 
     // but if the user is not an admin, they can only register if the event is not expired
     const isEventExpired = new Date(event.event_date) < new Date();
-    const canRegister = user?.role === "admin" || (!isEventExpired && !isEventFull);
+    const canRegister = !isEventExpired && !isEventFull
 
     return (
         <>
@@ -100,7 +100,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                     flex={1}
                     display="flex"
                     flexDirection="column"
-                    p={2}>
+                    p={4}>
                     <Box
                         position="absolute"
                         top="-20"
@@ -122,14 +122,21 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                             >
                                 {event.name}
                             </Heading>
-                            <Badge
-                                variant="outline"
-                                fontSize="xs"
-                                colorScheme="#389999"
-                                textTransform="uppercase"
-                            >
-                                {event.event_status || "todo"}
-                            </Badge>
+                        <PermissionGuard allowedRoles={["admin"]}>
+                        <Badge
+                            variant="outline"
+                            fontSize="xs"
+                            colorScheme="#389999"
+                            textTransform="uppercase"
+                        >
+                            {event.event_status || "todo"}
+                        </Badge>
+                        </PermissionGuard>
+                            {
+                            isEventExpired                                ? <Badge colorScheme="red" variant="subtle">Event Expired</Badge>
+                                : isEventFull ? <Badge colorScheme="orange" variant="subtle">Event Full</Badge>
+                                : <Badge colorScheme="green" variant="subtle">Open for Registration</Badge>
+                         }
                         </Box>
                     </Stack>
                     <CardBody p={6} flex={1} display="flex" flexDirection="column">
@@ -194,6 +201,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     color="white"
                                     _hover={{ opacity: 0.9 }}
                                     onClick={handleUpdateEvent}
+                                    disabled={isEventExpired}
                                 >
                                     Update Event
                                 </Button>
@@ -223,16 +231,13 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     bg={EventDesignSystem.primaryColor}
                                     color="white"
                                     disabled={canRegister ? false : true}
+                                     _hover={{ opacity: 0.9} }
                                     onClick={(e) => { e.stopPropagation(); onOpen(); }}
                                 >
                                     {user?.role === "admin" ? "Manage Registration" : "Register"}
                                 </Button>
                             </>
-                         {
-                            isEventExpired                                ? <Badge colorScheme="red" variant="subtle">Event Expired</Badge>
-                                : isEventFull ? <Badge colorScheme="orange" variant="subtle">Event Full</Badge>
-                                : <Badge colorScheme="green" variant="subtle">Open for Registration</Badge>
-                         }
+                         
 
                         </HStack>
                     </CardBody>
