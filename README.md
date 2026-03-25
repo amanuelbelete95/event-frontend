@@ -1,6 +1,64 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🎉 Event Management System – Frontend
+
+A modern and scalable Event Management System frontend built with React. This application provides an intuitive interface for managing events, employees, and operational workflows efficiently.
+
+📌 Project Overview
+
+The Event Management System is designed to streamline event planning and organizational tasks. It enables administrators and staff to manage events, track employee activities, and oversee operations through a clean and responsive user interface.
+
+🚀 Features
+📅 Event Management
+Create, update, and delete events
+Track event schedules and details
+👥 Employee Management
+Manage employee records
+Assign roles and responsibilities
+🧹 Service Management
+Handle operational services (e.g., cleaning workflows)
+Monitor service-related activities
+🔍 Search & Navigation
+Dynamic sidebar navigation
+Search and filter functionalities
+📱 Responsive Design
+Optimized for desktop and mobile devices
+
+
+🛠️ Tech Stack
+Frontend: React (Create React App)
+UI Library: Chakra UI
+State Management: (Add if you used Redux, Context API, etc.)
+Routing: React Router
+HTTP Client: Axios (if applicable)
+
+
+📂 Project Structure
+
+
+src/
+├── components/      # Reusable UI components
+├── pages/           # Application pages
+├── layouts/         # Layout components (e.g., SideNav)
+├── services/        # API calls
+├── utils/           # Helper functions
+├── assets/          # Images, icons, etc.
+└── App.js           # Main app entry
+
+⚙️ Getting Started
+Prerequisites
+Node.js (v14 or higher recommended)
+npm or yarn
+
+
+nstallation
+# Clone the repository
+git clone https://github.com/amanuelbelete95/event-frontend
+
+# Navigate into the project folder
+cd event-frontend
+
+# Install dependencies
+npm install
 
 ## Available Scripts
 
@@ -26,54 +84,3 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-# 📖 Cleaning frontend <a name="about-project"></a>
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-**[Cleaning]** is a project for Arada cleaning management office!
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-<details>
-  <summary>Server</summary>
-  <ul>
-    <li><a href="https://expressjs.com/">JavaScript</a></li>
-  </ul>
-</details>
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-
-### Making a Progressive Web App
-- **Cleaning management service**
-- **Cleaning Management Events and management **
-- **Employees Management**
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
