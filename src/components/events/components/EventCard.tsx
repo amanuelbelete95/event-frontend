@@ -5,13 +5,12 @@ import { memo, useCallback } from "react";
 import { FiMapPin } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/dateUtility";
+import { useAuth } from "../../auth/AuthProvider";
 import BasicEventModalRegModal from "../../BasicEventModalReg";
 import { PermissionGuard } from "../../PermissionGuard";
 import { registerToEvent } from "../../register-events/api/registerToEvent";
 import { EventDesignSystem } from "../designSystem";
 import { EventAPIResponse } from "../events.type";
-import userEvent from "@testing-library/user-event";
-import { useAuth } from "../../auth/AuthProvider";
 
 interface EventCardProps {
     event: EventAPIResponse;
@@ -60,6 +59,15 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
             })
         }
     });
+
+    // Check if the user is an admin, if so they can manage registration even if the event is full
+    const isEventFull = event.registration_count >= event.capacity;
+    
+    // Check if the user is an admin, they can manage registration regardless of the event date is expired or not, 
+    // but if the user is not an admin, they can only register if the event is not expired
+    const isEventExpired = new Date(event.event_date) < new Date();
+    const canRegister = !isEventExpired && !isEventFull
+
     return (
         <>
             <BasicEventModalRegModal
@@ -92,7 +100,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                     flex={1}
                     display="flex"
                     flexDirection="column"
-                    p={2}>
+                    p={4}>
                     <Box
                         position="absolute"
                         top="-20"
@@ -114,14 +122,21 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                             >
                                 {event.name}
                             </Heading>
-                            <Badge
-                                variant="outline"
-                                fontSize="xs"
-                                colorScheme="#389999"
-                                textTransform="uppercase"
-                            >
-                                {event.event_status || "todo"}
-                            </Badge>
+                        <PermissionGuard allowedRoles={["admin"]}>
+                        <Badge
+                            variant="outline"
+                            fontSize="xs"
+                            colorScheme="#389999"
+                            textTransform="uppercase"
+                        >
+                            {event.event_status || "todo"}
+                        </Badge>
+                        </PermissionGuard>
+                            {
+                            isEventExpired                                ? <Badge colorScheme="red" variant="subtle">Event Expired</Badge>
+                                : isEventFull ? <Badge colorScheme="orange" variant="subtle">Event Full</Badge>
+                                : <Badge colorScheme="green" variant="subtle">Open for Registration</Badge>
+                         }
                         </Box>
                     </Stack>
                     <CardBody p={6} flex={1} display="flex" flexDirection="column">
@@ -186,6 +201,7 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     color="white"
                                     _hover={{ opacity: 0.9 }}
                                     onClick={handleUpdateEvent}
+                                    disabled={isEventExpired}
                                 >
                                     Update Event
                                 </Button>
@@ -214,12 +230,14 @@ const EventCard = memo(({ event, onDeleteEvent }: EventCardProps) => {
                                     size="sm"
                                     bg={EventDesignSystem.primaryColor}
                                     color="white"
-                                    disabled={user?.role === "admin" ? false : event.registration_status}
+                                    disabled={canRegister ? false : true}
+                                     _hover={{ opacity: 0.9} }
                                     onClick={(e) => { e.stopPropagation(); onOpen(); }}
                                 >
                                     {user?.role === "admin" ? "Manage Registration" : "Register"}
                                 </Button>
                             </>
+                         
 
                         </HStack>
                     </CardBody>

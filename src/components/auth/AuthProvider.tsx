@@ -26,7 +26,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (data: CreateUpdateUser) => Promise<UserAPIResponse>;
   logout: () => void;
-  refreshUser: () => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -39,7 +38,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-
   const isAuthenticated = !!user;
 
   const login = async (data: CreateUpdateUser): Promise<UserAPIResponse> => {
@@ -62,10 +60,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
-  const refreshUser = async () => {
-    // Implementation can be added later if needed
-  };
-
   const contextValue = useMemo<AuthContextType>(() => ({
     user,
     isLoading,
@@ -73,7 +67,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated,
     login,
     logout,
-    refreshUser
   }), [user, isLoading, error, isAuthenticated, login]);
 
   return (

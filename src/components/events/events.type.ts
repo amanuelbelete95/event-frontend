@@ -29,4 +29,5 @@ export interface EventAPIResponse {
   description?: string;
   capacity: number;
   registration_status: boolean
+  registration_count: number;
 }
